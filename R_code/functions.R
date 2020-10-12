@@ -1,0 +1,411 @@
+# Functions
+library(tidyverse)
+library(ggplot2)
+library(gridExtra)
+# 6 NAS in abundance_size$abundance
+
+# Function %notin%
+'%notin%' <- 
+  Negate('%in%')
+
+# Estimate biomass --------------------------------------------------------
+get_allometric_equations <- function(specname, level, size, abundance, path, taxo, allometry_table){
+  #browser()
+  
+  # Check if species is length_raw, and if size is present
+  raw_meas <- 
+    allometry_table %>% 
+    filter(provenance == "length.raw") %>% 
+    filter(bwg_name == specname,
+           length_mm == size)
+  ## If both are present, then we do not need to compute
+  ## or at least just take the mean of the directly measured biomasses
+  if(nrow(raw_meas) > 0)
+    c(compute <- FALSE,
+      biomass <- mean(raw_meas$biomass_mg),
+      path <- paste0(path, "_raw"),
+      return(data.frame(biomass, as.character(path)))) else
+      compute <- TRUE
+    
+  # Get allometry information of species 
+  ## If using taxonomy, filter taxonomy of species of interest 
+  if(level != "traits")
+    ### Create blank dataframe if no trophic level (if NA)
+    if(do.call(paste, c(taxo[,level])) == "NA")
+      allometry <- data.frame() else
+         allometry <-
+            allometry_table %>% 
+            filter(allometry_table[,level] == do.call(paste, c(taxo[,level]))) %>% 
+            filter(!is.na(intercept)) %>% 
+            dplyr::select(intercept, slope) %>% 
+            unique()
+  ###If using trait, get custom list of species with other function
+  if(level == "traits")
+    c(speclist <- 
+        matcher_of_traits(specname, allometry_table),
+      allometry <-
+        allometry_table %>% 
+        filter(allometry_table$bwg_name %in% spec_list) %>% 
+        filter(!is.na(intercept)) %>% 
+        dplyr::select(intercept, slope) %>% 
+        unique())
+      
+  # Get number of equations
+   equation_number <- 
+     nrow(allometry)
+  
+  # Make bifurcation depending on number of equations
+  if(compute & equation_number == 0) 
+    equations <- "none"  else 
+      if(compute & equation_number == 1) 
+        equations <- "one" else
+          if(compute & equation_number > 1) 
+            equations <- "multiple"
+  
+  # Case 1: one equation for the level
+  if(equations == "one")
+    ## simply compute the biomass using equation, log10(biomass_mg) = slope * log10(length_mm + intercept) 
+    c(biomass <- 10^(allometry$slope * log10(size) + allometry$intercept) * abundance,
+      path <- paste0(path,"_BM:", level, "_1"))
+      
+    
+  # Case 2: more than one equation at the level
+  if(equations == "multiple") 
+    ## Set biomass to zero
+    c(biomass <- 0,
+    ## Sum biomass obtained from the different equations
+    for(i in 1:equation_number){
+      row <- allometry[i,]
+      biomass <- biomass + 10^(row$slope * log10(size) + row$intercept) * abundance
+    },
+    ## Average the result
+    biomass <- biomass/equation_number,
+    path <- paste0(path,"_BM:", level, "_", equation_number))
+    
+  # Case 3: no equations at the level
+  ## Simply return NA
+  if(equations == "none")
+      biomass <- NA
+    
+  # Return computed biomass
+  return(data.frame(biomass, as.character(path)))
+}
+# Estmate size  -----------------------------------------------
+sizest <- function(specname, size, level, path, taxo, allometry_table, data_table){
+  #browser()
+  
+  ## Decide where to go depending on value of size
+  if(size == "unknown")
+    category <-  "weighted_average" else
+      if(size %in% c("small", "medium", "large"))
+        category <-  "size_cat" else
+          category <-  "naught"
+  
+  ## Initiate new_size
+  new_size <- 
+    NA
+  
+  ### If using trait, get custom list of species with matcher_of_traits()
+  if(level == "traits")
+    c(speclist <- 
+        matcher_of_traits(specname, allometry_table),
+      other_meas <- 
+        data_table %>% 
+        filter(bwg_name %in% speclist)  %>% 
+        #### Select relevant columns
+        dplyr::select(size, abundance) %>% 
+        #### Add measurements from allometry table
+        bind_rows(allometry_table %>% 
+                    filter(bwg_name %in% speclist) %>%
+                    dplyr::select(length_mm) %>% 
+                    rename(size = length_mm) %>% 
+                    mutate(abundance = 1,
+                           size = as.character(size))) %>% 
+        #### Group by size and sum
+        group_by(size) %>% 
+        summarise_all(sum) %>% 
+        mutate(size = as.numeric(size)) %>% 
+        filter(!is.na(size)) %>% 
+        filter(!is.na(abundance)))
+  
+  ### If using taxonomy, filter taxonomy of species of interest 
+  if(level != "traits")
+    #### Create blank dataframe if no trophic level (if NA)
+    if(do.call(paste, c(taxo[,level])) == "NA")
+      other_meas <- data.frame() else
+        #### First extract actual name of trophic level
+        c(level_name <- 
+            taxo %>%
+            ## using all_of(), see <https://tidyselect.r-lib.org/reference/faq-external-vector.html>
+            dplyr::select(all_of(level)) %>% 
+            unique() %>% 
+            pull(), #### pull transforms it from a column to a vector
+          ### Get a vector of all species from that specificlevel
+          speclist <- 
+            allometry_table %>% 
+            filter(allometry_table[,level] == level_name) %>% 
+            dplyr::select(bwg_name) %>% 
+            unique() %>% 
+            pull(),
+          other_meas <- 
+            data_table %>% 
+            filter(bwg_name %in% speclist)  %>% 
+            #### Select relevant columns
+            dplyr::select(size, abundance) %>% 
+            #### Add measurements from allometry table
+            bind_rows(allometry_table %>% 
+                        filter(bwg_name %in% speclist) %>%
+                        dplyr::select(length_mm) %>% 
+                        rename(size = length_mm) %>% 
+                        mutate(abundance = 1,
+                               size = as.character(size))) %>% 
+            #### Group by size and sum
+            group_by(size) %>% 
+            summarise_all(sum) %>% 
+            mutate(size = as.numeric(size)) %>% 
+            filter(!is.na(size)) %>% 
+            filter(!is.na(abundance)))
+    
+  ## Get number of other numerical measurements
+  meas_number <- 
+    nrow(other_meas)
+  ## And make it a condition, cut-off set at three other numerical measurements
+  if(meas_number >= 3) 
+    others <- TRUE else
+      others <- FALSE
+  ## If we have more than three numerical measurements at a given level
+  ## Either compute weighted average or size categories
+  if(others)
+    c(if(category == "weighted_average")
+    ### Compute weighted average
+    c(new_size <- 
+        weighted.mean(other_meas$size, other_meas$abundance),
+      path <- 
+        paste0(path, "WA:", level,"_", meas_number)),
+    ### Compute size categories
+    if(category == "size_cat")
+      c(size_vec <- 
+          other_meas$size,
+        #### Sample elements to get 3 vectors of regular sizes
+        temp_list <- 
+          size_vec %>% 
+          split(1:3),
+        #### Make empty vector
+        vec_size <- 
+          c(),
+        #### Get length of each sample vector
+        for(i in 1:3){
+          vec_size <- 
+            c(vec_size, length(temp_list[[i]]))
+        },
+        #### Now that I have the size of the bins, we can compute the sizes!
+        #### The each new_size will be the mean for all values in that bin
+        #### S and L bins smaller than M
+        if(size == "small")
+          new_size <- 
+            mean(size_vec[1:min(vec_size)]) else
+              if(size == "large")
+                new_size <- 
+                  mean(size_vec[(length(size_vec) - min(vec_size) + 1):length(size_vec)]) else
+                    if(size == "medium")
+                      new_size <- 
+                        mean(size_vec[(1 + min(vec_size)):length(size_vec) - min(vec_size) + 1]),
+        path <- paste0(path, "BIN:", level, "_", meas_number)))
+  
+  ## If fails, just return initial value        
+  if(!others)
+    new_size <- 
+      size
+
+  ## If there was an expected value return special path
+  if(category == "naught")
+    c(new_size  <- 
+        "size_cat_unknown",
+      path <- 
+        paste0(path, "size_cat_unknown"))
+  
+  ## Return data
+  return(data.frame(new_size, as.character(path)))
+}
+# Trait-matching ----------------------------------------------------------
+matcher_of_traits <- function(specname, allometry_table){
+  # Extract traits of given species
+  traits <- 
+    allometry_table %>% 
+    filter(bwg_name == specname) %>% 
+    dplyr::select(BS1:BF4)
+  
+  # NA catcher 
+  if(ncol(traits) == ncol(traits[!is.na(colSums(traits))]))
+    proceed <- TRUE else
+      proceed <- FALSE
+    
+  # If no NAS in traits get all species that have the same traits +/- 1 and make it a vector
+  if(proceed)
+    spec_list <- 
+      allometry_table %>% 
+     ## Kept in that format to make explicit changes and allow flexibility in trait matching
+      filter(BS1 %in% c((traits$BS1 - 1):(traits$BS1 + 1)) &
+             BS2 %in% c((traits$BS2 - 1):(traits$BS2 + 1)) &
+             BS3 %in% c((traits$BS3 - 1):(traits$BS3 + 1)) &
+             BS4 %in% c((traits$BS4 - 1):(traits$BS4 + 1)) &
+             LO1 %in% c((traits$LO1 - 1):(traits$LO1 + 1)) &
+             LO2 %in% c((traits$LO2 - 1):(traits$LO2 + 1)) &
+             LO3 %in% c((traits$LO3 - 1):(traits$LO3 + 1)) &
+             LO4 %in% c((traits$LO4 - 1):(traits$LO4 + 1)) &  
+             LO5 %in% c((traits$LO5 - 1):(traits$LO5 + 1)) &
+             LO6 %in% c((traits$LO6 - 1):(traits$LO6 + 1)) &
+             LO7 %in% c((traits$LO7 - 1):(traits$LO7 + 1)) &
+             MD1 %in% c((traits$MD1 - 1):(traits$MD1 + 1)) &
+             MD2 %in% c((traits$MD2 - 1):(traits$MD2 + 1)) &
+             MD3 %in% c((traits$MD3 - 1):(traits$MD3 + 1)) &
+             MD4 %in% c((traits$MD4 - 1):(traits$MD4 + 1)) &  
+             MD5 %in% c((traits$MD5 - 1):(traits$MD5 + 1)) &
+             MD6 %in% c((traits$MD6 - 1):(traits$MD6 + 1)) &
+             MD7 %in% c((traits$MD7 - 1):(traits$MD7 + 1)) &
+             MD8 %in% c((traits$MD8 - 1):(traits$MD8 + 1)) &
+             BF1 %in% c((traits$BF1 - 1):(traits$BF1 + 1)) &
+             BF2 %in% c((traits$BF2 - 1):(traits$BF2 + 1)) &
+             BF3 %in% c((traits$BF3 - 1):(traits$BF3 + 1)) &
+             BF4 %in% c((traits$BF4 - 1):(traits$BF4 + 1))) %>% 
+      dplyr::select(bwg_name) %>% 
+      unique() %>% 
+      pull()
+  
+  # If we have NAs 
+  if(!proceed)
+    spec_list <- 
+      c(specname)
+
+  # Return list
+  return(spec_list)
+  
+}
+
+# Wrapper function going row-by-row ----------------------------
+hello_metry <- function(allometry_table, data_table, print){
+  # Make copy of data table
+  data_return <- 
+    data_table %>% 
+    ## And add new columns to fill
+    mutate(biomass = NA,
+           path = NA)
+  
+  # Some error catching 
+  ## Important columns have proper names
+  if("abundance" %notin% colnames(data_table))
+    stop("Please call column with abundance values 'abundance'")
+  if("bwg_name" %notin% colnames(data_table))
+    stop("Please call column with bwg species names values 'bwg_name'")
+  if("size" %notin% colnames(data_table))
+    stop("Please call column with specimen measurement values 'size'")
+  ## Print is actually a true false
+  if(print %notin% c(TRUE, FALSE))
+    stop("Print has to be TRUE/FALSE")
+  
+  # Make list of taxonomic groups/traits to gro through
+  # Note that after family we look at traits, and then back to higher trophic levels (the broad ones)
+  level_list <- 
+    c("bwg_name",
+      "genus",
+      "subfamily",
+      "family",
+      "traits",
+      "subord",
+      "ord",
+      "subclass",
+      "class")
+  
+ # Loop to fill row by row
+  for(i in 1:nrow(data_return)){
+    ## If people want to print row names to track progress
+    if(print == TRUE)
+      print(i)
+    ## Initialise function parameters
+    row <- data_return[i,]
+    specname <- row$bwg_name
+    size <- row$size
+    abundance <- row$abundance
+    ## Initialise path to record what happens in this function
+    path <- ""
+    
+    ## Some error catching
+    ### Make sure abundance is not NA
+    if(is.na(abundance))
+      stop(paste0("Abundance row ", i," is NA"))
+    
+   ## Let's not waste time if abundance is zero
+    if(abundance == 0) 
+      c(biomass <- 0, 
+       path <- "null_biomass") else
+          biomass <- 
+            NA
+  
+   ## Check if species is in the database
+   if(abundance > 0)
+   ### Make small frame to get taxonomy
+     c(taxo <- 
+        allometry_table %>% 
+        filter(bwg_name == specname) %>% 
+        dplyr::select(species_id:genus) %>% 
+        unique(),
+     ### If not in database, give special biomass value
+      if(nrow(taxo) == 0)
+        c(biomass <-
+        "notindatabase",
+        path <- paste0(path, "not_in_database")),
+      ### If in database 
+      if(nrow(taxo) > 0)
+          #### Check if we have a numeric size
+          if(!is.na(as.numeric(size))) 
+            size <- as.numeric(size) else
+              #### If we don't, do a size estimation
+              #### As long as size is not numeric
+              while(!is.numeric(size)){
+                ##### Go through my list of group
+                for(level in level_list){
+                  est <- sizest(specname, size, level, path, taxo, allometry_table, data_table)
+                  size <- est[,1]
+                  path <- est[,2]
+                  #### Break loop if done
+                  if(is.numeric(size))
+                    break
+                  ###### If we got to the end and still nothing, give up
+                  if(!is.numeric(size) & level == "class")
+                    c(path <- 
+                        paste0(path, "size_estimation_failed"),
+                      biomass <- 
+                        "plz_solve",
+                      size <- 
+                        666)
+                }})
+          
+    ### Call the allometric equations
+    #### As long as biomass is NA
+    while(is.na(biomass)){
+      ##### Go through my list of group
+      for(level in level_list){
+        est <- get_allometric_equations(specname, level, size, abundance, path, taxo, allometry_table)
+        biomass <- est[,1]
+        path <- est[,2]
+        #### Break loop if done
+        if(!is.na(biomass))
+          break
+        ###### If we got to the end and still nothing, give up
+        if(is.na(biomass) & level == "class")
+          c(biomass <-
+              "plz_solve",
+            path <- 
+              paste0(path, "_no_equations"))
+      }}
+  
+    ### Add biomass and path value to data frame to return
+    data_return[i,(ncol(data_return)-1)] <- biomass
+    data_return[i,ncol(data_return)] <- as.character(path)
+    
+  } 
+  ## Return new data frame
+  return(data_return)
+        
+}
+

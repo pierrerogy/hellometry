@@ -1,0 +1,6 @@
+species_id,bwg_name,domain,kingdom,phylum,subphylum,class,subclass,ord,subord,family,subfamily,tribe,genus,species,functional_group,,,,,,,,,,,,,,,,,,,,,,,,,,length_mm,,biomass_mg
+,,Eukaryota,Animalia,Arthropoda,Crustacea,Ostracoda,Podocopa,Podocopida,Cytherocopina,,,,Metacyparis,,scraper,,,,,,,,,,,,,,,,,,,,,,,,,,0.5,,0.0066
+,,Eukaryota,Animalia,Arthropoda,Crustacea,Ostracoda,Podocopa,Podocopida,Cytherocopina,,,,Metacyparis,,scraper,,,,,,,,,,,,,,,,,,,,,,,,,,0.8,,0.034
+,,Eukaryota,Animalia,Arthropoda,Crustacea,Ostracoda,Podocopa,Podocopida,Cytherocopina,,,,Metacyparis,,scraper,,,,,,,,,,,,,,,,,,,,,,,,,,0.6,,0.015
+,Diptera.697,Eukaryota,Animalia,Arthropoda,,Insecta,Neoptera,Diptera,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,Coleoptera.80,Eukaryota,Animalia,Arthropoda,,Insecta,Neoptera,Coleoptera,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
