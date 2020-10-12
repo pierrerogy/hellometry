@@ -176,7 +176,7 @@ allometry_table <-
 
 # Add extra data
 extra <- 
-  read.csv("preli/extra/extra.csv")
+  read.csv("extra/extra.csv")
 colnames(extra) <- colnames(allometry_table[,1:ncol(extra)])
 
 # Bind to allometry table
