@@ -31,41 +31,43 @@ get_allometric_equations <- function(specname, level, size, abundance, path, tax
   ## If using taxonomy, filter taxonomy of species of interest 
   if(level != "traits")
     ### Create blank dataframe if no trophic level (if NA)
-    if(do.call(paste, c(taxo[,level])) == "NA")
+    if(do.call(paste, list(taxo[,level])) == "NA")
       allometry <- data.frame() else
          allometry <-
             allometry_table %>% 
-            filter(allometry_table[,level] == do.call(paste, c(taxo[,level]))) %>% 
-            filter(!is.na(intercept)) %>% 
-            dplyr::select(intercept, slope) %>% 
+            filter(allometry_table[,level] == do.call(paste, list(taxo[,level]))) %>% 
+            filter(!is.na(intercept) | !is.na(ln_intercept)) %>% 
+            dplyr::select(intercept, slope, ln_intercept) %>% 
             unique()
   ###If using trait, get custom list of species with other function
   if(level == "traits")
-    c(speclist <- 
+    c(spec_list <- 
         matcher_of_traits(specname, allometry_table),
       allometry <-
         allometry_table %>% 
         filter(allometry_table$bwg_name %in% spec_list) %>% 
-        filter(!is.na(intercept)) %>% 
-        dplyr::select(intercept, slope) %>% 
+        filter(!is.na(intercept) | !is.na(ln_intercept)) %>% 
+        dplyr::select(intercept, slope, ln_intercept) %>% 
         unique())
-      
+  
   # Get number of equations
    equation_number <- 
      nrow(allometry)
   
   # Make bifurcation depending on number of equations
-  if(compute & equation_number == 0) 
-    equations <- "none"  else 
-      if(compute & equation_number == 1) 
-        equations <- "one" else
-          if(compute & equation_number > 1) 
-            equations <- "multiple"
-  
+  if(compute)
+    ## Number of equations
+    if(equation_number == 0) 
+      equations <- "none"  else 
+        if(equation_number == 1) 
+          equations <- "one" else
+            if(equation_number > 1) 
+              equations <- "multiple"
+      
   # Case 1: one equation for the level
   if(equations == "one")
-    ## simply compute the biomass using equation, log10(biomass_mg) = slope * log10(length_mm + intercept) 
-    c(biomass <- 10^(allometry$slope * log10(size) + allometry$intercept) * abundance,
+    ## simply compute the biomass using correct equation
+    c(biomass <- equation_finder(size, allometry, taxo$subclass) * abundance,
       path <- paste0(path,"_BM:", level, "_1"))
       
     
@@ -76,7 +78,7 @@ get_allometric_equations <- function(specname, level, size, abundance, path, tax
     ## Sum biomass obtained from the different equations
     for(i in 1:equation_number){
       row <- allometry[i,]
-      biomass <- biomass + 10^(row$slope * log10(size) + row$intercept) * abundance
+      biomass <- biomass + equation_finder(size, row, taxo$subclass) * abundance
     },
     ## Average the result
     biomass <- biomass/equation_number,
@@ -90,6 +92,40 @@ get_allometric_equations <- function(specname, level, size, abundance, path, tax
   # Return computed biomass
   return(data.frame(biomass, as.character(path)))
 }
+
+# Find right kind of allometric equation to use ---------------------------
+equation_finder <- function(size, row, exception){
+  ## Determine which type of equation to use
+  type <- 
+    ifelse(!is.na(row$intercept), 
+           "log10",
+           ifelse(!is.na(row$ln_intercept),
+                  "ln"))
+  
+  ## Exceptions
+  
+  
+  ## If function is log10
+  if(type == "log10")
+    per_cap_biomass <- 
+      10^(row$slope * log10(size) + row$intercept)
+  
+  ## If function is natural logarithm
+  if(type == "ln")
+    per_cap_biomass <-
+      exp(row$slope * log(size) + row$ln_intercept)
+  
+  ## Exceptions
+  ### With equation of Acari, weight is in micrograms, need to convert to milligrams
+  if(!is.na(exception) & exception == "Acari")
+    per_cap_biomass <-
+      per_cap_biomass/1000
+  
+  ## Return value  
+  return(per_cap_biomass)
+  
+}
+
 # Estmate size  -----------------------------------------------
 sizest <- function(specname, size, level, path, taxo, allometry_table, data_table){
   #browser()
@@ -107,16 +143,16 @@ sizest <- function(specname, size, level, path, taxo, allometry_table, data_tabl
   
   ### If using trait, get custom list of species with matcher_of_traits()
   if(level == "traits")
-    c(speclist <- 
+    c(spec_list <- 
         matcher_of_traits(specname, allometry_table),
       other_meas <- 
         data_table %>% 
-        filter(bwg_name %in% speclist)  %>% 
+        filter(bwg_name %in% spec_list)  %>% 
         #### Select relevant columns
         dplyr::select(size, abundance) %>% 
         #### Add measurements from allometry table
         bind_rows(allometry_table %>% 
-                    filter(bwg_name %in% speclist) %>%
+                    filter(bwg_name %in% spec_list) %>%
                     dplyr::select(length_mm) %>% 
                     rename(size = length_mm) %>% 
                     mutate(abundance = 1,
@@ -131,7 +167,7 @@ sizest <- function(specname, size, level, path, taxo, allometry_table, data_tabl
   ### If using taxonomy, filter taxonomy of species of interest 
   if(level != "traits")
     #### Create blank dataframe if no trophic level (if NA)
-    if(do.call(paste, c(taxo[,level])) == "NA")
+    if(do.call(paste, list(taxo[,level])) == "NA")
       other_meas <- data.frame() else
         #### First extract actual name of trophic level
         c(level_name <- 
@@ -141,7 +177,7 @@ sizest <- function(specname, size, level, path, taxo, allometry_table, data_tabl
             unique() %>% 
             pull(), #### pull transforms it from a column to a vector
           ### Get a vector of all species from that specificlevel
-          speclist <- 
+          spec_list <- 
             allometry_table %>% 
             filter(allometry_table[,level] == level_name) %>% 
             dplyr::select(bwg_name) %>% 
@@ -149,12 +185,12 @@ sizest <- function(specname, size, level, path, taxo, allometry_table, data_tabl
             pull(),
           other_meas <- 
             data_table %>% 
-            filter(bwg_name %in% speclist)  %>% 
+            filter(bwg_name %in% spec_list)  %>% 
             #### Select relevant columns
             dplyr::select(size, abundance) %>% 
             #### Add measurements from allometry table
             bind_rows(allometry_table %>% 
-                        filter(bwg_name %in% speclist) %>%
+                        filter(bwg_name %in% spec_list) %>%
                         dplyr::select(length_mm) %>% 
                         rename(size = length_mm) %>% 
                         mutate(abundance = 1,

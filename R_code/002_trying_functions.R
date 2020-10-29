@@ -2,11 +2,11 @@
 library(tidyverse)
 library(ggplot2)
 library(gridExtra)
-source("preli/functions.R")
+source("R_code/functions.R")
 
 # To do row by row testing of functions
 ## Enter i as row number
-i <- 638
+i <- 1476
 ## Enter data
 allometry_table <- allometry_table
 data_table <- abundance_size %>% 
@@ -15,7 +15,7 @@ data_table <- abundance_size %>%
 row <- data_table[i,]
 specname <- row$bwg_name
 size <- row$size
-level <- "class"
+level <- "family"
 abundance <- row$abundance
 path <- ""
 ## Extract species information
@@ -40,8 +40,8 @@ level_list <-
 ## Run size estimation and biomass estimation through list of levels
 for(level in level_list){
 path <- ""
-print(get_allometric_equations(specname, level, size, abundance, path, taxo, allometry_table))
 print(sizest(specname, size, level, path, taxo, allometry_table, data_table))
+print(get_allometric_equations(specname, level, size, abundance, path, taxo, allometry_table))
 }
 ## Run trait matching
 matcher_of_traits(specname, allometry_table)
@@ -55,8 +55,8 @@ biomass_row <-
 biomass_data <- 
   hello_metry(allometry_table, data_table, print = TRUE)
 
-write.csv(biomass_data,
-          "preli/biomass_data.csv")
+# write.csv(biomass_data,
+#           "data/biomass_data.csv")
 
 # Filter resulting database to assess those who haven't been assigned biomass so far
 ## Get list of species
@@ -70,7 +70,7 @@ leftover <-
               ## keep only taxonomic information
               dplyr::select(c(species_id, bwg_name:species))) 
 
-write.csv(leftover,
-          "preli/leftover_species.csv")
+# write.csv(leftover,
+#           "data/leftover_species.csv")
 
 

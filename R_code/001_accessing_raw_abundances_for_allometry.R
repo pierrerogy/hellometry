@@ -158,6 +158,13 @@ fw_database <-
 
 # Build allometry table
 allometry_table <- 
+  read.csv("data/allometry_table.csv",
+           stringsAsFactors = F)[,2:54]
+data_table <- 
+  read.csv("data/data_table.csv",
+           stringsAsFactors = F)[,2:10]
+
+allometry_table <- 
   fw_database$traits %>% 
   ## keep only taxonomic information
   dplyr::select(species_id, bwg_name:species,
@@ -174,15 +181,22 @@ allometry_table <-
                             -biomass_ci_upr, -biomass_ci_lwr)) %>% 
   unique()
 
+# Fix entry errors
+allometry_table$family[allometry_table$family == "Daphnidae"] <- 
+  "Daphniidae"
+
+
 # Add extra data
 extra <- 
-  read.csv("extra/extra.csv")
-colnames(extra) <- colnames(allometry_table[,1:ncol(extra)])
+  read.csv("data/extra.csv",
+           stringsAsFactors = F)
+## Fix column nmes for smooth binding
+colnames(extra) <- c(colnames(allometry_table), colnames(extra[54]))
 
 # Bind to allometry table
 allometry_table <- 
-  allometry_table %>% 
-  bind_rows(extra)
+  extra %>% 
+  bind_rows(allometry_table)
 
 
 
