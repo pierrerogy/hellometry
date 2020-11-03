@@ -156,14 +156,7 @@ fw_biomass <-
 fw_database <- 
   fw_data("0.7.7")
 
-# Build allometry table
-allometry_table <- 
-  read.csv("data/allometry_table.csv",
-           stringsAsFactors = F)[,2:54]
-data_table <- 
-  read.csv("data/data_table.csv",
-           stringsAsFactors = F)[,2:10]
-
+# Combine allometry table with trait data
 allometry_table <- 
   fw_database$traits %>% 
   ## keep only taxonomic information

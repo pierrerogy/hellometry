@@ -67,7 +67,7 @@ get_allometric_equations <- function(specname, level, size, abundance, path, tax
   # Case 1: one equation for the level
   if(equations == "one")
     ## simply compute the biomass using correct equation
-    c(biomass <- equation_finder(size, allometry, taxo$subclass) * abundance,
+    c(biomass <- equation_finder(size, allometry, taxo$level) * abundance,
       path <- paste0(path,"_BM:", level, "_1"))
       
     
@@ -78,7 +78,7 @@ get_allometric_equations <- function(specname, level, size, abundance, path, tax
     ## Sum biomass obtained from the different equations
     for(i in 1:equation_number){
       row <- allometry[i,]
-      biomass <- biomass + equation_finder(size, row, taxo$subclass) * abundance
+      biomass <- biomass + equation_finder(size, row, taxo$level) * abundance
     },
     ## Average the result
     biomass <- biomass/equation_number,
@@ -126,7 +126,7 @@ equation_finder <- function(size, row, exception){
   
 }
 
-# Estmate size  -----------------------------------------------
+# Estimate size  -----------------------------------------------
 sizest <- function(specname, size, level, path, taxo, allometry_table, data_table){
   #browser()
   
@@ -444,4 +444,40 @@ hello_metry <- function(allometry_table, data_table, print){
   return(data_return)
         
 }
+
+
+
+# Update allometry table --------------------------------------------------
+allometry_supplement <- function(allometry_table, data_table){
+  # Keep only numerical measurements of data table
+  data_table_num <- 
+    data_table %>% 
+    dplyr::select(bwg_name, size) %>% 
+    filter(!is.na(as.numeric(size))) %>% 
+    unique %>% 
+    rename("length_mm" = size) %>% 
+    mutate(length_mm = as.numeric(length_mm))
+  
+  # Make stub of allometry_table 
+  allometry_stub <- 
+    allometry_table %>% 
+    dplyr::select(species_id:BF4) %>% 
+    unique()
+  
+  # Join to numerical measurements
+  data_table_num <- 
+    data_table_num %>% 
+    left_join(allometry_stub)
+  
+  # Bind to allometry table
+  allometry_table <- 
+    allometry_table %>% 
+    bind_rows(data_table_num)
+  
+  # Return updated data
+  return(allometry_table)
+    
+}
+
+
 
