@@ -8,7 +8,7 @@ library(tidyr)
 library(ggplot2)
 library(lme4)
 library(stringr)
-
+library(stringdist)
 
 # Get abundance by size data ----------------------------------------------
 # Get list of datasets in database
@@ -172,24 +172,366 @@ allometry_table <-
               ## remove columns not important (I hope) for this specific table
               dplyr::select(-measurement_id, -length_est_mm, -length_measured_as, 
                             -biomass_ci_upr, -biomass_ci_lwr)) %>% 
-  unique()
-
-# Fix entry errors
-allometry_table$family[allometry_table$family == "Daphnidae"] <- 
-  "Daphniidae"
+  mutate(abundance = ifelse(is.na(is.numeric(length_mm)), 0, 1))
 
 
-# Add extra data
+# Extra data  ----------------------------------------------------
+# From litterature
 extra <- 
-  read.csv("data/extra.csv",
+  read.csv("raw_data/extra.csv",
            stringsAsFactors = F)
 ## Fix column nmes for smooth binding
-colnames(extra) <- c(colnames(allometry_table), colnames(extra[54]))
+colnames(extra) <- 
+  c(colnames(allometry_table), 
+    colnames(extra[55]))
 
 # Bind to allometry table
 allometry_table <- 
   extra %>% 
   bind_rows(allometry_table)
 
+# Check and fix entry errors in taxonomy ------------------------------------------------------------
+# Domain
+## Distance matrix of strings
+dist.matrix <- 
+  stringdistmatrix(unique(allometry_table$domain[!is.na(allometry_table$domain)]),
+                   unique(allometry_table$domain[!is.na(allometry_table$domain)]),
+                   method = 'jw', p = 0.1)
+## Give their actual names back to elements of the vector
+## (converted to numbers through the function)
+row.names(dist.matrix) <- 
+  unique(allometry_table$domain[!is.na(allometry_table$domain)])
+names(dist.matrix) <- 
+  rep(unique(allometry_table$domain[!is.na(allometry_table$domain)]),
+      length(unique(allometry_table$domain[!is.na(allometry_table$domain)])))
+## Reconvert to distance matrix
+dist.matrix <- 
+  as.dist(dist.matrix)
+## Convert distance matrix to clusters for plotting
+clusters <- 
+  hclust(dist.matrix, method = "ward.D2")
+## Plot
+plot(clusters)
+## Now fix
+allometry_table$domain[which(allometry_table$domain %in% c("Eukaryota", "Insecta", "Animalia"))] <- 
+  "Eukarya"
+
+# Kingdom
+## Distance matrix of strings
+dist.matrix <- 
+  stringdistmatrix(unique(allometry_table$kingdom[!is.na(allometry_table$kingdom)]),
+                   unique(allometry_table$kingdom[!is.na(allometry_table$kingdom)]),
+                   method = 'jw', p = 0.1)
+## Give their actual names back to elements of the vector
+## (converted to numbers through the function)
+row.names(dist.matrix) <- 
+  unique(allometry_table$kingdom[!is.na(allometry_table$kingdom)])
+names(dist.matrix) <- 
+  rep(unique(allometry_table$kingdom[!is.na(allometry_table$kingdom)]),
+      length(unique(allometry_table$kingdom[!is.na(allometry_table$kingdom)])))
+## Reconvert to distance matrix
+dist.matrix <- 
+  as.dist(dist.matrix)
+## Convert distance matrix to clusters for plotting
+clusters <- 
+  hclust(dist.matrix, method = "ward.D2")
+#### No problems here
+
+# Phylum
+## Distance matrix of strings
+dist.matrix <- 
+  stringdistmatrix(unique(allometry_table$phylum[!is.na(allometry_table$phylum)]),
+                   unique(allometry_table$phylum[!is.na(allometry_table$phylum)]),
+                   method = 'jw', p = 0.1)
+## Give their actual names back to elements of the vector
+## (converted to numbers through the function)
+row.names(dist.matrix) <- 
+  unique(allometry_table$phylum[!is.na(allometry_table$phylum)])
+names(dist.matrix) <- 
+  rep(unique(allometry_table$phylum[!is.na(allometry_table$phylum)]),
+      length(unique(allometry_table$phylum[!is.na(allometry_table$phylum)])))
+## Reconvert to distance matrix
+dist.matrix <- 
+  as.dist(dist.matrix)
+## Convert distance matrix to clusters for plotting
+clusters <- 
+  hclust(dist.matrix, method = "ward.D2")
+## Plot
+plot(clusters)
+#### No problem here
+
+# Subphylum
+## Distance matrix of strings
+dist.matrix <- 
+  stringdistmatrix(unique(allometry_table$subphylum[!is.na(allometry_table$subphylum)]),
+                   unique(allometry_table$subphylum[!is.na(allometry_table$subphylum)]),
+                   method = 'jw', p = 0.1)
+## Give their actual names back to elements of the vector
+## (converted to numbers through the function)
+row.names(dist.matrix) <- 
+  unique(allometry_table$subphylum[!is.na(allometry_table$subphylum)])
+names(dist.matrix) <- 
+  rep(unique(allometry_table$subphylum[!is.na(allometry_table$subphylum)]),
+      length(unique(allometry_table$subphylum[!is.na(allometry_table$subphylum)])))
+## Reconvert to distance matrix
+dist.matrix <- 
+  as.dist(dist.matrix)
+## Convert distance matrix to clusters for plotting
+clusters <- 
+  hclust(dist.matrix, method = "ward.D2")
+## Plot
+plot(clusters)
+## Now fix
+allometry_table$subphylum[which(allometry_table$subphylum == "")] <- 
+  NA
+
+# Class
+## Distance matrix of strings
+dist.matrix <- 
+  stringdistmatrix(unique(allometry_table$class[!is.na(allometry_table$class)]),
+                   unique(allometry_table$class[!is.na(allometry_table$class)]),
+                   method = 'jw', p = 0.1)
+## Give their actual names back to elements of the vector
+## (converted to numbers through the function)
+row.names(dist.matrix) <- 
+  unique(allometry_table$class[!is.na(allometry_table$class)])
+names(dist.matrix) <- 
+  rep(unique(allometry_table$class[!is.na(allometry_table$class)]),
+      length(unique(allometry_table$class[!is.na(allometry_table$class)])))
+## Reconvert to distance matrix
+dist.matrix <- 
+  as.dist(dist.matrix)
+## Convert distance matrix to clusters for plotting
+clusters <- 
+  hclust(dist.matrix, method = "ward.D2")
+## Plot
+plot(clusters)
+#### No problem here
+
+# Subclass
+## Distance matrix of strings
+dist.matrix <- 
+  stringdistmatrix(unique(allometry_table$subclass[!is.na(allometry_table$subclass)]),
+                   unique(allometry_table$subclass[!is.na(allometry_table$subclass)]),
+                   method = 'jw', p = 0.1)
+## Give their actual names back to elements of the vector
+## (converted to numbers through the function)
+row.names(dist.matrix) <- 
+  unique(allometry_table$subclass[!is.na(allometry_table$subclass)])
+names(dist.matrix) <- 
+  rep(unique(allometry_table$subclass[!is.na(allometry_table$subclass)]),
+      length(unique(allometry_table$subclass[!is.na(allometry_table$subclass)])))
+## Reconvert to distance matrix
+dist.matrix <- 
+  as.dist(dist.matrix)
+## Convert distance matrix to clusters for plotting
+clusters <- 
+  hclust(dist.matrix, method = "ward.D2")
+## Plot
+plot(clusters)
+## Now fix
+allometry_table$subclass[which(allometry_table$subclass == "Paleoptera")] <- 
+  "Palaeoptera"
+allometry_table$subclass[which(allometry_table$subclass == "")] <- 
+  NA
+
+# Order
+## Distance matrix of strings
+dist.matrix <- 
+  stringdistmatrix(unique(allometry_table$ord[!is.na(allometry_table$ord)]),
+                   unique(allometry_table$ord[!is.na(allometry_table$ord)]),
+                   method = 'jw', p = 0.1)
+## Give their actual names back to elements of the vector
+## (converted to numbers through the function)
+row.names(dist.matrix) <- 
+  unique(allometry_table$ord[!is.na(allometry_table$ord)])
+names(dist.matrix) <- 
+  rep(unique(allometry_table$ord[!is.na(allometry_table$ord)]),
+      length(unique(allometry_table$ord[!is.na(allometry_table$ord)])))
+## Reconvert to distance matrix
+dist.matrix <- 
+  as.dist(dist.matrix)
+## Convert distance matrix to clusters for plotting
+clusters <- 
+  hclust(dist.matrix, method = "ward.D2")
+## Plot
+plot(clusters)
+## Now fix
+allometry_table$ord[which(allometry_table$ord == "Opisthopora<U+FFFD>")] <- 
+  "Opisthopora"
+allometry_table$ord[which(allometry_table$ord == "")] <- 
+  NA
+
+# Suborder
+## Distance matrix of strings
+dist.matrix <- 
+  stringdistmatrix(unique(allometry_table$subord[!is.na(allometry_table$subord)]),
+                   unique(allometry_table$subord[!is.na(allometry_table$subord)]),
+                   method = 'jw', p = 0.1)
+## Give their actual names back to elements of the vector
+## (converted to numbers through the function)
+row.names(dist.matrix) <- 
+  unique(allometry_table$subord[!is.na(allometry_table$subord)])
+names(dist.matrix) <- 
+  rep(unique(allometry_table$subord[!is.na(allometry_table$subord)]),
+      length(unique(allometry_table$subord[!is.na(allometry_table$subord)])))
+## Reconvert to distance matrix
+dist.matrix <- 
+  as.dist(dist.matrix)
+## Convert distance matrix to clusters for plotting
+clusters <- 
+  hclust(dist.matrix, method = "ward.D2")
+## Plot
+plot(clusters)
+## Now fix
+allometry_table$subord[which(allometry_table$subord == "")] <- 
+  NA
+allometry_table$subord[which(allometry_table$subord == "Zigoptera")] <- 
+  "Zygoptera"
+
+# Family
+## Distance matrix of strings
+dist.matrix <- 
+  stringdistmatrix(unique(allometry_table$family[!is.na(allometry_table$family)]),
+                   unique(allometry_table$family[!is.na(allometry_table$family)]),
+                   method = 'jw', p = 0.1)
+## Give their actual names back to elements of the vector
+## (converted to numbers through the function)
+row.names(dist.matrix) <- 
+  unique(allometry_table$family[!is.na(allometry_table$family)])
+names(dist.matrix) <- 
+  rep(unique(allometry_table$family[!is.na(allometry_table$family)]),
+      length(unique(allometry_table$family[!is.na(allometry_table$family)])))
+## Reconvert to distance matrix
+dist.matrix <- 
+  as.dist(dist.matrix)
+## Convert distance matrix to clusters for plotting
+clusters <- 
+  hclust(dist.matrix, method = "ward.D2")
+## Plot
+plot(clusters)
+## Now fix
+allometry_table$family[which(allometry_table$family == "Vellidae")] <- 
+  "Veliidae"
+allometry_table$family[which(allometry_table$family == "Daphnidae")] <- 
+  "Daphniidae"
+allometry_table$family[which(allometry_table$family == "")] <- 
+  NA
+
+# Subfamily
+## Distance matrix of strings
+dist.matrix <- 
+  stringdistmatrix(unique(allometry_table$subfamily[!is.na(allometry_table$subfamily)]),
+                   unique(allometry_table$subfamily[!is.na(allometry_table$subfamily)]),
+                   method = 'jw', p = 0.1)
+## Give their actual names back to elements of the vector
+## (converted to numbers through the function)
+row.names(dist.matrix) <- 
+  unique(allometry_table$subfamily[!is.na(allometry_table$subfamily)])
+names(dist.matrix) <- 
+  rep(unique(allometry_table$subfamily[!is.na(allometry_table$subfamily)]),
+      length(unique(allometry_table$subfamily[!is.na(allometry_table$subfamily)])))
+## Reconvert to distance matrix
+dist.matrix <- 
+  as.dist(dist.matrix)
+## Convert distance matrix to clusters for plotting
+clusters <- 
+  hclust(dist.matrix, method = "ward.D2")
+## Plot
+plot(clusters)
+## Now fix
+allometry_table$subfamily[which(allometry_table$subfamily == "Sphaerodinae")] <- 
+  "Sphaeridiinae"
+
+# Tribe
+## Distance matrix of strings
+dist.matrix <- 
+  stringdistmatrix(unique(allometry_table$tribe[!is.na(allometry_table$tribe)]),
+                   unique(allometry_table$tribe[!is.na(allometry_table$tribe)]),
+                   method = 'jw', p = 0.1)
+## Give their actual names back to elements of the vector
+## (converted to numbers through the function)
+row.names(dist.matrix) <- 
+  unique(allometry_table$tribe[!is.na(allometry_table$tribe)])
+names(dist.matrix) <- 
+  rep(unique(allometry_table$tribe[!is.na(allometry_table$tribe)]),
+      length(unique(allometry_table$tribe[!is.na(allometry_table$tribe)])))
+## Reconvert to distance matrix
+dist.matrix <- 
+  as.dist(dist.matrix)
+## Convert distance matrix to clusters for plotting
+clusters <- 
+  hclust(dist.matrix, method = "ward.D2")
+## Plot
+plot(clusters)
+#### No problem here
+
+# Genus
+## Distance matrix of strings
+dist.matrix <- 
+  stringdistmatrix(unique(allometry_table$genus[!is.na(allometry_table$genus)]),
+                   unique(allometry_table$genus[!is.na(allometry_table$genus)]),
+                   method = 'jw', p = 0.1)
+## Give their actual names back to elements of the vector
+## (converted to numbers through the function)
+row.names(dist.matrix) <- 
+  unique(allometry_table$genus[!is.na(allometry_table$genus)])
+names(dist.matrix) <- 
+  rep(unique(allometry_table$genus[!is.na(allometry_table$genus)]),
+      length(unique(allometry_table$genus[!is.na(allometry_table$genus)])))
+## Reconvert to distance matrix
+dist.matrix <- 
+  as.dist(dist.matrix)
+## Convert distance matrix to clusters for plotting
+clusters <- 
+  hclust(dist.matrix, method = "ward.D2")
+## Plot
+plot(clusters)
+#### No problem here
+
+# Species
+## Distance matrix of strings
+dist.matrix <- 
+  stringdistmatrix(unique(allometry_table$species[!is.na(allometry_table$species)]),
+                   unique(allometry_table$species[!is.na(allometry_table$species)]),
+                   method = 'jw', p = 0.1)
+## Give their actual names back to elements of the vector
+## (converted to numbers through the function)
+row.names(dist.matrix) <- 
+  unique(allometry_table$species[!is.na(allometry_table$species)])
+names(dist.matrix) <- 
+  rep(unique(allometry_table$species[!is.na(allometry_table$species)]),
+      length(unique(allometry_table$species[!is.na(allometry_table$species)])))
+## Reconvert to distance matrix
+dist.matrix <- 
+  as.dist(dist.matrix)
+## Convert distance matrix to clusters for plotting
+clusters <- 
+  hclust(dist.matrix, method = "ward.D2")
+## Plot
+plot(clusters)
+## Now fix
+allometry_table <- 
+  allometry_table %>% 
+  mutate(species = str_replace_all(species, "[()]", ""),
+         species = str_replace_all(species, "Microculex ", ""),
+         species = str_replace_all(species, "Aulophorus ", ""),
+         species = str_replace_all(species, "Phoniomyia ", ""))
 
 
+# Try function against dataset --------------------------------------------
+# Load data
+pitilla <- 
+  read.csv("raw_data/Pitilla2002_clean.csv") %>% 
+  mutate(wet_per_cap_biomass_mg = wet_per_cap_biomass_g * 1000,
+         dry_per_cap_biomass_mg = dry_per_cap_biomass_g * 1000,
+         abundance = 1) %>% 
+  dplyr::select(-wet_per_cap_biomass_g, -dry_per_cap_biomass_g) %>% 
+  rename(bwg_name = nickname,
+         size_mm = size..mm.)
+
+# Use functions
+pitilla_trial <- 
+  hello_metry(allometry_updated, 
+              pitilla, 
+              print = TRUE)

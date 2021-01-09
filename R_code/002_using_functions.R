@@ -1,4 +1,4 @@
-# Trying out functions
+# Using the functions
 library(tidyverse)
 library(ggplot2)
 library(gridExtra)
@@ -6,7 +6,7 @@ source("R_code/functions.R")
 
 # Enter data
 ## Allometry table, where all the allometric information is stored
-allometry_table3 <- 
+allometry_table <- 
   read.csv("data/allometry_table.csv",
            stringsAsFactors = F)
 ## Data table, your data frame
@@ -35,12 +35,12 @@ View(leftover)
 # Row by row testing of functions -----------------------------------
 # Enter i as row number
 i <- 
-  1476
+  64059
 
 # Extract row information
 row <- data_table[i,]
 specname <- row$bwg_name
-size <- row$size
+size_mm <- row$size_mm
 level <- "family"
 abundance <- row$abundance
 path <- ""
@@ -64,12 +64,21 @@ level_list <-
     "subclass",
     "class")
 
-# Run size estimation and biomass estimation through list of levels
+# Run size estimation through list of levels
 for(level in level_list){
 path <- ""
-print(sizest(specname, size, level, path, taxo, allometry_table, data_table))
-print(get_allometric_equations(specname, level, size, abundance, path, taxo, allometry_table))
+print(paste(c(level,
+              sizest(specname, size_mm, level, path, taxo, allometry_table, data_table))))
 }
+
+# Run biomass estimation through list of levels
+for(level in level_list){
+  path <- ""
+  print(paste(c(level, 
+                get_allometric_equations(specname, level, size_mm, abundance, path, taxo, allometry_table))))
+}
+
+
 
 # Run trait matching
 matcher_of_traits(specname, allometry_table)

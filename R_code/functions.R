@@ -2,22 +2,20 @@
 library(tidyverse)
 library(ggplot2)
 library(gridExtra)
-# 6 NAS in abundance_size$abundance
 
 # Function %notin%
 '%notin%' <- 
   Negate('%in%')
 
 # Estimate biomass --------------------------------------------------------
-get_allometric_equations <- function(specname, level, size, abundance, path, taxo, allometry_table){
-  #browser()
-  
+get_allometric_equations <- function(specname, level, size_mm, abundance, path, taxo, allometry_table){
+
   # Check if species is length_raw, and if size is present
   raw_meas <- 
     allometry_table %>% 
     filter(provenance == "length.raw") %>% 
     filter(bwg_name == specname,
-           length_mm == size)
+           length_mm == size_mm)
   ## If both are present, then we do not need to compute
   ## or at least just take the mean of the directly measured biomasses
   if(nrow(raw_meas) > 0)
@@ -67,7 +65,7 @@ get_allometric_equations <- function(specname, level, size, abundance, path, tax
   # Case 1: one equation for the level
   if(equations == "one")
     ## simply compute the biomass using correct equation
-    c(biomass <- equation_finder(size, allometry, taxo$level) * abundance,
+    c(biomass <- equation_finder(size_mm, allometry, taxo) * abundance,
       path <- paste0(path,"_BM:", level, "_1"))
       
     
@@ -78,7 +76,7 @@ get_allometric_equations <- function(specname, level, size, abundance, path, tax
     ## Sum biomass obtained from the different equations
     for(i in 1:equation_number){
       row <- allometry[i,]
-      biomass <- biomass + equation_finder(size, row, taxo$level) * abundance
+      biomass <- biomass + equation_finder(size_mm, row, taxo) * abundance
     },
     ## Average the result
     biomass <- biomass/equation_number,
@@ -94,7 +92,7 @@ get_allometric_equations <- function(specname, level, size, abundance, path, tax
 }
 
 # Find right kind of allometric equation to use ---------------------------
-equation_finder <- function(size, row, exception){
+equation_finder <- function(size_mm, row, taxo){
   ## Determine which type of equation to use
   type <- 
     ifelse(!is.na(row$intercept), 
@@ -102,22 +100,19 @@ equation_finder <- function(size, row, exception){
            ifelse(!is.na(row$ln_intercept),
                   "ln"))
   
-  ## Exceptions
-  
-  
   ## If function is log10
   if(type == "log10")
     per_cap_biomass <- 
-      10^(row$slope * log10(size) + row$intercept)
+      10^(row$slope * log10(size_mm) + row$intercept)
   
   ## If function is natural logarithm
   if(type == "ln")
     per_cap_biomass <-
-      exp(row$slope * log(size) + row$ln_intercept)
+      exp(row$slope * log(size_mm) + row$ln_intercept)
   
   ## Exceptions
   ### With equation of Acari, weight is in micrograms, need to convert to milligrams
-  if(!is.na(exception) & exception == "Acari")
+  if(!is.na(taxo$subclass) & taxo$subclass == "Acari")
     per_cap_biomass <-
       per_cap_biomass/1000
   
@@ -127,13 +122,12 @@ equation_finder <- function(size, row, exception){
 }
 
 # Estimate size  -----------------------------------------------
-sizest <- function(specname, size, level, path, taxo, allometry_table, data_table){
-  #browser()
-  
+sizest <- function(specname, size_mm, level, path, taxo, allometry_table, data_table){
+
   ## Decide where to go depending on value of size
-  if(size == "unknown")
+  if(size_mm == "unknown")
     category <-  "weighted_average" else
-      if(size %in% c("small", "medium", "large"))
+      if(size_mm %in% c("small", "medium", "large"))
         category <-  "size_cat" else
           category <-  "naught"
   
@@ -149,19 +143,18 @@ sizest <- function(specname, size, level, path, taxo, allometry_table, data_tabl
         data_table %>% 
         filter(bwg_name %in% spec_list)  %>% 
         #### Select relevant columns
-        dplyr::select(size, abundance) %>% 
+        dplyr::select(size_mm, abundance) %>% 
         #### Add measurements from allometry table
         bind_rows(allometry_table %>% 
                     filter(bwg_name %in% spec_list) %>%
-                    dplyr::select(length_mm) %>% 
-                    rename(size = length_mm) %>% 
-                    mutate(abundance = 1,
-                           size = as.character(size))) %>% 
+                    dplyr::select(length_mm, abundance) %>% 
+                    rename(size_mm = length_mm) %>% 
+                    mutate(size_mm = as.character(size_mm))) %>% 
         #### Group by size and sum
-        group_by(size) %>% 
-        summarise_all(sum) %>% 
-        mutate(size = as.numeric(size)) %>% 
-        filter(!is.na(size)) %>% 
+        group_by(size_mm) %>% 
+        summarise_all(sum)  %>% 
+        mutate(size_mm = as.numeric(size_mm)) %>% 
+        filter(!is.na(size_mm)) %>% 
         filter(!is.na(abundance)))
   
   ### If using taxonomy, filter taxonomy of species of interest 
@@ -187,19 +180,18 @@ sizest <- function(specname, size, level, path, taxo, allometry_table, data_tabl
             data_table %>% 
             filter(bwg_name %in% spec_list)  %>% 
             #### Select relevant columns
-            dplyr::select(size, abundance) %>% 
+            dplyr::select(size_mm, abundance) %>% 
             #### Add measurements from allometry table
             bind_rows(allometry_table %>% 
                         filter(bwg_name %in% spec_list) %>%
-                        dplyr::select(length_mm) %>% 
-                        rename(size = length_mm) %>% 
-                        mutate(abundance = 1,
-                               size = as.character(size))) %>% 
+                        dplyr::select(length_mm, abundance) %>% 
+                        rename(size_mm = length_mm) %>% 
+                        mutate(size_mm = as.character(size_mm))) %>% 
             #### Group by size and sum
-            group_by(size) %>% 
+            group_by(size_mm) %>% 
             summarise_all(sum) %>% 
-            mutate(size = as.numeric(size)) %>% 
-            filter(!is.na(size)) %>% 
+            mutate(size_mm = as.numeric(size_mm)) %>% 
+            filter(!is.na(size_mm)) %>% 
             filter(!is.na(abundance)))
     
   ## Get number of other numerical measurements
@@ -215,13 +207,13 @@ sizest <- function(specname, size, level, path, taxo, allometry_table, data_tabl
     c(if(category == "weighted_average")
     ### Compute weighted average
     c(new_size <- 
-        weighted.mean(other_meas$size, other_meas$abundance),
+        weighted.mean(other_meas$size_mm, other_meas$abundance),
       path <- 
         paste0(path, "WA:", level,"_", meas_number)),
     ### Compute size categories
     if(category == "size_cat")
       c(size_vec <- 
-          other_meas$size,
+          other_meas$size_mm,
         #### Sample elements to get 3 vectors of regular sizes
         temp_list <- 
           size_vec %>% 
@@ -237,13 +229,13 @@ sizest <- function(specname, size, level, path, taxo, allometry_table, data_tabl
         #### Now that I have the size of the bins, we can compute the sizes!
         #### The each new_size will be the mean for all values in that bin
         #### S and L bins smaller than M
-        if(size == "small")
+        if(size_mm == "small")
           new_size <- 
             mean(size_vec[1:min(vec_size)]) else
-              if(size == "large")
+              if(size_mm == "large")
                 new_size <- 
                   mean(size_vec[(length(size_vec) - min(vec_size) + 1):length(size_vec)]) else
-                    if(size == "medium")
+                    if(size_mm == "medium")
                       new_size <- 
                         mean(size_vec[(1 + min(vec_size)):length(size_vec) - min(vec_size) + 1]),
         path <- paste0(path, "BIN:", level, "_", meas_number)))
@@ -251,7 +243,7 @@ sizest <- function(specname, size, level, path, taxo, allometry_table, data_tabl
   ## If fails, just return initial value        
   if(!others)
     new_size <- 
-      size
+      size_mm
 
   ## If there was an expected value return special path
   if(category == "naught")
@@ -320,7 +312,8 @@ matcher_of_traits <- function(specname, allometry_table){
 
 # Wrapper function going row-by-row ----------------------------
 hello_metry <- function(allometry_table, data_table, print){
-  # Make copy of data table
+  # browser()
+    # Make copy of data table
   data_return <- 
     data_table %>% 
     ## And add new columns to fill
@@ -333,8 +326,8 @@ hello_metry <- function(allometry_table, data_table, print){
     stop("Please call column with abundance values 'abundance'")
   if("bwg_name" %notin% colnames(data_table))
     stop("Please call column with bwg species names values 'bwg_name'")
-  if("size" %notin% colnames(data_table))
-    stop("Please call column with specimen measurement values 'size'")
+  if("size_mm" %notin% colnames(data_table))
+    stop("Please call column with specimen measurement values 'size_mm'")
   ## Print is actually a true false
   if(print %notin% c(TRUE, FALSE))
     stop("Print has to be TRUE/FALSE")
@@ -360,7 +353,7 @@ hello_metry <- function(allometry_table, data_table, print){
     ## Initialise function parameters
     row <- data_return[i,]
     specname <- row$bwg_name
-    size <- row$size
+    size_mm <- row$size_mm
     abundance <- row$abundance
     ## Initialise path to record what happens in this function
     path <- ""
@@ -393,26 +386,26 @@ hello_metry <- function(allometry_table, data_table, print){
       ### If in database 
       if(nrow(taxo) > 0)
           #### Check if we have a numeric size
-          if(!is.na(as.numeric(size))) 
-            size <- as.numeric(size) else
+          if(!is.na(as.numeric(size_mm))) 
+            size_mm <- as.numeric(size_mm) else
               #### If we don't, do a size estimation
               #### As long as size is not numeric
-              while(!is.numeric(size)){
+              while(!is.numeric(size_mm)){
                 ##### Go through my list of group
                 for(level in level_list){
-                  est <- sizest(specname, size, level, path, taxo, allometry_table, data_table)
-                  size <- est[,1]
+                  est <- sizest(specname, size_mm, level, path, taxo, allometry_table, data_table)
+                  size_mm <- est[,1]
                   path <- est[,2]
                   #### Break loop if done
-                  if(is.numeric(size))
+                  if(is.numeric(size_mm))
                     break
                   ###### If we got to the end and still nothing, give up
-                  if(!is.numeric(size) & level == "class")
+                  if(!is.numeric(size_mm) & level == "class")
                     c(path <- 
                         paste0(path, "size_estimation_failed"),
                       biomass <- 
-                        "plz_solve",
-                      size <- 
+                        "cannot_estimate",
+                      size_mm <- 
                         666)
                 }})
           
@@ -421,7 +414,7 @@ hello_metry <- function(allometry_table, data_table, print){
     while(is.na(biomass)){
       ##### Go through my list of group
       for(level in level_list){
-        est <- get_allometric_equations(specname, level, size, abundance, path, taxo, allometry_table)
+        est <- get_allometric_equations(specname, level, size_mm, abundance, path, taxo, allometry_table)
         biomass <- est[,1]
         path <- est[,2]
         #### Break loop if done
@@ -430,7 +423,7 @@ hello_metry <- function(allometry_table, data_table, print){
         ###### If we got to the end and still nothing, give up
         if(is.na(biomass) & level == "class")
           c(biomass <-
-              "plz_solve",
+              "cannot_estimate",
             path <- 
               paste0(path, "_no_equations"))
       }}
@@ -441,7 +434,8 @@ hello_metry <- function(allometry_table, data_table, print){
     
   } 
   ## Return new data frame
-  return(data_return)
+  return(data_return %>% 
+           rename(biomass_mg = biomass))
         
 }
 
@@ -452,10 +446,10 @@ allometry_supplement <- function(allometry_table, data_table){
   # Keep only numerical measurements of data table
   data_table_num <- 
     data_table %>% 
-    dplyr::select(bwg_name, size) %>% 
-    filter(!is.na(as.numeric(size))) %>% 
+    dplyr::select(bwg_name, size_mm) %>% 
+    filter(!is.na(as.numeric(size_mm))) %>% 
     unique %>% 
-    rename("length_mm" = size) %>% 
+    rename(length_mm = size_mm) %>% 
     mutate(length_mm = as.numeric(length_mm))
   
   # Make stub of allometry_table 
