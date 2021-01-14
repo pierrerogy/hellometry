@@ -30,9 +30,8 @@ biomass_data <-
 ## Get list of species
 leftover <- 
   biomass_data %>% 
-  filter(biomass %in% c("cannot_estimate", "notindatabase")) %>% 
-  dplyr::select(bwg_name, path) %>% 
-  unique() 
+  filter(biomass_mg %in% c("cannot_estimate", "notindatabase")) %>% 
+  dplyr::select(bwg_name, path)
 ## View it
 View(leftover)
   

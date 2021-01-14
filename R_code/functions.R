@@ -352,7 +352,8 @@ hello_metry <- function(equation_table, measurement_table, data_table, print){
       "subord",
       "ord",
       "subclass",
-      "class")
+      "class",
+      "phylum")
   
  # Loop to fill row by row
   for(i in 1:nrow(data_return)){
@@ -409,7 +410,7 @@ hello_metry <- function(equation_table, measurement_table, data_table, print){
                   if(is.numeric(size_mm))
                     break
                   ###### If we got to the end and still nothing, give up
-                  if(!is.numeric(size_mm) & level == "class")
+                  if(!is.numeric(size_mm) & level == "phylum")
                     c(path <- 
                         paste0(path, "size_estimation_failed"),
                       biomass <- 
@@ -430,7 +431,7 @@ hello_metry <- function(equation_table, measurement_table, data_table, print){
         if(!is.na(biomass))
           break
         ###### If we got to the end and still nothing, give up
-        if(is.na(biomass) & level == "class")
+        if(is.na(biomass) & level == "phylum")
           c(biomass <-
               "cannot_estimate",
             path <- 
