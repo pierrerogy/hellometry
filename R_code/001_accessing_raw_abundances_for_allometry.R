@@ -138,7 +138,7 @@ abundance_size <-
                                      "unknown",
                                      size))))
 
-# Get biomass data --------------------------------------------------------
+# Get raw data --------------------------------------------------------
 # Sign in with secret password 
 fw_auth()
 
@@ -147,63 +147,36 @@ fw_versions(local = FALSE,
             biomass = TRUE)
 fw_versions(local = FALSE,
             biomass = FALSE)
-# Save data
+# Get allometry data
 fw_biomass <- 
   fw_data("v.0.0.1_0.0.1",
           biomass = TRUE) %>%
   ## convert species_id to character
-  mutate(species_id = as.character(species_id))
+  mutate(species_id = as.character(species_id),
+         ## Only keep raw biomass values
+         biomass_mg = ifelse(provenance %in% c("length.raw", "category.raw"),
+                             biomass_mg, NA))
+
+# Get taxonomic and trait data
 fw_database <- 
   fw_data("0.7.7")
-
-# Combine allometry table with trait data
-allometry_table <- 
-  fw_database$traits %>% 
-  ## keep only taxonomic information
-  dplyr::select(species_id, bwg_name:species,
-                functional_group, 
-                BS1:BS5, 
-                LO1:LO7,
-                MD1:MD8,
-                BF1:BF4) %>% 
-  left_join(fw_biomass %>% 
-              ## filter only those rows where we have the allometry equation (i.e. not NA)
-              # filter(!is.na(intercept)) %>% 
-              ## remove columns not important (I hope) for this specific table
-              dplyr::select(-measurement_id, -length_est_mm, -length_measured_as, 
-                            -biomass_ci_upr, -biomass_ci_lwr)) %>% 
-  mutate(abundance = ifelse(is.na(is.numeric(length_mm)), 0, 1))
-
-
-# Extra data  ----------------------------------------------------
-# From litterature
-extra <- 
-  read.csv("raw_data/extra.csv",
-           stringsAsFactors = F)
-## Fix column nmes for smooth binding
-colnames(extra) <- 
-  c(colnames(allometry_table), 
-    colnames(extra[55]))
-
-# Bind to allometry table
-allometry_table <- 
-  extra %>% 
-  bind_rows(allometry_table)
+trait_data <- 
+  fw_database$traits
 
 # Check and fix entry errors in taxonomy ------------------------------------------------------------
 # Domain
 ## Distance matrix of strings
 dist.matrix <- 
-  stringdistmatrix(unique(allometry_table$domain[!is.na(allometry_table$domain)]),
-                   unique(allometry_table$domain[!is.na(allometry_table$domain)]),
+  stringdistmatrix(unique(trait_data$domain[!is.na(trait_data$domain)]),
+                   unique(trait_data$domain[!is.na(trait_data$domain)]),
                    method = 'jw', p = 0.1)
 ## Give their actual names back to elements of the vector
 ## (converted to numbers through the function)
 row.names(dist.matrix) <- 
-  unique(allometry_table$domain[!is.na(allometry_table$domain)])
+  unique(trait_data$domain[!is.na(trait_data$domain)])
 names(dist.matrix) <- 
-  rep(unique(allometry_table$domain[!is.na(allometry_table$domain)]),
-      length(unique(allometry_table$domain[!is.na(allometry_table$domain)])))
+  rep(unique(trait_data$domain[!is.na(trait_data$domain)]),
+      length(unique(trait_data$domain[!is.na(trait_data$domain)])))
 ## Reconvert to distance matrix
 dist.matrix <- 
   as.dist(dist.matrix)
@@ -213,22 +186,22 @@ clusters <-
 ## Plot
 plot(clusters)
 ## Now fix
-allometry_table$domain[which(allometry_table$domain %in% c("Eukaryota", "Insecta", "Animalia"))] <- 
+trait_data$domain[which(trait_data$domain %in% c("Eukaryota", "Insecta", "Animalia"))] <- 
   "Eukarya"
 
 # Kingdom
 ## Distance matrix of strings
 dist.matrix <- 
-  stringdistmatrix(unique(allometry_table$kingdom[!is.na(allometry_table$kingdom)]),
-                   unique(allometry_table$kingdom[!is.na(allometry_table$kingdom)]),
+  stringdistmatrix(unique(trait_data$kingdom[!is.na(trait_data$kingdom)]),
+                   unique(trait_data$kingdom[!is.na(trait_data$kingdom)]),
                    method = 'jw', p = 0.1)
 ## Give their actual names back to elements of the vector
 ## (converted to numbers through the function)
 row.names(dist.matrix) <- 
-  unique(allometry_table$kingdom[!is.na(allometry_table$kingdom)])
+  unique(trait_data$kingdom[!is.na(trait_data$kingdom)])
 names(dist.matrix) <- 
-  rep(unique(allometry_table$kingdom[!is.na(allometry_table$kingdom)]),
-      length(unique(allometry_table$kingdom[!is.na(allometry_table$kingdom)])))
+  rep(unique(trait_data$kingdom[!is.na(trait_data$kingdom)]),
+      length(unique(trait_data$kingdom[!is.na(trait_data$kingdom)])))
 ## Reconvert to distance matrix
 dist.matrix <- 
   as.dist(dist.matrix)
@@ -240,16 +213,16 @@ clusters <-
 # Phylum
 ## Distance matrix of strings
 dist.matrix <- 
-  stringdistmatrix(unique(allometry_table$phylum[!is.na(allometry_table$phylum)]),
-                   unique(allometry_table$phylum[!is.na(allometry_table$phylum)]),
+  stringdistmatrix(unique(trait_data$phylum[!is.na(trait_data$phylum)]),
+                   unique(trait_data$phylum[!is.na(trait_data$phylum)]),
                    method = 'jw', p = 0.1)
 ## Give their actual names back to elements of the vector
 ## (converted to numbers through the function)
 row.names(dist.matrix) <- 
-  unique(allometry_table$phylum[!is.na(allometry_table$phylum)])
+  unique(trait_data$phylum[!is.na(trait_data$phylum)])
 names(dist.matrix) <- 
-  rep(unique(allometry_table$phylum[!is.na(allometry_table$phylum)]),
-      length(unique(allometry_table$phylum[!is.na(allometry_table$phylum)])))
+  rep(unique(trait_data$phylum[!is.na(trait_data$phylum)]),
+      length(unique(trait_data$phylum[!is.na(trait_data$phylum)])))
 ## Reconvert to distance matrix
 dist.matrix <- 
   as.dist(dist.matrix)
@@ -263,16 +236,16 @@ plot(clusters)
 # Subphylum
 ## Distance matrix of strings
 dist.matrix <- 
-  stringdistmatrix(unique(allometry_table$subphylum[!is.na(allometry_table$subphylum)]),
-                   unique(allometry_table$subphylum[!is.na(allometry_table$subphylum)]),
+  stringdistmatrix(unique(trait_data$subphylum[!is.na(trait_data$subphylum)]),
+                   unique(trait_data$subphylum[!is.na(trait_data$subphylum)]),
                    method = 'jw', p = 0.1)
 ## Give their actual names back to elements of the vector
 ## (converted to numbers through the function)
 row.names(dist.matrix) <- 
-  unique(allometry_table$subphylum[!is.na(allometry_table$subphylum)])
+  unique(trait_data$subphylum[!is.na(trait_data$subphylum)])
 names(dist.matrix) <- 
-  rep(unique(allometry_table$subphylum[!is.na(allometry_table$subphylum)]),
-      length(unique(allometry_table$subphylum[!is.na(allometry_table$subphylum)])))
+  rep(unique(trait_data$subphylum[!is.na(trait_data$subphylum)]),
+      length(unique(trait_data$subphylum[!is.na(trait_data$subphylum)])))
 ## Reconvert to distance matrix
 dist.matrix <- 
   as.dist(dist.matrix)
@@ -282,22 +255,22 @@ clusters <-
 ## Plot
 plot(clusters)
 ## Now fix
-allometry_table$subphylum[which(allometry_table$subphylum == "")] <- 
+trait_data$subphylum[which(trait_data$subphylum == "")] <- 
   NA
 
 # Class
 ## Distance matrix of strings
 dist.matrix <- 
-  stringdistmatrix(unique(allometry_table$class[!is.na(allometry_table$class)]),
-                   unique(allometry_table$class[!is.na(allometry_table$class)]),
+  stringdistmatrix(unique(trait_data$class[!is.na(trait_data$class)]),
+                   unique(trait_data$class[!is.na(trait_data$class)]),
                    method = 'jw', p = 0.1)
 ## Give their actual names back to elements of the vector
 ## (converted to numbers through the function)
 row.names(dist.matrix) <- 
-  unique(allometry_table$class[!is.na(allometry_table$class)])
+  unique(trait_data$class[!is.na(trait_data$class)])
 names(dist.matrix) <- 
-  rep(unique(allometry_table$class[!is.na(allometry_table$class)]),
-      length(unique(allometry_table$class[!is.na(allometry_table$class)])))
+  rep(unique(trait_data$class[!is.na(trait_data$class)]),
+      length(unique(trait_data$class[!is.na(trait_data$class)])))
 ## Reconvert to distance matrix
 dist.matrix <- 
   as.dist(dist.matrix)
@@ -311,16 +284,16 @@ plot(clusters)
 # Subclass
 ## Distance matrix of strings
 dist.matrix <- 
-  stringdistmatrix(unique(allometry_table$subclass[!is.na(allometry_table$subclass)]),
-                   unique(allometry_table$subclass[!is.na(allometry_table$subclass)]),
+  stringdistmatrix(unique(trait_data$subclass[!is.na(trait_data$subclass)]),
+                   unique(trait_data$subclass[!is.na(trait_data$subclass)]),
                    method = 'jw', p = 0.1)
 ## Give their actual names back to elements of the vector
 ## (converted to numbers through the function)
 row.names(dist.matrix) <- 
-  unique(allometry_table$subclass[!is.na(allometry_table$subclass)])
+  unique(trait_data$subclass[!is.na(trait_data$subclass)])
 names(dist.matrix) <- 
-  rep(unique(allometry_table$subclass[!is.na(allometry_table$subclass)]),
-      length(unique(allometry_table$subclass[!is.na(allometry_table$subclass)])))
+  rep(unique(trait_data$subclass[!is.na(trait_data$subclass)]),
+      length(unique(trait_data$subclass[!is.na(trait_data$subclass)])))
 ## Reconvert to distance matrix
 dist.matrix <- 
   as.dist(dist.matrix)
@@ -330,24 +303,24 @@ clusters <-
 ## Plot
 plot(clusters)
 ## Now fix
-allometry_table$subclass[which(allometry_table$subclass == "Paleoptera")] <- 
+trait_data$subclass[which(trait_data$subclass == "Paleoptera")] <- 
   "Palaeoptera"
-allometry_table$subclass[which(allometry_table$subclass == "")] <- 
+trait_data$subclass[which(trait_data$subclass == "")] <- 
   NA
 
 # Order
 ## Distance matrix of strings
 dist.matrix <- 
-  stringdistmatrix(unique(allometry_table$ord[!is.na(allometry_table$ord)]),
-                   unique(allometry_table$ord[!is.na(allometry_table$ord)]),
+  stringdistmatrix(unique(trait_data$ord[!is.na(trait_data$ord)]),
+                   unique(trait_data$ord[!is.na(trait_data$ord)]),
                    method = 'jw', p = 0.1)
 ## Give their actual names back to elements of the vector
 ## (converted to numbers through the function)
 row.names(dist.matrix) <- 
-  unique(allometry_table$ord[!is.na(allometry_table$ord)])
+  unique(trait_data$ord[!is.na(trait_data$ord)])
 names(dist.matrix) <- 
-  rep(unique(allometry_table$ord[!is.na(allometry_table$ord)]),
-      length(unique(allometry_table$ord[!is.na(allometry_table$ord)])))
+  rep(unique(trait_data$ord[!is.na(trait_data$ord)]),
+      length(unique(trait_data$ord[!is.na(trait_data$ord)])))
 ## Reconvert to distance matrix
 dist.matrix <- 
   as.dist(dist.matrix)
@@ -357,24 +330,24 @@ clusters <-
 ## Plot
 plot(clusters)
 ## Now fix
-allometry_table$ord[which(allometry_table$ord == "Opisthopora<U+FFFD>")] <- 
+trait_data$ord[which(trait_data$ord == "Opisthopora<U+FFFD>")] <- 
   "Opisthopora"
-allometry_table$ord[which(allometry_table$ord == "")] <- 
+trait_data$ord[which(trait_data$ord == "")] <- 
   NA
 
 # Suborder
 ## Distance matrix of strings
 dist.matrix <- 
-  stringdistmatrix(unique(allometry_table$subord[!is.na(allometry_table$subord)]),
-                   unique(allometry_table$subord[!is.na(allometry_table$subord)]),
+  stringdistmatrix(unique(trait_data$subord[!is.na(trait_data$subord)]),
+                   unique(trait_data$subord[!is.na(trait_data$subord)]),
                    method = 'jw', p = 0.1)
 ## Give their actual names back to elements of the vector
 ## (converted to numbers through the function)
 row.names(dist.matrix) <- 
-  unique(allometry_table$subord[!is.na(allometry_table$subord)])
+  unique(trait_data$subord[!is.na(trait_data$subord)])
 names(dist.matrix) <- 
-  rep(unique(allometry_table$subord[!is.na(allometry_table$subord)]),
-      length(unique(allometry_table$subord[!is.na(allometry_table$subord)])))
+  rep(unique(trait_data$subord[!is.na(trait_data$subord)]),
+      length(unique(trait_data$subord[!is.na(trait_data$subord)])))
 ## Reconvert to distance matrix
 dist.matrix <- 
   as.dist(dist.matrix)
@@ -384,24 +357,24 @@ clusters <-
 ## Plot
 plot(clusters)
 ## Now fix
-allometry_table$subord[which(allometry_table$subord == "")] <- 
+trait_data$subord[which(trait_data$subord == "")] <- 
   NA
-allometry_table$subord[which(allometry_table$subord == "Zigoptera")] <- 
+trait_data$subord[which(trait_data$subord == "Zigoptera")] <- 
   "Zygoptera"
 
 # Family
 ## Distance matrix of strings
 dist.matrix <- 
-  stringdistmatrix(unique(allometry_table$family[!is.na(allometry_table$family)]),
-                   unique(allometry_table$family[!is.na(allometry_table$family)]),
+  stringdistmatrix(unique(trait_data$family[!is.na(trait_data$family)]),
+                   unique(trait_data$family[!is.na(trait_data$family)]),
                    method = 'jw', p = 0.1)
 ## Give their actual names back to elements of the vector
 ## (converted to numbers through the function)
 row.names(dist.matrix) <- 
-  unique(allometry_table$family[!is.na(allometry_table$family)])
+  unique(trait_data$family[!is.na(trait_data$family)])
 names(dist.matrix) <- 
-  rep(unique(allometry_table$family[!is.na(allometry_table$family)]),
-      length(unique(allometry_table$family[!is.na(allometry_table$family)])))
+  rep(unique(trait_data$family[!is.na(trait_data$family)]),
+      length(unique(trait_data$family[!is.na(trait_data$family)])))
 ## Reconvert to distance matrix
 dist.matrix <- 
   as.dist(dist.matrix)
@@ -411,26 +384,26 @@ clusters <-
 ## Plot
 plot(clusters)
 ## Now fix
-allometry_table$family[which(allometry_table$family == "Vellidae")] <- 
+trait_data$family[which(trait_data$family == "Vellidae")] <- 
   "Veliidae"
-allometry_table$family[which(allometry_table$family == "Daphnidae")] <- 
+trait_data$family[which(trait_data$family == "Daphnidae")] <- 
   "Daphniidae"
-allometry_table$family[which(allometry_table$family == "")] <- 
+trait_data$family[which(trait_data$family == "")] <- 
   NA
 
 # Subfamily
 ## Distance matrix of strings
 dist.matrix <- 
-  stringdistmatrix(unique(allometry_table$subfamily[!is.na(allometry_table$subfamily)]),
-                   unique(allometry_table$subfamily[!is.na(allometry_table$subfamily)]),
+  stringdistmatrix(unique(trait_data$subfamily[!is.na(trait_data$subfamily)]),
+                   unique(trait_data$subfamily[!is.na(trait_data$subfamily)]),
                    method = 'jw', p = 0.1)
 ## Give their actual names back to elements of the vector
 ## (converted to numbers through the function)
 row.names(dist.matrix) <- 
-  unique(allometry_table$subfamily[!is.na(allometry_table$subfamily)])
+  unique(trait_data$subfamily[!is.na(trait_data$subfamily)])
 names(dist.matrix) <- 
-  rep(unique(allometry_table$subfamily[!is.na(allometry_table$subfamily)]),
-      length(unique(allometry_table$subfamily[!is.na(allometry_table$subfamily)])))
+  rep(unique(trait_data$subfamily[!is.na(trait_data$subfamily)]),
+      length(unique(trait_data$subfamily[!is.na(trait_data$subfamily)])))
 ## Reconvert to distance matrix
 dist.matrix <- 
   as.dist(dist.matrix)
@@ -440,22 +413,22 @@ clusters <-
 ## Plot
 plot(clusters)
 ## Now fix
-allometry_table$subfamily[which(allometry_table$subfamily == "Sphaerodinae")] <- 
+trait_data$subfamily[which(trait_data$subfamily == "Sphaerodinae")] <- 
   "Sphaeridiinae"
 
 # Tribe
 ## Distance matrix of strings
 dist.matrix <- 
-  stringdistmatrix(unique(allometry_table$tribe[!is.na(allometry_table$tribe)]),
-                   unique(allometry_table$tribe[!is.na(allometry_table$tribe)]),
+  stringdistmatrix(unique(trait_data$tribe[!is.na(trait_data$tribe)]),
+                   unique(trait_data$tribe[!is.na(trait_data$tribe)]),
                    method = 'jw', p = 0.1)
 ## Give their actual names back to elements of the vector
 ## (converted to numbers through the function)
 row.names(dist.matrix) <- 
-  unique(allometry_table$tribe[!is.na(allometry_table$tribe)])
+  unique(trait_data$tribe[!is.na(trait_data$tribe)])
 names(dist.matrix) <- 
-  rep(unique(allometry_table$tribe[!is.na(allometry_table$tribe)]),
-      length(unique(allometry_table$tribe[!is.na(allometry_table$tribe)])))
+  rep(unique(trait_data$tribe[!is.na(trait_data$tribe)]),
+      length(unique(trait_data$tribe[!is.na(trait_data$tribe)])))
 ## Reconvert to distance matrix
 dist.matrix <- 
   as.dist(dist.matrix)
@@ -469,16 +442,16 @@ plot(clusters)
 # Genus
 ## Distance matrix of strings
 dist.matrix <- 
-  stringdistmatrix(unique(allometry_table$genus[!is.na(allometry_table$genus)]),
-                   unique(allometry_table$genus[!is.na(allometry_table$genus)]),
+  stringdistmatrix(unique(trait_data$genus[!is.na(trait_data$genus)]),
+                   unique(trait_data$genus[!is.na(trait_data$genus)]),
                    method = 'jw', p = 0.1)
 ## Give their actual names back to elements of the vector
 ## (converted to numbers through the function)
 row.names(dist.matrix) <- 
-  unique(allometry_table$genus[!is.na(allometry_table$genus)])
+  unique(trait_data$genus[!is.na(trait_data$genus)])
 names(dist.matrix) <- 
-  rep(unique(allometry_table$genus[!is.na(allometry_table$genus)]),
-      length(unique(allometry_table$genus[!is.na(allometry_table$genus)])))
+  rep(unique(trait_data$genus[!is.na(trait_data$genus)]),
+      length(unique(trait_data$genus[!is.na(trait_data$genus)])))
 ## Reconvert to distance matrix
 dist.matrix <- 
   as.dist(dist.matrix)
@@ -492,16 +465,16 @@ plot(clusters)
 # Species
 ## Distance matrix of strings
 dist.matrix <- 
-  stringdistmatrix(unique(allometry_table$species[!is.na(allometry_table$species)]),
-                   unique(allometry_table$species[!is.na(allometry_table$species)]),
+  stringdistmatrix(unique(trait_data$species[!is.na(trait_data$species)]),
+                   unique(trait_data$species[!is.na(trait_data$species)]),
                    method = 'jw', p = 0.1)
 ## Give their actual names back to elements of the vector
 ## (converted to numbers through the function)
 row.names(dist.matrix) <- 
-  unique(allometry_table$species[!is.na(allometry_table$species)])
+  unique(trait_data$species[!is.na(trait_data$species)])
 names(dist.matrix) <- 
-  rep(unique(allometry_table$species[!is.na(allometry_table$species)]),
-      length(unique(allometry_table$species[!is.na(allometry_table$species)])))
+  rep(unique(trait_data$species[!is.na(trait_data$species)]),
+      length(unique(trait_data$species[!is.na(trait_data$species)])))
 ## Reconvert to distance matrix
 dist.matrix <- 
   as.dist(dist.matrix)
@@ -511,13 +484,113 @@ clusters <-
 ## Plot
 plot(clusters)
 ## Now fix
-allometry_table <- 
-  allometry_table %>% 
+trait_data <- 
+  trait_data %>% 
   mutate(species = str_replace_all(species, "[()]", ""),
          species = str_replace_all(species, "Microculex ", ""),
          species = str_replace_all(species, "Aulophorus ", ""),
          species = str_replace_all(species, "Phoniomyia ", ""))
 
+
+
+# Combine data for functions ----------------------------------------------
+# Combine allometry and trait data
+equation_table <- 
+  trait_data %>% 
+  ## Get taxonomic and trait information
+  dplyr::select(species_id, bwg_name:species) %>% 
+  ## Add equations
+  left_join(fw_biomass %>% 
+              ## remove columns not important (I hope) for this specific table
+              dplyr::select(-measurement_id, -stage:-length_est_mm,
+                            -biomass_mg:-num_relatives)) %>% 
+  filter(!is.na(intercept)) %>% 
+  ## If shared taxon is NA, it means the equation is from the species itself
+  mutate(shared_taxon = ifelse(is.na(shared_taxon),
+                               "species", shared_taxon),
+         ln_intercept = NA) %>% 
+  unique()
+
+## Empty columns depending on level of equation
+### Species
+equation_table$bwg_name[which(equation_table$shared_taxon != "species")] <- 
+  NA
+equation_table$species_id[which(equation_table$shared_taxon != "species")] <- 
+  NA
+equation_table$species[which(equation_table$shared_taxon != "species")] <- 
+  NA
+### Genus
+equation_table$genus[which(equation_table$shared_taxon %notin% 
+                             c("species", "genus"))] <- 
+  NA
+### Subfamily
+equation_table$subfamily[which(equation_table$shared_taxon %notin% 
+                                 c("species", "genus", "subfamily"))] <- 
+  NA
+### Family
+equation_table$family[which(equation_table$shared_taxon %notin% 
+                                 c("species", "genus", "subfamily", 
+                                   "family"))] <- 
+  NA
+
+### Suborder
+equation_table$subord[which(equation_table$shared_taxon %notin% 
+                              c("species", "genus", "subfamily", 
+                                "family", "subord"))] <- 
+  NA
+### Order
+equation_table$subord[which(equation_table$shared_taxon %notin% 
+                              c("species", "genus", "subfamily", 
+                                "family", "subord", "ord"))] <- 
+  NA
+
+## Final cleanup of the table
+equation_table <- 
+  equation_table %>% 
+  unique() %>% 
+  ### Remove one equation at kingdom level and remove column
+  filter(shared_taxon != "kingdom") %>% 
+  dplyr::select(-shared_taxon)
+#### Still need to keep only unique row for each equation
+
+# Combine abundance, weight and trait data
+measurement_table <- 
+  trait_data  %>% 
+  ## keep only taxonomic information
+  dplyr::select(species_id, bwg_name:species,
+                functional_group, 
+                BS1:BS5, 
+                LO1:LO7,
+                MD1:MD8,
+                BF1:BF4) %>% 
+  ## First add only raw measurements and biomass for species
+  left_join(fw_biomass %>% 
+              ## remove columns not important (I hope) for this specific table
+              dplyr::select(-measurement_id, -length_est_mm, -length_measured_as, 
+                            -biomass_ci_upr, -biomass_ci_lwr, -provenance_species:-slope)) %>% 
+mutate(abundance = ifelse(is.na(length_mm), 0, 1))
+  
+# Extra data  ----------------------------------------------------
+# From literature
+## Equations
+extra_equations <- 
+  read.csv("raw_data/extra_equations.csv",
+           stringsAsFactors = F)
+# Bind to allometry table
+equation_table <- 
+  equation_table %>% 
+  bind_rows(extra_equations)
+
+## Measurements
+extra_measurements <- 
+  read.csv("raw_data/extra_measurements.csv",
+           stringsAsFactors = F)
+colnames(extra_measurements) <- 
+  colnames(measurement_table)
+# Bind to allometry table
+measurement_table <- 
+  measurement_table %>% 
+  bind_rows(extra_measurements)
 
 # Try function against dataset --------------------------------------------
 # Load data
@@ -530,8 +603,14 @@ pitilla <-
   rename(bwg_name = nickname,
          size_mm = size..mm.)
 
+# Update measurement table with database
+measurement_updated <- 
+  measurement_supplement(measurement_table,
+                         data_table)
+
 # Use functions
 pitilla_trial <- 
-  hello_metry(allometry_updated, 
+  hello_metry(equation_table,
+              measurement_updated, 
               pitilla, 
               print = TRUE)

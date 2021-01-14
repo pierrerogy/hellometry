@@ -6,8 +6,11 @@ source("R_code/functions.R")
 
 # Enter data
 ## Allometry table, where all the allometric information is stored
-allometry_table <- 
-  read.csv("data/allometry_table.csv",
+equation_table <- 
+  read.csv("data/equation_table.csv",
+           stringsAsFactors = F)
+measurement_table <- 
+  read.csv("data/measurement_table.csv",
            stringsAsFactors = F)
 ## Data table, your data frame
 ### Make sure abundance column named 'abundance'
@@ -18,7 +21,8 @@ data_table <-
 
 # Get biomass estimation for entire data frame
 biomass_data <- 
-  hello_metry(allometry_table, 
+  hello_metry(equation_table, 
+              measurement_table,
               data_table, 
               print = TRUE)
 
@@ -26,22 +30,22 @@ biomass_data <-
 ## Get list of species
 leftover <- 
   biomass_data %>% 
-  filter(biomass %in% c("plz_solve", "notindatabase")) %>% 
+  filter(biomass %in% c("cannot_estimate", "notindatabase")) %>% 
   dplyr::select(bwg_name, path) %>% 
   unique() 
 ## View it
 View(leftover)
   
-# Row by row testing of functions -----------------------------------
+# Row by row use of functions -----------------------------------
 # Enter i as row number
 i <- 
-  64059
+  30
 
 # Extract row information
 row <- data_table[i,]
 specname <- row$bwg_name
 size_mm <- row$size_mm
-level <- "family"
+level <- "subord"
 abundance <- row$abundance
 path <- ""
 
@@ -68,24 +72,28 @@ level_list <-
 for(level in level_list){
 path <- ""
 print(paste(c(level,
-              sizest(specname, size_mm, level, path, taxo, allometry_table, data_table))))
+              sizest(specname, size_mm, level, path, taxo, 
+                     equation_table, measurement_table, data_table))))
 }
 
 # Run biomass estimation through list of levels
 for(level in level_list){
   path <- ""
   print(paste(c(level, 
-                get_allometric_equations(specname, level, size_mm, abundance, path, taxo, allometry_table))))
+                get_allometric_equations(specname, level, size_mm, abundance, path, taxo, 
+                                         equation_table, measurement_table))))
 }
 
 
-
 # Run trait matching
-matcher_of_traits(specname, allometry_table)
+matcher_of_traits(specname, measurement_table)
 
 
 # Get biomass estimation for single row
 biomass_row <- 
-  hello_metry(allometry_table, row, print = TRUE)
+  hello_metry(equation_table, 
+              measurement_table, 
+              row, 
+              print = TRUE)
 
 

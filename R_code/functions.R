@@ -8,11 +8,11 @@ library(gridExtra)
   Negate('%in%')
 
 # Estimate biomass --------------------------------------------------------
-get_allometric_equations <- function(specname, level, size_mm, abundance, path, taxo, allometry_table){
+get_allometric_equations <- function(specname, level, size_mm, abundance, path, taxo, equation_table, measurement_table){
 
   # Check if species is length_raw, and if size is present
   raw_meas <- 
-    allometry_table %>% 
+    measurement_table %>% 
     filter(provenance == "length.raw") %>% 
     filter(bwg_name == specname,
            length_mm == size_mm)
@@ -32,20 +32,20 @@ get_allometric_equations <- function(specname, level, size_mm, abundance, path, 
     if(do.call(paste, list(taxo[,level])) == "NA")
       allometry <- data.frame() else
          allometry <-
-            allometry_table %>% 
-            filter(allometry_table[,level] == do.call(paste, list(taxo[,level]))) %>% 
+            equation_table %>% 
+            filter(equation_table[,level] == do.call(paste, list(taxo[,level]))) %>% 
             filter(!is.na(intercept) | !is.na(ln_intercept)) %>% 
-            dplyr::select(intercept, slope, ln_intercept) %>% 
+            dplyr::select(biomass_type, intercept, slope, ln_intercept) %>% 
             unique()
   ###If using trait, get custom list of species with other function
   if(level == "traits")
     c(spec_list <- 
-        matcher_of_traits(specname, allometry_table),
+        matcher_of_traits(specname, measurement_table),
       allometry <-
-        allometry_table %>% 
-        filter(allometry_table$bwg_name %in% spec_list) %>% 
+        equation_table %>% 
+        filter(equation_table$bwg_name %in% spec_list) %>% 
         filter(!is.na(intercept) | !is.na(ln_intercept)) %>% 
-        dplyr::select(intercept, slope, ln_intercept) %>% 
+        dplyr::select(biomass_type, intercept, slope, ln_intercept) %>% 
         unique())
   
   # Get number of equations
@@ -66,7 +66,7 @@ get_allometric_equations <- function(specname, level, size_mm, abundance, path, 
   if(equations == "one")
     ## simply compute the biomass using correct equation
     c(biomass <- equation_finder(size_mm, allometry, taxo) * abundance,
-      path <- paste0(path,"_BM:", level, "_1"))
+      path <- paste0(path,"_BM:", level, "_1", allometry$biomass_type[1]))
       
     
   # Case 2: more than one equation at the level
@@ -80,7 +80,16 @@ get_allometric_equations <- function(specname, level, size_mm, abundance, path, 
     },
     ## Average the result
     biomass <- biomass/equation_number,
-    path <- paste0(path,"_BM:", level, "_", equation_number))
+    ## Count instance of equations based on dry and wet weight
+    type_count <- 
+      allometry %>% 
+      count(biomass_type) %>% 
+      unite(count, n, biomass_type) %>% 
+      pull(),
+    ## Stick it together to add to path
+    type_count <- 
+      paste0(type_count[1], "_", type_count[2]),
+    path <- paste0(path,"_BM:", level, "_", type_count))
     
   # Case 3: no equations at the level
   ## Simply return NA
@@ -122,7 +131,7 @@ equation_finder <- function(size_mm, row, taxo){
 }
 
 # Estimate size  -----------------------------------------------
-sizest <- function(specname, size_mm, level, path, taxo, allometry_table, data_table){
+sizest <- function(specname, size_mm, level, path, taxo, equation_table, measurement_table, data_table){
 
   ## Decide where to go depending on value of size
   if(size_mm == "unknown")
@@ -138,14 +147,14 @@ sizest <- function(specname, size_mm, level, path, taxo, allometry_table, data_t
   ### If using trait, get custom list of species with matcher_of_traits()
   if(level == "traits")
     c(spec_list <- 
-        matcher_of_traits(specname, allometry_table),
+        matcher_of_traits(specname, measurement_table),
       other_meas <- 
         data_table %>% 
         filter(bwg_name %in% spec_list)  %>% 
         #### Select relevant columns
         dplyr::select(size_mm, abundance) %>% 
         #### Add measurements from allometry table
-        bind_rows(allometry_table %>% 
+        bind_rows(measurement_table %>% 
                     filter(bwg_name %in% spec_list) %>%
                     dplyr::select(length_mm, abundance) %>% 
                     rename(size_mm = length_mm) %>% 
@@ -169,10 +178,10 @@ sizest <- function(specname, size_mm, level, path, taxo, allometry_table, data_t
             dplyr::select(all_of(level)) %>% 
             unique() %>% 
             pull(), #### pull transforms it from a column to a vector
-          ### Get a vector of all species from that specificlevel
+          ### Get a vector of all species from that specific level
           spec_list <- 
-            allometry_table %>% 
-            filter(allometry_table[,level] == level_name) %>% 
+            measurement_table %>% 
+            filter(measurement_table[,level] == level_name) %>% 
             dplyr::select(bwg_name) %>% 
             unique() %>% 
             pull(),
@@ -182,7 +191,7 @@ sizest <- function(specname, size_mm, level, path, taxo, allometry_table, data_t
             #### Select relevant columns
             dplyr::select(size_mm, abundance) %>% 
             #### Add measurements from allometry table
-            bind_rows(allometry_table %>% 
+            bind_rows(measurement_table %>% 
                         filter(bwg_name %in% spec_list) %>%
                         dplyr::select(length_mm, abundance) %>% 
                         rename(size_mm = length_mm) %>% 
@@ -256,10 +265,10 @@ sizest <- function(specname, size_mm, level, path, taxo, allometry_table, data_t
   return(data.frame(new_size, as.character(path)))
 }
 # Trait-matching ----------------------------------------------------------
-matcher_of_traits <- function(specname, allometry_table){
+matcher_of_traits <- function(specname, measurement_table){
   # Extract traits of given species
   traits <- 
-    allometry_table %>% 
+    measurement_table %>% 
     filter(bwg_name == specname) %>% 
     dplyr::select(BS1:BF4)
   
@@ -271,7 +280,7 @@ matcher_of_traits <- function(specname, allometry_table){
   # If no NAS in traits get all species that have the same traits +/- 1 and make it a vector
   if(proceed)
     spec_list <- 
-      allometry_table %>% 
+      measurement_table %>% 
      ## Kept in that format to make explicit changes and allow flexibility in trait matching
       filter(BS1 %in% c((traits$BS1 - 1):(traits$BS1 + 1)) &
              BS2 %in% c((traits$BS2 - 1):(traits$BS2 + 1)) &
@@ -311,7 +320,7 @@ matcher_of_traits <- function(specname, allometry_table){
 }
 
 # Wrapper function going row-by-row ----------------------------
-hello_metry <- function(allometry_table, data_table, print){
+hello_metry <- function(equation_table, measurement_table, data_table, print){
   # browser()
     # Make copy of data table
   data_return <- 
@@ -374,7 +383,7 @@ hello_metry <- function(allometry_table, data_table, print){
    if(abundance > 0)
    ### Make small frame to get taxonomy
      c(taxo <- 
-        allometry_table %>% 
+        measurement_table %>% 
         filter(bwg_name == specname) %>% 
         dplyr::select(species_id:genus) %>% 
         unique(),
@@ -393,7 +402,7 @@ hello_metry <- function(allometry_table, data_table, print){
               while(!is.numeric(size_mm)){
                 ##### Go through my list of group
                 for(level in level_list){
-                  est <- sizest(specname, size_mm, level, path, taxo, allometry_table, data_table)
+                  est <- sizest(specname, size_mm, level, path, taxo, equation_table, measurement_table, data_table)
                   size_mm <- est[,1]
                   path <- est[,2]
                   #### Break loop if done
@@ -414,7 +423,7 @@ hello_metry <- function(allometry_table, data_table, print){
     while(is.na(biomass)){
       ##### Go through my list of group
       for(level in level_list){
-        est <- get_allometric_equations(specname, level, size_mm, abundance, path, taxo, allometry_table)
+        est <- get_allometric_equations(specname, level, size_mm, abundance, path, taxo, equation_table, measurement_table)
         biomass <- est[,1]
         path <- est[,2]
         #### Break loop if done
@@ -441,8 +450,8 @@ hello_metry <- function(allometry_table, data_table, print){
 
 
 
-# Update allometry table --------------------------------------------------
-allometry_supplement <- function(allometry_table, data_table){
+# Update measurement table --------------------------------------------------
+measurement_supplement <- function(measurement_table, data_table){
   # Keep only numerical measurements of data table
   data_table_num <- 
     data_table %>% 
@@ -452,26 +461,27 @@ allometry_supplement <- function(allometry_table, data_table){
     rename(length_mm = size_mm) %>% 
     mutate(length_mm = as.numeric(length_mm))
   
-  # Make stub of allometry_table 
-  allometry_stub <- 
-    allometry_table %>% 
+  # Make stub of measurement_table 
+  measurement_stub <- 
+    measurement_table %>% 
     dplyr::select(species_id:BF4) %>% 
     unique()
   
   # Join to numerical measurements
   data_table_num <- 
     data_table_num %>% 
-    left_join(allometry_stub)
+    left_join(measurement_stub)
   
-  # Bind to allometry table
-  allometry_table <- 
-    allometry_table %>% 
+  # Bind to measurement table
+  measurement_table <- 
+    measurement_table %>% 
     bind_rows(data_table_num)
   
   # Return updated data
-  return(allometry_table)
+  return(measurement_table)
     
 }
+
 
 
 
