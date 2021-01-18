@@ -9,6 +9,8 @@ library(ggplot2)
 library(lme4)
 library(stringr)
 library(stringdist)
+source("R_code/functions.R")
+
 
 # Get abundance by size data ----------------------------------------------
 # Get list of datasets in database
@@ -584,7 +586,8 @@ equation_table <-
 ## Measurements
 extra_measurements <- 
   read.csv("raw_data/extra_measurements.csv",
-           stringsAsFactors = F)
+           stringsAsFactors = F) %>% 
+  mutate(species_id = as.character(species_id))
 colnames(extra_measurements) <- 
   colnames(measurement_table)
 # Bind to allometry table

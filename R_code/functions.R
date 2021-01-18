@@ -21,7 +21,7 @@ get_allometric_equations <- function(specname, level, size_mm, abundance, path, 
   if(nrow(raw_meas) > 0)
     c(compute <- FALSE,
       biomass <- mean(raw_meas$biomass_mg),
-      path <- paste0(path, "_raw"),
+      path <- paste0(path, "_raw_", unique(raw_meas$biomass_type)),
       return(data.frame(biomass, as.character(path)))) else
       compute <- TRUE
     
@@ -37,7 +37,7 @@ get_allometric_equations <- function(specname, level, size_mm, abundance, path, 
             filter(!is.na(intercept) | !is.na(ln_intercept)) %>% 
             dplyr::select(biomass_type, intercept, slope, ln_intercept) %>% 
             unique()
-  ###If using trait, get custom list of species with other function
+  ## If using trait, get custom list of species with other function
   if(level == "traits")
     c(spec_list <- 
         matcher_of_traits(specname, measurement_table),
@@ -47,7 +47,7 @@ get_allometric_equations <- function(specname, level, size_mm, abundance, path, 
         filter(!is.na(intercept) | !is.na(ln_intercept)) %>% 
         dplyr::select(biomass_type, intercept, slope, ln_intercept) %>% 
         unique())
-  
+      
   # Get number of equations
    equation_number <- 
      nrow(allometry)
@@ -71,24 +71,40 @@ get_allometric_equations <- function(specname, level, size_mm, abundance, path, 
     
   # Case 2: more than one equation at the level
   if(equations == "multiple") 
-    ## Set biomass to zero
-    c(biomass <- 0,
+    c(## Count instance of equations based on dry and wet weight
+      type_count <- 
+        allometry %>% 
+        count(biomass_type) %>% 
+        ### Keep only the most common kind of equation
+        filter(n == max(n)),
+      ## If we have the same number of equations in both dry and wet, prioritise dry
+      ifelse(nrow(type_count) == 2,
+             type_count <- 
+               type_count %>% 
+               filter(biomass_type == "dry"),
+             type_count <- 
+               type_count),
+      ## Extract the selected kind of equation
+      allometry <- 
+        allometry %>% 
+        filter(biomass_type == type_count$biomass_type),
+      ## Update number of equations
+      equation_number <- 
+        nrow(allometry),
+      ## Unite values in type count for path
+      type_count <- 
+        type_count %>% 
+        unite(count, n, biomass_type),
+      ## Set biomass to zero
+      biomass <- 0,
     ## Sum biomass obtained from the different equations
-    for(i in 1:equation_number){
-      row <- allometry[i,]
-      biomass <- biomass + equation_finder(size_mm, row, taxo) * abundance
+    for(j in 1:equation_number){
+      eq <- allometry[j,]
+      biomass <- biomass + equation_finder(size_mm, eq, taxo) * abundance
     },
     ## Average the result
     biomass <- biomass/equation_number,
-    ## Count instance of equations based on dry and wet weight
-    type_count <- 
-      allometry %>% 
-      count(biomass_type) %>% 
-      unite(count, n, biomass_type) %>% 
-      pull(),
-    ## Stick it together to add to path
-    type_count <- 
-      paste0(type_count[1], "_", type_count[2]),
+    ## Add equation information to path
     path <- paste0(path,"_BM:", level, "_", type_count))
     
   # Case 3: no equations at the level
@@ -107,7 +123,11 @@ equation_finder <- function(size_mm, row, taxo){
     ifelse(!is.na(row$intercept), 
            "log10",
            ifelse(!is.na(row$ln_intercept),
-                  "ln"))
+                  "ln", NA))
+  
+  ## Possible error wit equations table
+  if(is.na(type))
+    stop("Error with equation format, please double check equation table")
   
   ## If function is log10
   if(type == "log10")

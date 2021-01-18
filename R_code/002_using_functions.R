@@ -17,7 +17,8 @@ measurement_table <-
 ### Make sure column with BWG species names named 'bwg_name'
 ### Make sure column with measurements names named 'size'
 data_table <- 
-  data_table
+  read.csv("data/database_data.csv",
+           stringsAsFactors = F)
 
 # Get biomass estimation for entire data frame
 biomass_data <- 
@@ -38,7 +39,7 @@ View(leftover)
 # Row by row use of functions -----------------------------------
 # Enter i as row number
 i <- 
-  30
+  1253
 
 # Extract row information
 row <- data_table[i,]
@@ -50,7 +51,7 @@ path <- ""
 
 # Extract species information
 taxo <- 
-  allometry_table %>% 
+  measurement_table %>% 
   filter(bwg_name == specname) %>% 
   dplyr::select(species_id:genus) %>% 
   unique()
