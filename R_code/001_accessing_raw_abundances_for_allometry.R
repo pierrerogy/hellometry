@@ -561,10 +561,10 @@ measurement_table <-
   ## keep only taxonomic information
   dplyr::select(species_id, bwg_name:species,
                 functional_group, 
-                BS1:BS5, 
-                LO1:LO7,
-                MD1:MD8,
-                BF1:BF4) %>% 
+                BS1:BS5, ### maximum body size
+                LO1:LO7, ### locomotion
+                MD1:MD8, ### morphological defense
+                BF1:BF4) %>% ### body form
   ## First add only raw measurements and biomass for species
   left_join(fw_biomass %>% 
               ## remove columns not important (I hope) for this specific table

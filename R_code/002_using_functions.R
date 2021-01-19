@@ -26,6 +26,8 @@ biomass_data <-
               measurement_table,
               data_table, 
               print = TRUE)
+## Save data
+write.csv(biomass_data, "data/database_biomass_estimates.csv", row.names = F)
 
 # Filter resulting database to assess those who haven't been assigned biomass so far
 ## Get list of species

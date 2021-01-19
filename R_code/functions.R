@@ -346,7 +346,8 @@ hello_metry <- function(equation_table, measurement_table, data_table, print){
   data_return <- 
     data_table %>% 
     ## And add new columns to fill
-    mutate(biomass = NA,
+    mutate(size_used = NA,
+           biomass = NA,
            path = NA)
   
   # Some error catching 
@@ -406,7 +407,7 @@ hello_metry <- function(equation_table, measurement_table, data_table, print){
      c(taxo <- 
         measurement_table %>% 
         filter(bwg_name == specname) %>% 
-        dplyr::select(species_id:genus) %>% 
+        dplyr::select(species_id:species) %>% 
         unique(),
      ### If not in database, give special biomass value
       if(nrow(taxo) == 0)
@@ -459,13 +460,21 @@ hello_metry <- function(equation_table, measurement_table, data_table, print){
       }}
   
     ### Add biomass and path value to data frame to return
+    data_return[i,(ncol(data_return)-2)] <- size_mm
     data_return[i,(ncol(data_return)-1)] <- biomass
     data_return[i,ncol(data_return)] <- as.character(path)
     
   } 
   ## Return new data frame
   return(data_return %>% 
-           rename(biomass_mg = biomass))
+           rename(biomass_mg = biomass,
+                  size_original = size_mm) %>% 
+           left_join(measurement_table %>% 
+                       dplyr::select(domain:species) %>% 
+                       unique()) %>% 
+           relocate(size_original:path, .after = species) %>% 
+           ### to make things easy only put NA where size was not computed
+           mutate(size_used = ifelse(abundance == 0, NA, size_used)))
         
 }
 
