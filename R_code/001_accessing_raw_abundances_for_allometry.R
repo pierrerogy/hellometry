@@ -578,22 +578,29 @@ mutate(abundance = ifelse(is.na(length_mm), 0, 1))
 extra_equations <- 
   read.csv("raw_data/extra_equations.csv",
            stringsAsFactors = F)
-# Bind to allometry table
+
+## Bind to allometry table
 equation_table <- 
   equation_table %>% 
-  bind_rows(extra_equations)
+  bind_rows(extra_equations) %>% 
+  ## Make sure empty space are NAs and not empty strings
+  mutate_all(list(~na_if(.,"")))
 
-## Measurements
+
+
+# Measurements
 extra_measurements <- 
   read.csv("raw_data/extra_measurements.csv",
            stringsAsFactors = F) %>% 
   mutate(species_id = as.character(species_id))
 colnames(extra_measurements) <- 
   colnames(measurement_table)
-# Bind to allometry table
+## Bind to allometry table
 measurement_table <- 
   measurement_table %>% 
-  bind_rows(extra_measurements)
+  bind_rows(extra_measurements) %>% 
+  ## Make sure empty space are NAs and not empty strings
+  mutate_all(list(~na_if(.,"")))
 
 # Try function against dataset --------------------------------------------
 # Load data

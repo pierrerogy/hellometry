@@ -18,7 +18,12 @@ measurement_table <-
 ### Make sure column with measurements names named 'size'
 data_table <- 
   read.csv("data/database_data.csv",
-           stringsAsFactors = F)
+           stringsAsFactors = F) %>% 
+  ### Change those gigantic Monopelopia
+  mutate(size_mm = ifelse(bwg_name == "Diptera.175" & size_mm == "35",
+         "unknown", size_mm)) %>% 
+  ### Remove Collembola
+  filter(bwg_name %notin% c("Collembola.1", "Collembola.2", "Collembola.3"))
 
 # Get biomass estimation for entire data frame
 biomass_data <- 
