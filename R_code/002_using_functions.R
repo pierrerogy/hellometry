@@ -25,7 +25,8 @@ biomass_data <-
   hello_metry(equation_table, 
               measurement_table,
               data_table, 
-              print = TRUE)
+              print = TRUE,
+              biomass_kind = "dry")
 ## Save data
 write.csv(biomass_data, "data/database_biomass_estimates.csv", row.names = F)
 
@@ -83,7 +84,7 @@ for(level in level_list){
   path <- ""
   print(paste(c(level, 
                 get_allometric_equations(specname, level, size_mm, abundance, path, taxo, 
-                                         equation_table, measurement_table))))
+                                         equation_table, measurement_table, biomass_kind = "dry"))))
 }
 
 
@@ -96,6 +97,120 @@ biomass_row <-
   hello_metry(equation_table, 
               measurement_table, 
               row, 
-              print = TRUE)
+              print = TRUE,
+              biomass_kind = "dry")
 
+# Some data checking ------------------------------------------------------
 
+# Combine measurements
+updated_meas <- 
+  measurement_supplement(measurement_table, data_table)
+
+#Make histograms for families
+family_list <- 
+  unique(updated_meas$family)
+family_list <- 
+  family_list[which(family_list != "")]
+
+pdf("family_hist.pdf")
+par(mfrow=c(4,2))
+for(i in family_list){
+  dats <- 
+    updated_meas %>% 
+    filter(family == i,
+           !is.na(length_mm))
+  tryCatch(
+    expr = {hist(dats$length_mm,
+                 nclass = 50,
+                 main = paste0(i))
+            hist(log(dats$length_mm + 1),
+                 nclass = 50,
+                 main = paste0(i))
+    },
+    error = function(e){ 
+      ### If error (species unconnected), just make a blank plot with site name
+      plot.new()
+      title(paste0(i))
+      plot.new()
+      title(paste0(i))
+    })
+  
+  
+  
+}
+dev.off()
+par(mfrow=c(1,1))
+
+#Make scatterplots for families
+family_list <- 
+  unique(updated_meas$family)
+family_list <- 
+  family_list[which(family_list != "")]
+
+pdf("family_scat.pdf")
+par(mfrow=c(4,2))
+for(i in family_list){
+  dats <- 
+    updated_meas %>% 
+    filter(family == i,
+           !is.na(length_mm),
+           !is.na(biomass_mg))
+  tryCatch(
+    expr = {plot(dats$length_mm ~
+                 dats$biomass_mg,
+                 main = paste0(i))
+
+    },
+    error = function(e){ 
+      ### If error (species unconnected), just make a blank plot with site name
+      plot.new()
+      title(paste0(i))
+    })
+  
+  
+  
+}
+dev.off()
+par(mfrow=c(1,1))
+
+#Make scatterplots for families with estimated biomass
+family_list <- 
+  unique(biomass_data$family)
+family_list <- 
+  family_list[which(family_list != "")]
+
+pdf("family_estimated_scat.pdf")
+par(mfrow=c(4,2))
+for(i in family_list){
+  dats <- 
+    biomass_data %>% 
+    mutate(size_original = as.numeric(size_original),
+           biomass_mg = as.numeric(biomass_mg)) %>% 
+    filter(family == i,
+           abundance > 0,
+           !is.na(size_original),
+           !is.na(biomass_mg)) %>% 
+    mutate(type = ifelse(str_detect(path, "wet", negate = FALSE),
+                         "wet", "dry"),
+           biomass_per_cap = biomass_mg/abundance)
+  
+  tryCatch(
+    expr = {plot(dats$biomass_per_cap ~
+                   dats$size_original,
+                 pch = ifelse(dats$type == "dry", 16, 17),
+                 ylab = "per cap. biomass (mg)",
+                 xlab = "length (mm)",
+                 main = paste0(i))
+      
+    },
+    error = function(e){ 
+      ### If error (species unconnected), just make a blank plot with site name
+      plot.new()
+      title(paste0(i))
+    })
+  
+  
+  
+}
+dev.off()
+par(mfrow=c(1,1))

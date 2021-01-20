@@ -8,14 +8,40 @@ library(gridExtra)
   Negate('%in%')
 
 # Estimate biomass --------------------------------------------------------
-get_allometric_equations <- function(specname, level, size_mm, abundance, path, taxo, equation_table, measurement_table){
-
+get_allometric_equations <- function(specname, level, size_mm, abundance, path, taxo, equation_table, measurement_table, biomass_kind){
+  #browser()
   # Check if species is length_raw, and if size is present
   raw_meas <- 
     measurement_table %>% 
     filter(provenance == "length.raw") %>% 
     filter(bwg_name == specname,
-           length_mm == size_mm)
+           length_mm == size_mm) %>% 
+    unique()
+  
+  # Switch for wet and dry measurements
+  ## Only keep dry measurements
+  if(biomass_kind == "dry")
+    (raw_meas <- 
+      raw_meas %>% 
+      filter(biomass_type == "dry")) else
+  ## Just keep the most numerous
+        c(type_count <- 
+          raw_meas %>% 
+          count(biomass_type) %>% 
+          ### Keep only the most common kind of measurement
+          filter(n == max(n)),
+          ## If we have the same number of measurements in both dry and wet, prioritise dry
+          ifelse(nrow(type_count) == 2,
+                 (type_count <- 
+                   type_count %>% 
+                   filter(biomass_type == "dry")),
+                 type_count <- 
+                   type_count),
+          raw_meas <- 
+            raw_meas %>% 
+            filter(biomass_type == type_count$biomass_type))
+        
+  
   ## If both are present, then we do not need to compute
   ## or at least just take the mean of the directly measured biomasses
   if(nrow(raw_meas) > 0)
@@ -48,6 +74,34 @@ get_allometric_equations <- function(specname, level, size_mm, abundance, path, 
         dplyr::select(biomass_type, intercept, slope, ln_intercept) %>% 
         unique())
       
+  # Switch for wet and dry measurements    
+  if(nrow(allometry > 0))
+    ## Only keep dry measurements
+    c(if(biomass_kind == "dry")
+      c(allometry <- 
+          allometry %>% 
+          filter(biomass_type == "dry"),
+        type_count <- 
+          allometry %>% 
+          count(biomass_type)) else 
+            ## Count instance of equations based on dry and wet weight
+            c(type_count <- 
+                allometry %>% 
+                count(biomass_type) %>% 
+                ### Keep only the most common kind of equation
+                filter(n == max(n)),
+              ## If we have the same number of equations in both dry and wet, prioritise dry
+              ifelse(nrow(type_count) == 2,
+                     type_count <- 
+                       type_count %>% 
+                       filter(biomass_type == "dry"),
+                     type_count <- 
+                       type_count),
+              ## Extract the selected kind of equation
+              allometry <- 
+                allometry %>% 
+                filter(biomass_type == type_count$biomass_type)))
+  
   # Get number of equations
    equation_number <- 
      nrow(allometry)
@@ -71,30 +125,7 @@ get_allometric_equations <- function(specname, level, size_mm, abundance, path, 
     
   # Case 2: more than one equation at the level
   if(equations == "multiple") 
-    c(## Count instance of equations based on dry and wet weight
-      type_count <- 
-        allometry %>% 
-        count(biomass_type) %>% 
-        ### Keep only the most common kind of equation
-        filter(n == max(n)),
-      ## If we have the same number of equations in both dry and wet, prioritise dry
-      ifelse(nrow(type_count) == 2,
-             type_count <- 
-               type_count %>% 
-               filter(biomass_type == "dry"),
-             type_count <- 
-               type_count),
-      ## Extract the selected kind of equation
-      allometry <- 
-        allometry %>% 
-        filter(biomass_type == type_count$biomass_type),
-      ## Update number of equations
-      equation_number <- 
-        nrow(allometry),
-      ## Unite values in type count for path
-      type_count <- 
-        type_count %>% 
-        unite(count, n, biomass_type),
+    c(## Unite values in type count for path
       ## Set biomass to zero
       biomass <- 0,
     ## Sum biomass obtained from the different equations
@@ -105,7 +136,7 @@ get_allometric_equations <- function(specname, level, size_mm, abundance, path, 
     ## Average the result
     biomass <- biomass/equation_number,
     ## Add equation information to path
-    path <- paste0(path,"_BM:", level, "_", type_count))
+    path <- paste0(path,"_BM:", level, "_", type_count$biomass_type, type_count$count))
     
   # Case 3: no equations at the level
   ## Simply return NA
@@ -340,7 +371,7 @@ matcher_of_traits <- function(specname, measurement_table){
 }
 
 # Wrapper function going row-by-row ----------------------------
-hello_metry <- function(equation_table, measurement_table, data_table, print){
+hello_metry <- function(equation_table, measurement_table, data_table, print, biomass_kind){
   # browser()
     # Make copy of data table
   data_return <- 
@@ -361,6 +392,9 @@ hello_metry <- function(equation_table, measurement_table, data_table, print){
   ## Print is actually a true false
   if(print %notin% c(TRUE, FALSE))
     stop("Print has to be TRUE/FALSE")
+  ## Biomass kind needs to be dry or both
+  if(biomass_kind %notin% c("dry", "both"))
+    stop("Biomass kind has to be 'dry' or 'both'")
   
   # Make list of taxonomic groups/traits to gro through
   # Note that after family we look at traits, and then back to higher trophic levels (the broad ones)
@@ -445,7 +479,7 @@ hello_metry <- function(equation_table, measurement_table, data_table, print){
     while(is.na(biomass)){
       ##### Go through my list of group
       for(level in level_list){
-        est <- get_allometric_equations(specname, level, size_mm, abundance, path, taxo, equation_table, measurement_table)
+        est <- get_allometric_equations(specname, level, size_mm, abundance, path, taxo, equation_table, measurement_table, biomass_kind)
         biomass <- est[,1]
         path <- est[,2]
         #### Break loop if done
@@ -470,7 +504,7 @@ hello_metry <- function(equation_table, measurement_table, data_table, print){
            rename(biomass_mg = biomass,
                   size_original = size_mm) %>% 
            left_join(measurement_table %>% 
-                       dplyr::select(domain:species) %>% 
+                       dplyr::select(bwg_name:species) %>% 
                        unique()) %>% 
            relocate(size_original:path, .after = species) %>% 
            ### to make things easy only put NA where size was not computed
