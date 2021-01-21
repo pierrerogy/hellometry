@@ -410,6 +410,16 @@ hello_metry <- function(equation_table, measurement_table, data_table, print, bi
       "class",
       "phylum")
   
+  ## Limoniidae and Tipulidae essentially the same thing so can be considered together
+  measurement_table <- 
+    measurement_table %>% 
+    mutate(family = ifelse(family %in% c("Tipulidae", "Limoniidae"),
+                           "Tipulidae_Limoniidae", family))
+  equation_table <- 
+    equation_table %>% 
+    mutate(family = ifelse(family %in% c("Tipulidae", "Limoniidae"),
+                           "Tipulidae_Limoniidae", family))
+  
  # Loop to fill row by row
   for(i in 1:nrow(data_return)){
     ## If people want to print row names to track progress
@@ -424,16 +434,6 @@ hello_metry <- function(equation_table, measurement_table, data_table, print, bi
     
     ## Initialise path to record what happens in this function
     path <- ""
-    
-    ## Limoniidae and Tipulidae essentially the same thing so can be considered together
-    measurement_table <- 
-      measurement_table %>% 
-      mutate(family = ifelse(family %in% c("Tipulidae", "Limoniidae"),
-                             "Tipulidae_Limoniidae", family))
-    equation_table <- 
-      equation_table %>% 
-      mutate(family = ifelse(family %in% c("Tipulidae", "Limoniidae"),
-                             "Tipulidae_Limoniidae", family))
     
     ## Some error catching
     ### Make sure abundance is not NA

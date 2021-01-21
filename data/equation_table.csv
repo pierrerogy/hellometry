@@ -76,7 +76,6 @@ NA,NA,"Eukarya","Animalia","Arthropoda",NA,"Insecta","Palaeoptera","Odonata","Zy
 "6281","Odonata.4","Eukarya","Animalia","Arthropoda",NA,"Insecta","Palaeoptera","Odonata","Zygoptera","Pseudostigmatidae",NA,NA,"Mecistogaster","modesta","wet",0.977662084213884,28,-1.49103574889887,2.78662043899398,NA
 "6521","Coleoptera.31","Eukarya","Animalia","Arthropoda",NA,"Insecta","Neoptera","Coleoptera","Polyphaga","Scirtidae",NA,NA,NA,NA,"wet",0.944796300609338,9,-1.13701800585174,1.98465618318617,NA
 NA,NA,"Eukarya","Animalia","Arthropoda",NA,"Insecta","Neoptera","Coleoptera","Polyphaga","Scirtidae",NA,NA,NA,NA,"dry",0.841128467897583,14,-2.3871463806583,2.18406598986187,NA
-NA,NA,"Eukaryota","Animalia","Platyhelminthes",NA,"Turbellaria",NA,"Tricladida",NA,"Dugesiidae",NA,NA,"Dugesia","polychroa","dry",NA,7820,0.0009669,0.0022326,NA
 NA,NA,"Eukaryota","Animalia","Platyhelminthes",NA,"Turbellaria",NA,"Tricladida",NA,"Dugesiidae",NA,NA,"Girardia",NA,"dry",0.86,28,NA,1.91,-4.01
 NA,NA,"Eukaryota","Animalia","Annelida",NA,"Clitellata","Oligochaeta","Haplotaxida","Lumbricina","Lumbriculidae",NA,NA,NA,NA,"dry",0.74,28,NA,3.25,-9.19
 NA,NA,"Eukaryota","Animalia","Annelida",NA,"Clitellata","Oligochaeta","Haplotaxida","Tubificina","Naididae",NA,NA,NA,NA,"dry",0.57,20,NA,0.74,-2.58
@@ -94,5 +93,5 @@ NA,NA,"Eukaryota","Animalia","Arthropoda","Crustacea","Ostracoda","Myodocopa","H
 NA,NA,"Eukaryota","Animalia","Arthropoda","Crustacea","Ostracoda","Myodocopa","Halocyprida","Holocypridina","Halocyprididae",NA,NA,"Metaconchoecia","skogsbergi","dry",0.996,7,-7.143,2.42,NA
 NA,NA,"Eukaryota","Animalia","Arthropoda","Crustacea","Ostracoda","Myodocopa","Halocyprida","Holocypridina","Halocyprididae",NA,NA,"Orthoconchoecia","haddoni","dry",0.996,8,-7.511,2.53,NA
 NA,NA,"Eukaryota","Animalia","Arthropoda","Chelicerata","Arachnida","Acari",NA,NA,NA,NA,NA,NA,NA,"dry",NA,NA,NA,2.761,3.682
-NA,NA,"Eukarya","Animalia","Arthropoda",NA,"Insecta","Neoptera","Diptera","Nematocera","Limoniidae","Limoniinae",NA,"Trentepohlia",NA,"dry",NA,NA,0.0019,2.3298,NA
-NA,NA,"Eukarya","Animalia","Arthropoda",NA,"Insecta","Neoptera","Diptera","Nematocera","Tipulidae",NA,NA,NA,NA,"dry",NA,NA,0.0019,2.3298,NA
+NA,NA,"Eukarya","Animalia","Arthropoda",NA,"Insecta","Neoptera","Diptera","Nematocera","Limoniidae","Limoniinae",NA,"Trentepohlia",NA,"dry",NA,NA,-2.721246399,2.3298,NA
+NA,NA,"Eukarya","Animalia","Arthropoda",NA,"Insecta","Neoptera","Diptera","Nematocera","Tipulidae",NA,NA,NA,NA,"dry",NA,NA,-2.721246399,2.3298,NA
