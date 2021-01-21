@@ -8,7 +8,7 @@ library(gridExtra)
   Negate('%in%')
 
 # Estimate biomass --------------------------------------------------------
-get_allometric_equations <- function(specname, level, size_mm, abundance, path, taxo, equation_table, measurement_table, biomass_kind){
+get_allometric_equations <- function(specname, level, size_mm, abundance, stage, path, taxo, equation_table, measurement_table, biomass_kind){
   #browser()
   # Check if species is length_raw, and if size is present
   raw_meas <- 
@@ -182,7 +182,7 @@ equation_finder <- function(size_mm, row, taxo){
 }
 
 # Estimate size  -----------------------------------------------
-sizest <- function(specname, size_mm, level, path, taxo, equation_table, measurement_table, data_table){
+sizest <- function(specname, size_mm, level, stage, path, taxo, equation_table, measurement_table, data_table){
 
   ## Decide where to go depending on value of size
   if(size_mm == "unknown")
@@ -431,6 +431,7 @@ hello_metry <- function(equation_table, measurement_table, data_table, print, bi
     specname <- row$bwg_name
     size_mm <- row$size_mm
     abundance <- row$abundance
+    stage <- row$stage
     
     ## Initialise path to record what happens in this function
     path <- ""
@@ -470,7 +471,7 @@ hello_metry <- function(equation_table, measurement_table, data_table, print, bi
               while(!is.numeric(size_mm)){
                 ##### Go through my list of group
                 for(level in level_list){
-                  est <- sizest(specname, size_mm, level, path, taxo, equation_table, measurement_table, data_table)
+                  est <- sizest(specname, size_mm, level, stage, path, taxo, equation_table, measurement_table, data_table)
                   size_mm <- est[,1]
                   path <- est[,2]
                   #### Break loop if done
@@ -491,7 +492,7 @@ hello_metry <- function(equation_table, measurement_table, data_table, print, bi
     while(is.na(biomass)){
       ##### Go through my list of group
       for(level in level_list){
-        est <- get_allometric_equations(specname, level, size_mm, abundance, path, taxo, equation_table, measurement_table, biomass_kind)
+        est <- get_allometric_equations(specname, level, size_mm, abundance, stage, path, taxo, equation_table, measurement_table, biomass_kind)
         biomass <- est[,1]
         path <- est[,2]
         #### Break loop if done
