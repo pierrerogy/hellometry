@@ -88,7 +88,7 @@ print(paste(c(level,
 for(level in level_list){
   path <- ""
   print(paste(c(level, 
-                get_allometric_equations(specname, level, size_mm, abundance, stage, path, taxo, 
+                get_biomass(specname, level, size_mm, abundance, stage, path, taxo, 
                                          equation_table, measurement_table, biomass_kind = "dry"))))
 }
 
