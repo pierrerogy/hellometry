@@ -14,7 +14,7 @@ get_biomass <- function(specname, level, size_mm, abundance, stage, path, taxo, 
     measurement_table %>% 
     filter(provenance == "length.raw") %>% 
     filter(bwg_name == specname,
-           length_mm == size_mm) %>% 
+           size_mm == size_mm) %>% 
     unique()
   
   # Switch for wet and dry measurements

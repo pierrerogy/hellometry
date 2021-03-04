@@ -123,12 +123,12 @@ for(i in family_list){
   dats <- 
     updated_meas %>% 
     filter(family == i,
-           !is.na(length_mm))
+           !is.na(size_mm))
   tryCatch(
-    expr = {hist(dats$length_mm,
+    expr = {hist(dats$size_mm,
                  nclass = 50,
                  main = paste0(i))
-            hist(log(dats$length_mm + 1),
+            hist(log(dats$size_mm + 1),
                  nclass = 50,
                  main = paste0(i))
     },
@@ -158,10 +158,10 @@ for(i in family_list){
   dats <- 
     updated_meas %>% 
     filter(family == i,
-           !is.na(length_mm),
+           !is.na(size_mm),
            !is.na(biomass_mg))
   tryCatch(
-    expr = {plot(dats$length_mm ~
+    expr = {plot(dats$size_mm ~
                  dats$biomass_mg,
                  main = paste0(i))
 

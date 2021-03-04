@@ -35,8 +35,8 @@ sizest <- function(specname, size_mm, level, stage, path, taxo, equation_table, 
         #### Add measurements from allometry table
         bind_rows(measurement_table %>% 
                     filter(bwg_name %in% spec_list) %>%
-                    dplyr::select(length_mm, abundance) %>% 
-                    rename(size_mm = length_mm) %>% 
+                    dplyr::select(size_mm, abundance) %>% 
+                    rename(size_mm = size_mm) %>% 
                     mutate(size_mm = as.character(size_mm))) %>% 
         #### Group by size and sum
         group_by(size_mm) %>% 
@@ -72,8 +72,8 @@ sizest <- function(specname, size_mm, level, stage, path, taxo, equation_table, 
             #### Add measurements from allometry table
             bind_rows(measurement_table %>% 
                         filter(bwg_name %in% spec_list) %>%
-                        dplyr::select(length_mm, abundance) %>% 
-                        rename(size_mm = length_mm) %>% 
+                        dplyr::select(size_mm, abundance) %>% 
+                        rename(size_mm = size_mm) %>% 
                         mutate(size_mm = as.character(size_mm))) %>% 
             #### Group by size and sum
             group_by(size_mm) %>% 

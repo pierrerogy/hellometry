@@ -570,7 +570,7 @@ measurement_table <-
               ## remove columns not important (I hope) for this specific table
               dplyr::select(-measurement_id, -length_est_mm, -length_measured_as, 
                             -biomass_ci_upr, -biomass_ci_lwr, -provenance_species:-slope)) %>% 
-mutate(abundance = ifelse(is.na(length_mm), 0, 1))
+mutate(abundance = ifelse(is.na(size_mm), 0, 1))
   
 # Extra data  ----------------------------------------------------
 # From literature
