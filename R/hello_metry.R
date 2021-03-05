@@ -4,8 +4,10 @@
 #' biomass from given species, size and abundance, as well as path taken through 
 #' the function
 #'
-#' @param data_table, print, biomass_kind, database
-#' @return The original data frame, 
+#' @param data_table The input data table print, make sure columns "abundance", "bwg_name", "size_mm" are present
+#' @param print Do you want to see the printing of the rows (TRUE/FALSE)
+#' @param biomass_kind "dry" for just dry biomass, or "both" for both dry and wet
+#' @param database Should data from the bwg database be used to supplement the measurements (TRUE/FALSE)
 #' @export
 hello_metry <- function(data_table, print, biomass_kind, database){
   # browser()

@@ -7,10 +7,13 @@
 hello_metry(data_table, print, biomass_kind, database)
 }
 \arguments{
-\item{data_table, }{print, biomass_kind, database}
-}
-\value{
-The original data frame,
+\item{data_table}{The input data table print, make sure columns "abundance", "bwg_name", "size_mm" are present}
+
+\item{print}{Do you want to see the printing of the rows (TRUE/FALSE)}
+
+\item{biomass_kind}{"dry" for just dry biomass, or "both" for both dry and wet}
+
+\item{database}{Should data from the bwg database be used to supplement the measurements (TRUE/FALSE)}
 }
 \description{
 Wrapper function, returns initial data table with three extra columns: total
