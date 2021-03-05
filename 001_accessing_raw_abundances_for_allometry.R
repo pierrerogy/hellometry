@@ -58,7 +58,7 @@ for(i in rows){
     ## convert list of list into dataframe, with first column being species key, and second column the nested list
     enframe(name = "species.key") %>%
     ## from that second column, extract bwg name of species, and store rest of nested list within new column
-    mutate(bwgname = map_chr(value, 1),
+    dplyr::mutate(bwgname = map_chr(value, 1),
            measure = map(value,2)) %>%
     ## remove column coupling bwg names and nested lists
     select(-value)
@@ -68,7 +68,7 @@ for(i in rows){
     dataset_meas %>%
     ## measure is a nested list; extract and convert to a dataframe
     ### again list of length 1 with everything stored in first element, so keep onyl this
-    mutate(meas_list = map(measure, 1),
+    dplyr::mutate(meas_list = map(measure, 1),
            ### convert list to dataframe, again with list names in "listcontent" column
            meas_df = map(meas_list, enframe, name = "listcontents")) %>%
     ## remove old columns, to keep only species key, bwg name, and jsut created dataframe column
@@ -82,7 +82,7 @@ for(i in rows){
   dataset_flat <-
     dataset_almost_flat %>%
     ## flatten first level of list
-    mutate(category_range = flatten_chr(category_range),
+    dplyr::mutate(category_range = flatten_chr(category_range),
            ## extract first character element of value list in row
            measurement = map_chr(measurement, "value"),
            ## turn last level of nested list into data frame
@@ -90,20 +90,20 @@ for(i in rows){
     ## unnest data frame
     unnest(bromeliads) %>%
     ## flatten first level of list
-    mutate(value = flatten_chr(value) %>%
+    dplyr::mutate(value = flatten_chr(value) %>%
              ## convert to numeric (character before)
              readr::parse_double(.)) %>%
     ## give more informative name to "name"
-    rename(bromeliad = name) %>% 
+    dplyr::rename(bromeliad = name) %>% 
     ## add column with dataset info
-    mutate(dataset_id = dataset_id,
+    dplyr::mutate(dataset_id = dataset_id,
            dataset_name = dataset_name) %>% 
     # put columns in better order
-    relocate(dataset_id, dataset_name,  .before = species.key)
+    dplyr::relocate(dataset_id, dataset_name,  .before = species.key)
   
   # bind rows to overall data frame
   all_dats <- 
-    bind_rows(all_dats, 
+    dplyr::bind_rows(all_dats, 
               dataset_flat) 
   
 }
@@ -113,7 +113,7 @@ for(i in rows){
 all_dats <- 
   all_dats %>% 
   separate(measurement, c("stage", "size"), sep = "_", remove = T) %>% 
-  mutate(size = ifelse(is.na(size), stage, size))
+  dplyr::mutate(size = ifelse(is.na(size), stage, size))
 ## returns big warning message, it's ok because we if only one word, kept in "stage"
 
 # Remove "mm" in some meas rows
@@ -126,13 +126,13 @@ for(i in 1:nrow(all_dats)){
 abundance_size <- 
   all_dats %>% 
   filter(bromeliad != 12626) %>% 
-  rename(abundance = value)
+  dplyr::rename(abundance = value)
 
 # Give better column name, and harmonise size categories
 abundance_size <- 
   abundance_size %>% 
-  rename(bwg_name = bwgname) %>% 
-  mutate(size = ifelse(size %in% c("tiny", "S", "xsmall"),
+  dplyr::rename(bwg_name = bwgname) %>% 
+  dplyr::mutate(size = ifelse(size %in% c("tiny", "S", "xsmall"),
                        "small",
                        ifelse(size %in% c("huge", "xlarge"),
                               "large",
@@ -154,7 +154,7 @@ fw_biomass <-
   fw_data("v.0.0.1_0.0.1",
           biomass = TRUE) %>%
   ## convert species_id to character
-  mutate(species_id = as.character(species_id),
+  dplyr::mutate(species_id = as.character(species_id),
          ## Only keep raw biomass values
          biomass_mg = ifelse(provenance %in% c("length.raw", "category.raw"),
                              biomass_mg, NA))
@@ -488,7 +488,7 @@ plot(clusters)
 ## Now fix
 trait_data <- 
   trait_data %>% 
-  mutate(species = str_replace_all(species, "[()]", ""),
+  dplyr::mutate(species = str_replace_all(species, "[()]", ""),
          species = str_replace_all(species, "Microculex ", ""),
          species = str_replace_all(species, "Aulophorus ", ""),
          species = str_replace_all(species, "Phoniomyia ", ""))
@@ -508,7 +508,7 @@ equation_table <-
                             -biomass_mg:-num_relatives)) %>% 
   filter(!is.na(intercept)) %>% 
   ## If shared taxon is NA, it means the equation is from the species itself
-  mutate(shared_taxon = ifelse(is.na(shared_taxon),
+  dplyr::mutate(shared_taxon = ifelse(is.na(shared_taxon),
                                "species", shared_taxon),
          ln_intercept = NA) %>% 
   unique()
@@ -570,7 +570,7 @@ measurement_table <-
               ## remove columns not important (I hope) for this specific table
               dplyr::select(-measurement_id, -length_est_mm, -length_measured_as, 
                             -biomass_ci_upr, -biomass_ci_lwr, -provenance_species:-slope)) %>% 
-mutate(abundance = ifelse(is.na(size_mm), 0, 1))
+dplyr::mutate(abundance = ifelse(is.na(size_mm), 0, 1))
   
 # Extra data  ----------------------------------------------------
 # From literature
@@ -582,9 +582,9 @@ extra_equations <-
 ## Bind to allometry table
 equation_table <- 
   equation_table %>% 
-  bind_rows(extra_equations) %>% 
+  dplyr::bind_rows(extra_equations) %>% 
   ## Make sure empty space are NAs and not empty strings
-  mutate_all(list(~na_if(.,"")))
+  dplyr::mutate_all(list(~na_if(.,"")))
 
 
 
@@ -592,25 +592,25 @@ equation_table <-
 extra_measurements <- 
   read.csv("raw_data/extra_measurements.csv",
            stringsAsFactors = F) %>% 
-  mutate(species_id = as.character(species_id))
+  dplyr::mutate(species_id = as.character(species_id))
 colnames(extra_measurements) <- 
   colnames(measurement_table)
 ## Bind to allometry table
 measurement_table <- 
   measurement_table %>% 
-  bind_rows(extra_measurements) %>% 
+  dplyr::bind_rows(extra_measurements) %>% 
   ## Make sure empty space are NAs and not empty strings
-  mutate_all(list(~na_if(.,"")))
+  dplyr::mutate_all(list(~na_if(.,"")))
 
 # Try function against dataset --------------------------------------------
 # Load data
 pitilla <- 
   read.csv("raw_data/Pitilla2002_clean.csv") %>% 
-  mutate(wet_per_cap_biomass_mg = wet_per_cap_biomass_g * 1000,
+  dplyr::mutate(wet_per_cap_biomass_mg = wet_per_cap_biomass_g * 1000,
          dry_per_cap_biomass_mg = dry_per_cap_biomass_g * 1000,
          abundance = 1) %>% 
   dplyr::select(-wet_per_cap_biomass_g, -dry_per_cap_biomass_g) %>% 
-  rename(bwg_name = nickname,
+  dplyr::rename(bwg_name = nickname,
          size_mm = size..mm.)
 
 # Update measurement table with database

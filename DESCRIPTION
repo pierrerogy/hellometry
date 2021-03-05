@@ -13,7 +13,8 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
-Imports: tidyverse,
-         ggplot2,
-         gridExtra
-
+Imports: 
+    tidyverse,
+    ggplot2,
+    magrittr,
+    dplyr

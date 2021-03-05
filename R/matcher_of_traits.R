@@ -13,7 +13,7 @@ matcher_of_traits <- function(specname, measurement_table){
   # Extract traits of given species
   traits <- 
     measurement_table %>% 
-    filter(bwg_name == specname) %>% 
+    dplyr::filter(bwg_name == specname) %>% 
     dplyr::select(BS1:BF4)
   
   # NA catcher 
@@ -26,7 +26,7 @@ matcher_of_traits <- function(specname, measurement_table){
     spec_list <- 
       measurement_table %>% 
      ## Kept in that format to make explicit changes and allow flexibility in trait matching
-      filter(BS1 %in% c((traits$BS1 - 1):(traits$BS1 + 1)) &
+      dplyr::filter(BS1 %in% c((traits$BS1 - 1):(traits$BS1 + 1)) &
              BS2 %in% c((traits$BS2 - 1):(traits$BS2 + 1)) &
              BS3 %in% c((traits$BS3 - 1):(traits$BS3 + 1)) &
              BS4 %in% c((traits$BS4 - 1):(traits$BS4 + 1)) &
@@ -51,7 +51,7 @@ matcher_of_traits <- function(specname, measurement_table){
              BF4 %in% c((traits$BF4 - 1):(traits$BF4 + 1))) %>% 
       dplyr::select(bwg_name) %>% 
       unique() %>% 
-      pull()
+      dplyr::pull()
   
   # If we have NAs 
   if(!proceed)

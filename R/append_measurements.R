@@ -11,11 +11,11 @@ append_measurements <- function(measurement_table, data_table){
   data_table_num <- 
     data_table %>% 
     dplyr::select(bwg_name, size_mm, abundance) %>% 
-    mutate(size_mm = as.numeric(size_mm)) %>% 
-    filter(!is.na(size_mm),
+    dplyr::mutate(size_mm = as.numeric(size_mm)) %>% 
+    dplyr::filter(!is.na(size_mm),
            abundance > 0) %>% 
-    group_by(bwg_name, size_mm) %>% 
-    summarise_all(sum)
+    dplyr::group_by(bwg_name, size_mm) %>% 
+    dplyr::summarise_all(sum)
     
   # Make stub of measurement_table 
   measurement_stub <- 
@@ -31,7 +31,7 @@ append_measurements <- function(measurement_table, data_table){
   # Bind to measurement table
   measurement_table <- 
     measurement_table %>% 
-    bind_rows(data_table_num)
+    dplyr::bind_rows(data_table_num)
   
   # Return updated data
   return(measurement_table)

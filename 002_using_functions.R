@@ -20,10 +20,10 @@ data_table <-
   read.csv("data/database_data.csv",
            stringsAsFactors = F) %>% 
   ### Change those gigantic Monopelopia
-  mutate(size_mm = ifelse(bwg_name == "Diptera.175" & size_mm == "35",
+  dplyr::mutate(size_mm = ifelse(bwg_name == "Diptera.175" & size_mm == "35",
          "unknown", size_mm)) %>% 
   ### Remove Collembola
-  filter(bwg_name %notin% c("Collembola.1", "Collembola.2", "Collembola.3"))
+  dplyr::filter(bwg_name %notin% c("Collembola.1", "Collembola.2", "Collembola.3"))
 
 # Get biomass estimation for entire data frame
 biomass_data <- 
@@ -39,7 +39,7 @@ write.csv(biomass_data, "data/database_biomass_estimates.csv", row.names = F)
 ## Get list of species
 leftover <- 
   biomass_data %>% 
-  filter(biomass_mg %in% c("cannot_estimate", "notindatabase")) %>% 
+  dplyr::filter(biomass_mg %in% c("cannot_estimate", "notindatabase")) %>% 
   dplyr::select(bwg_name, path)
 ## View it
 View(leftover)
@@ -60,7 +60,7 @@ path <- ""
 # Extract species information
 taxo <- 
   measurement_table %>% 
-  filter(bwg_name == specname) %>% 
+  dplyr::filter(bwg_name == specname) %>% 
   dplyr::select(species_id:genus) %>% 
   unique()
 
@@ -122,7 +122,7 @@ par(mfrow=c(4,2))
 for(i in family_list){
   dats <- 
     updated_meas %>% 
-    filter(family == i,
+    dplyr::filter(family == i,
            !is.na(size_mm))
   tryCatch(
     expr = {hist(dats$size_mm,
@@ -157,7 +157,7 @@ par(mfrow=c(4,2))
 for(i in family_list){
   dats <- 
     updated_meas %>% 
-    filter(family == i,
+    dplyr::filter(family == i,
            !is.na(size_mm),
            !is.na(biomass_mg))
   tryCatch(
@@ -189,13 +189,13 @@ par(mfrow=c(4,2))
 for(i in family_list){
   dats <- 
     biomass_data %>% 
-    mutate(size_original = as.numeric(size_original),
+    dplyr::mutate(size_original = as.numeric(size_original),
            biomass_mg = as.numeric(biomass_mg)) %>% 
-    filter(family == i,
+    dplyr::filter(family == i,
            abundance > 0,
            !is.na(size_original),
            !is.na(biomass_mg)) %>% 
-    mutate(type = ifelse(str_detect(path, "wet", negate = FALSE),
+    dplyr::mutate(type = ifelse(str_detect(path, "wet", negate = FALSE),
                          "wet", "dry"),
            biomass_per_cap = biomass_mg/abundance)
   

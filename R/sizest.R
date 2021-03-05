@@ -29,21 +29,21 @@ sizest <- function(specname, size_mm, level, stage, path, taxo, equation_table, 
         matcher_of_traits(specname, measurement_table),
       other_meas <- 
         data_table %>% 
-        filter(bwg_name %in% spec_list)  %>% 
+        dplyr::filter(bwg_name %in% spec_list)  %>% 
         #### Select relevant columns
         dplyr::select(size_mm, abundance) %>% 
         #### Add measurements from allometry table
-        bind_rows(measurement_table %>% 
-                    filter(bwg_name %in% spec_list) %>%
+        dplyr::bind_rows(measurement_table %>% 
+                    dplyr::filter(bwg_name %in% spec_list) %>%
                     dplyr::select(size_mm, abundance) %>% 
-                    rename(size_mm = size_mm) %>% 
-                    mutate(size_mm = as.character(size_mm))) %>% 
+                    dplyr::rename(size_mm = size_mm) %>% 
+                    dplyr::mutate(size_mm = as.character(size_mm))) %>% 
         #### Group by size and sum
-        group_by(size_mm) %>% 
-        summarise_all(sum)  %>% 
-        mutate(size_mm = as.numeric(size_mm)) %>% 
-        filter(!is.na(size_mm)) %>% 
-        filter(!is.na(abundance)))
+        dplyr::group_by(size_mm) %>% 
+        dplyr::summarise_all(sum)  %>% 
+        dplyr::mutate(size_mm = as.numeric(size_mm)) %>% 
+        dplyr::filter(!is.na(size_mm)) %>% 
+        dplyr::filter(!is.na(abundance)))
   
   ### If using taxonomy, filter taxonomy of species of interest 
   if(level != "traits")
@@ -56,31 +56,31 @@ sizest <- function(specname, size_mm, level, stage, path, taxo, equation_table, 
             ## using all_of(), see <https://tidyselect.r-lib.org/reference/faq-external-vector.html>
             dplyr::select(all_of(level)) %>% 
             unique() %>% 
-            pull(), #### pull transforms it from a column to a vector
+            dplyr::pull(), #### pull transforms it from a column to a vector
           ### Get a vector of all species from that specific level
           spec_list <- 
             measurement_table %>% 
-            filter(measurement_table[,level] == level_name) %>% 
+            dplyr::filter(measurement_table[,level] == level_name) %>% 
             dplyr::select(bwg_name) %>% 
             unique() %>% 
-            pull(),
+            dplyr::pull(),
           other_meas <- 
             data_table %>% 
-            filter(bwg_name %in% spec_list)  %>% 
+            dplyr::filter(bwg_name %in% spec_list)  %>% 
             #### Select relevant columns
             dplyr::select(size_mm, abundance) %>% 
             #### Add measurements from allometry table
-            bind_rows(measurement_table %>% 
-                        filter(bwg_name %in% spec_list) %>%
+            dplyr::bind_rows(measurement_table %>% 
+                        dplyr::filter(bwg_name %in% spec_list) %>%
                         dplyr::select(size_mm, abundance) %>% 
-                        rename(size_mm = size_mm) %>% 
-                        mutate(size_mm = as.character(size_mm))) %>% 
+                        dplyr::rename(size_mm = size_mm) %>% 
+                        dplyr::mutate(size_mm = as.character(size_mm))) %>% 
             #### Group by size and sum
-            group_by(size_mm) %>% 
-            summarise_all(sum) %>% 
-            mutate(size_mm = as.numeric(size_mm)) %>% 
-            filter(!is.na(size_mm)) %>% 
-            filter(!is.na(abundance)))
+            dplyr::group_by(size_mm) %>% 
+            dplyr::summarise_all(sum) %>% 
+            dplyr::mutate(size_mm = as.numeric(size_mm)) %>% 
+            dplyr::filter(!is.na(size_mm)) %>% 
+            dplyr::filter(!is.na(abundance)))
     
   ## Get number of other numerical measurements
   meas_number <- 

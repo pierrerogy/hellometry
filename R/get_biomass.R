@@ -12,8 +12,8 @@ get_biomass <- function(specname, level, size_mm, abundance, stage, path, taxo, 
   # Check if species is length_raw, and if size is present
   raw_meas <- 
     measurement_table %>% 
-    filter(provenance == "length.raw") %>% 
-    filter(bwg_name == specname,
+    dplyr::filter(provenance == "length.raw") %>% 
+    dplyr::filter(bwg_name == specname,
            size_mm == size_mm) %>% 
     unique()
   
@@ -22,23 +22,23 @@ get_biomass <- function(specname, level, size_mm, abundance, stage, path, taxo, 
   if(biomass_kind == "dry")
     (raw_meas <- 
       raw_meas %>% 
-      filter(biomass_type == "dry")) else
+       dplyr::filter(biomass_type == "dry")) else
   ## Just keep the most numerous
         c(type_count <- 
           raw_meas %>% 
-          count(biomass_type) %>% 
+          dplyr::count(biomass_type) %>% 
           ### Keep only the most common kind of measurement
-          filter(n == max(n)),
+            dplyr::filter(n == max(n)),
           ## If we have the same number of measurements in both dry and wet, prioritise dry
           ifelse(nrow(type_count) == 2,
                  (type_count <- 
                    type_count %>% 
-                   filter(biomass_type == "dry")),
+                    dplyr::filter(biomass_type == "dry")),
                  type_count <- 
                    type_count),
           raw_meas <- 
             raw_meas %>% 
-            filter(biomass_type == type_count$biomass_type))
+            dplyr::filter(biomass_type == type_count$biomass_type))
         
   
   ## If both are present, then we do not need to compute
@@ -58,8 +58,8 @@ get_biomass <- function(specname, level, size_mm, abundance, stage, path, taxo, 
       allometry <- data.frame() else
          allometry <-
             equation_table %>% 
-            filter(equation_table[,level] == do.call(paste, list(taxo[,level]))) %>% 
-            filter(!is.na(intercept) | !is.na(ln_intercept)) %>% 
+          dplyr::filter(equation_table[,level] == do.call(paste, list(taxo[,level]))) %>% 
+          dplyr::filter(!is.na(intercept) | !is.na(ln_intercept)) %>% 
             dplyr::select(biomass_type, intercept, slope, ln_intercept) %>% 
             unique()
   ## If using trait, get custom list of species with other function
@@ -68,8 +68,8 @@ get_biomass <- function(specname, level, size_mm, abundance, stage, path, taxo, 
         matcher_of_traits(specname, measurement_table),
       allometry <-
         equation_table %>% 
-        filter(equation_table$bwg_name %in% spec_list) %>% 
-        filter(!is.na(intercept) | !is.na(ln_intercept)) %>% 
+        dplyr::filter(equation_table$bwg_name %in% spec_list) %>% 
+        dplyr::filter(!is.na(intercept) | !is.na(ln_intercept)) %>% 
         dplyr::select(biomass_type, intercept, slope, ln_intercept) %>% 
         unique())
       
@@ -79,27 +79,27 @@ get_biomass <- function(specname, level, size_mm, abundance, stage, path, taxo, 
     c(if(biomass_kind == "dry")
       c(allometry <- 
           allometry %>% 
-          filter(biomass_type == "dry"),
+          dplyr::filter(biomass_type == "dry"),
         type_count <- 
           allometry %>% 
-          count(biomass_type)) else 
+          dplyr::count(biomass_type)) else 
             ## Count instance of equations based on dry and wet weight
             c(type_count <- 
                 allometry %>% 
-                count(biomass_type) %>% 
+                dplyr::count(biomass_type) %>% 
                 ### Keep only the most common kind of equation
-                filter(n == max(n)),
+                dplyr::filter(n == max(n)),
               ## If we have the same number of equations in both dry and wet, prioritise dry
               ifelse(nrow(type_count) == 2,
                      type_count <- 
                        type_count %>% 
-                       filter(biomass_type == "dry"),
+                       dplyr::filter(biomass_type == "dry"),
                      type_count <- 
                        type_count),
               ## Extract the selected kind of equation
               allometry <- 
                 allometry %>% 
-                filter(biomass_type == type_count$biomass_type)))
+                dplyr::filter(biomass_type == type_count$biomass_type)))
   
   # Get number of equations
    equation_number <- 

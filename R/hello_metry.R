@@ -4,20 +4,20 @@
 #' biomass from given species, size and abundance, as well as path taken through 
 #' the function
 #'
-#' @param equation_table, measurement_table, data_table, print, biomass_kind
+#' @param data_table, print, biomass_kind, database
 #' @return The original data frame, 
 #' @export
-hello_metry <- function(equation_table, measurement_table, data_table, print, biomass_kind){
+hello_metry <- function(data_table, print, biomass_kind, database){
   # browser()
   # Function %notin%
   '%notin%' <- 
     Negate('%in%')
   
-    # Make copy of data table
+  # Make copy of data table
   data_return <- 
     data_table %>% 
     ## And add new columns to fill
-    mutate(size_used = NA,
+    dplyr::mutate(size_used = NA,
            biomass = NA,
            path = NA)
   
@@ -29,12 +29,29 @@ hello_metry <- function(equation_table, measurement_table, data_table, print, bi
     stop("Please call column with bwg species names values 'bwg_name'")
   if("size_mm" %notin% colnames(data_table))
     stop("Please call column with specimen measurement values 'size_mm'")
+  # if("stage" %notin% colnames(data_table))
+  #   stop("Please call column with life stage (larva/pupa/adult) 'stage'")
   ## Print is actually a true false
   if(print %notin% c(TRUE, FALSE))
+    stop("Print has to be TRUE/FALSE")
+  ## Database is actually a true false
+  if(database %notin% c(TRUE, FALSE))
     stop("Print has to be TRUE/FALSE")
   ## Biomass kind needs to be dry or both
   if(biomass_kind %notin% c("dry", "both"))
     stop("Biomass kind has to be 'dry' or 'both'")
+  
+  # Load measurement table
+  # If user wants to use the database measurement or not
+  if(database == TRUE)
+    measurement_table <- 
+      read.csv(system.file("extdata", "measurement_table_withdb.csv", package = "hellometry")) else
+      measurement_table <- 
+        read.csv(system.file("extdata", "measurement_table_nodb.csv", package = "hellometry"))
+  
+  # Load equation table
+  equation_table <- 
+    read.csv(system.file("extdata", "equation_table.csv", package = "hellometry"))
   
   # Make list of taxonomic groups/traits to gro through
   # Note that after family we look at traits, and then back to higher trophic levels (the broad ones)
@@ -53,11 +70,11 @@ hello_metry <- function(equation_table, measurement_table, data_table, print, bi
   ## Limoniidae and Tipulidae essentially the same thing so can be considered together
   measurement_table <- 
     measurement_table %>% 
-    mutate(family = ifelse(family %in% c("Tipulidae", "Limoniidae"),
+    dplyr::mutate(family = ifelse(family %in% c("Tipulidae", "Limoniidae"),
                            "Tipulidae_Limoniidae", family))
   equation_table <- 
     equation_table %>% 
-    mutate(family = ifelse(family %in% c("Tipulidae", "Limoniidae"),
+    dplyr::mutate(family = ifelse(family %in% c("Tipulidae", "Limoniidae"),
                            "Tipulidae_Limoniidae", family))
   
  # Loop to fill row by row
@@ -93,7 +110,7 @@ hello_metry <- function(equation_table, measurement_table, data_table, print, bi
    ### Make small frame to get taxonomy
      c(taxo <- 
         measurement_table %>% 
-        filter(bwg_name == specname) %>% 
+         dplyr::filter(bwg_name == specname) %>% 
         dplyr::select(species_id:species) %>% 
         unique(),
      ### If not in database, give special biomass value
@@ -154,13 +171,13 @@ hello_metry <- function(equation_table, measurement_table, data_table, print, bi
   } 
   ## Return new data frame
   return(data_return %>% 
-           rename(biomass_mg = biomass,
+           dplyr::rename(biomass_mg = biomass,
                   size_original = size_mm) %>% 
            left_join(measurement_table %>% 
                        dplyr::select(bwg_name:species) %>% 
                        unique()) %>% 
-           relocate(size_original:path, .after = species) %>% 
+           dplyr::relocate(size_original:path, .after = species) %>% 
            ### to make things easy only put NA where size was not computed
-           mutate(size_used = ifelse(abundance == 0, NA, size_used)))
+           dplyr::mutate(size_used = ifelse(abundance == 0, NA, size_used)))
         
 }
