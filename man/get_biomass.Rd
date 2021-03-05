@@ -18,7 +18,25 @@ get_biomass(
 )
 }
 \arguments{
-\item{specname, }{level, size_mm, abundance, stage, path, taxo, equation_table, #' measurement_table, biomass_kind}
+\item{specname}{BWG name of the species}
+
+\item{level}{Taxonomic level of estimation}
+
+\item{size_mm}{Size in mm}
+
+\item{abundance}{Abundance of individuals of the species/size combination}
+
+\item{stage}{Developmental stage of the invertebrate (larva/pupa/adult)}
+
+\item{path}{Path taken trough function}
+
+\item{taxo}{Taxonomic information about the species}
+
+\item{equation_table}{Table containing all allometric equation}
+
+\item{measurement_table}{Table containing all measurements}
+
+\item{biomass_kind}{Should data used in inference be "dry" for just dry biomass, or "both" for both dry and wet biomass}
 }
 \value{
 new column with estimate biomass value

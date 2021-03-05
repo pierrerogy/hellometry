@@ -7,7 +7,9 @@
 matcher_of_traits(specname, measurement_table)
 }
 \arguments{
-\item{species_name, }{measurement_table}
+\item{measurement_table}{Table containing all measurements}
+
+\item{species_name}{BWG name of the species}
 }
 \value{
 List of species with matching traits

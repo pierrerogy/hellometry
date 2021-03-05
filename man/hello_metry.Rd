@@ -11,7 +11,7 @@ hello_metry(data_table, print, biomass_kind, database)
 
 \item{print}{Do you want to see the printing of the rows (TRUE/FALSE)}
 
-\item{biomass_kind}{"dry" for just dry biomass, or "both" for both dry and wet}
+\item{biomass_kind}{Should data used in inference be "dry" for just dry biomass, or "both" for both dry and wet biomass}
 
 \item{database}{Should data from the bwg database be used to supplement the measurements (TRUE/FALSE)}
 }

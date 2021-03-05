@@ -4,7 +4,16 @@
 #' suborder to phylum. Once threshold of at least one allometric 
 #' equation is met: if there is only one equation, compute value of #' biomass; if there is more than one allometric equation, average #' the computed values of biomass.
 #'
-#' @param specname, level, size_mm, abundance, stage, path, taxo, equation_table, #' measurement_table, biomass_kind
+#' @param specname  BWG name of the species
+#' @param level Taxonomic level of estimation
+#' @param size_mm Size in mm
+#' @param abundance Abundance of individuals of the species/size combination
+#' @param stage Developmental stage of the invertebrate (larva/pupa/adult)
+#' @param path Path taken trough function
+#' @param taxo Taxonomic information about the species
+#' @param equation_table Table containing all allometric equation
+#' @param measurement_table Table containing all measurements
+#' @param biomass_kind Should data used in inference be "dry" for just dry biomass, or "both" for both dry and wet biomass
 #' @return new column with estimate biomass value 
 #' @export
 get_biomass <- function(specname, level, size_mm, abundance, stage, path, taxo, equation_table, measurement_table, biomass_kind){

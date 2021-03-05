@@ -7,7 +7,11 @@
 equation_finder(size_mm, row, taxo)
 }
 \arguments{
-\item{size_mm, }{row, taxo}
+\item{size_mm}{size in mm}
+
+\item{row}{row of the data frame}
+
+\item{taxo}{taxonomy information for the species, used to get information about the equation}
 }
 \value{
 correct use of equation for one individual of given size

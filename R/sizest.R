@@ -6,9 +6,16 @@
 #' measurement values, if bins not equal, larger bins for S and L. Return average of     
 #' measurements within given bin
 #'
-#' @param specname, size_mm, level, stage, path, taxo, equation_table, measurement_table,  
-#' data_table
-#' @return extra column with size estimate
+#' @param specname BWG name of the species
+#' @param size_mm Size in mm
+#' @param level Taxonomic level of estimation
+#' @param stage Developmental stage of the invertebrate (larva/pupa/adult)
+#' @param path Path taken trough function
+#' @param taxo Taxonomic information about the species
+#' @param equation_table Table containing all allometric equation
+#' @param measurement_table Table containing all measurements
+#' @param data_table Input data
+#' @return An extra column with size estimate
 #' @export
 sizest <- function(specname, size_mm, level, stage, path, taxo, equation_table, measurement_table, data_table){
 

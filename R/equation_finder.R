@@ -5,7 +5,9 @@
 #' (ln(biomass) = slope x ln(size) + ln(intercept)). Has an exception argument, so far used for #' Acari, because equation used generates weight in micrograms, not milligrams (argument
 #' controls the conversion)
 #'
-#' @param size_mm, row, taxo
+#' @param size_mm size in mm
+#' @param row row of the data frame
+#' @param taxo taxonomy information for the species, used to get information about the equation
 #' @return correct use of equation for one individual of given size
 #' @export
 equation_finder <- function(size_mm, row, taxo){

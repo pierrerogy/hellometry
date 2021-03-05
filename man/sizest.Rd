@@ -17,11 +17,26 @@ sizest(
 )
 }
 \arguments{
-\item{specname, }{size_mm, level, stage, path, taxo, equation_table, measurement_table,
-data_table}
+\item{specname}{BWG name of the species}
+
+\item{size_mm}{Size in mm}
+
+\item{level}{Taxonomic level of estimation}
+
+\item{stage}{Developmental stage of the invertebrate (larva/pupa/adult)}
+
+\item{path}{Path taken trough function}
+
+\item{taxo}{Taxonomic information about the species}
+
+\item{equation_table}{Table containing all allometric equation}
+
+\item{measurement_table}{Table containing all measurements}
+
+\item{data_table}{Input data}
 }
 \value{
-extra column with size estimate
+An extra column with size estimate
 }
 \description{
 Collect abundance/size distribution from species in both measurement and data tables. Look for #' at least three distinct numeric measurements in a given grouping in the following order: species #' to family, traits, suborder to phylum. Once threshold of at least three distinct numeric
