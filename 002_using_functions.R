@@ -27,9 +27,7 @@ data_table <-
 
 # Get biomass estimation for entire data frame
 biomass_data <- 
-  hello_metry(equation_table, 
-              measurement_table,
-              data_table, 
+  hello_metry(data_table, 
               print = TRUE,
               biomass_kind = "dry")
 ## Save data

@@ -9,7 +9,7 @@ library(ggplot2)
 library(lme4)
 library(stringr)
 library(stringdist)
-source("R_code/functions.R")
+library(hellometry)
 
 
 # Get abundance by size data ----------------------------------------------

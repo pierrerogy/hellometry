@@ -2,9 +2,10 @@
 #'
 #' Wrapper function, returns initial data table with three extra columns: total 
 #' biomass from given species, size and abundance, as well as path taken through 
-#' the function
+#' the function. Please name column with number of specimen "abundance", 
+#' column with BWG name "bwg_name",  and column with measurement in mm "size_mm".
 #'
-#' @param data_table The input data table print, make sure columns "abundance", "bwg_name", "size_mm" are present
+#' @param data_table The input data table, please include columns columns "abundance", "bwg_name", "size_mm" are present
 #' @param print Do you want to see the printing of the rows (TRUE/FALSE)
 #' @param biomass_kind Should data used in inference be "dry" for just dry biomass, or "both" for both dry and wet biomass
 #' @param database Should data from the bwg database be used to supplement the measurements (TRUE/FALSE)
