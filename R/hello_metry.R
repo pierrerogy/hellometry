@@ -1,14 +1,34 @@
 #' Wrapper function going row-by-row to estimate size (mm) and biomass (mg)
 #'
-#' Wrapper function, returns initial data table with three extra columns: total 
-#' biomass from given species, size and abundance, as well as path taken through 
-#' the function. Please name column with number of specimen "abundance", 
+#' Wrapper function, input your data and get size and measurement . Please name column with number of specimen "abundance", 
 #' column with BWG name "bwg_name",  and column with measurement in mm "size_mm".
+#' If you do not have a numerical measurement for a given specimen, the algorithm can
+#' do size estimations if you input "small", "medium", "large" or "unknown". In this
+#' case, the algorithm will use existing size measurements for the species, and use 
+#' the size distribution to estimate "small", "medium" and "large" inputs, or a weighted
+#' average of all measurements if the input is "unknown".
 #'
 #' @param data_table The input data table, please include columns columns "abundance", "bwg_name", "size_mm" are present
 #' @param print Do you want to see the printing of the rows (TRUE/FALSE)
 #' @param biomass_kind Should data used in inference be "dry" for just dry biomass, or "both" for both dry and wet biomass
 #' @param database Should data from the bwg database be used to supplement the measurements (TRUE/FALSE)
+#' @return Your initial data table with three extra columns: value (in mm)
+#' of size estimation (NA if not done), total biomass for given row (in mg), 
+#' as well as path taken through the function. The nomenclature of this path column is as follows.
+#' ## Special cases
+#'- "null_biomass": if abundance was 0
+#'- "_size_failed": if there was not enough close relatives or species with matching traits to compute size
+#'- "_raw_dry/wet": if there was a raw (direct) measurement for that particular species-size combination, and whether that measurement is dry or wet biomass
+#' ## Regular cases
+#'- if the species goes through estimation of size (sizest()): 
+#'  estimation kind:level_number of measurements.
+#'  For example,  _WA:genus_5 (size estimation using weighted average on 5 measurements from the species' genus), _BIN:subfamily_3 (size estimation using size bins (S, M, L) on three measurement a the subfamily level)
+#'- if the allometric equations are used (get_biomass()): 
+#'  biomass estimation:taxonomic level of inference_number of equations_dry/wet.
+#'  For example, _BM:bwg_name_1_wet (one equation from wet biomass at the species level), _BM:subclass_5_dry (five equation from dry biomass s at the subclass level)
+#' # If a species went through both size estimation and biomass estimations, the path will be composite, e.g. _WA:genus_5_BM:bwg_name_1_wet
+
+
 #' @export
 hello_metry <- function(data_table, print, biomass_kind, database){
   # browser()
