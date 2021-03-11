@@ -26,7 +26,7 @@ append_measurements <- function(measurement_table, data_table){
   # Join to numerical measurements
   data_table_num <- 
     data_table_num %>% 
-    left_join(measurement_stub)
+    dplyr::left_join(measurement_stub)
   
   # Bind to measurement table
   measurement_table <- 

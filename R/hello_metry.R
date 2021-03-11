@@ -66,15 +66,11 @@ hello_metry <- function(data_table, print, biomass_kind, database){
   
   # Load measurement table
   # If user wants to use the database measurement or not
-  if(database == TRUE)
-    measurement_table <- 
-      read.csv(system.file("extdata", "measurement_table_withdb.csv", package = "hellometry")) else
-      measurement_table <- 
-        read.csv(system.file("extdata", "measurement_table_nodb.csv", package = "hellometry"))
-  
+  measurement_table <- 
+    get_measurements(database)
   # Load equation table
   equation_table <- 
-    read.csv(system.file("extdata", "equation_table.csv", package = "hellometry"))
+    get_equations()
   
   # Make list of taxonomic groups/traits to gro through
   # Note that after family we look at traits, and then back to higher trophic levels (the broad ones)
@@ -196,7 +192,7 @@ hello_metry <- function(data_table, print, biomass_kind, database){
   return(data_return %>% 
            dplyr::rename(biomass_mg = biomass,
                   size_original = size_mm) %>% 
-           left_join(measurement_table %>% 
+           dplyr::left_join(measurement_table %>% 
                        dplyr::select(bwg_name:species) %>% 
                        unique()) %>% 
            dplyr::relocate(size_original:path, .after = species) %>% 

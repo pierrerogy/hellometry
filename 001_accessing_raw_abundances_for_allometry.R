@@ -502,7 +502,7 @@ equation_table <-
   ## Get taxonomic and trait information
   dplyr::select(species_id, bwg_name:species) %>% 
   ## Add equations
-  left_join(fw_biomass %>% 
+  dplyr::left_join(fw_biomass %>% 
               ## remove columns not important (I hope) for this specific table
               dplyr::select(-measurement_id, -stage:-length_est_mm,
                             -biomass_mg:-num_relatives)) %>% 
@@ -566,7 +566,7 @@ measurement_table <-
                 MD1:MD8, ### morphological defense
                 BF1:BF4) %>% ### body form
   ## First add only raw measurements and biomass for species
-  left_join(fw_biomass %>% 
+  dplyr::left_join(fw_biomass %>% 
               ## remove columns not important (I hope) for this specific table
               dplyr::select(-measurement_id, -length_est_mm, -length_measured_as, 
                             -biomass_ci_upr, -biomass_ci_lwr, -provenance_species:-slope)) %>% 

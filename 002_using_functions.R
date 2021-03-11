@@ -26,13 +26,17 @@ data_table <-
   dplyr::filter(bwg_name %notin% c("Collembola.1", "Collembola.2", "Collembola.3"))
 
 # Get biomass estimation for entire data frame
+data_table <- 
+  database_data(FALSE)
 biomass_data <- 
   hello_metry(data_table, 
               print = TRUE,
-              biomass_kind = "dry")
+              biomass_kind = "both",
+              database = F)
 ## Save data
-write.csv(biomass_data, "data/database_biomass_estimates.csv", row.names = F)
-
+write.csv(biomass_data, "bwg_database_estimates.csv", row.names = F)
+data_table <- 
+  database_data(TRUE)
 # Filter resulting database to assess those who haven't been assigned biomass so far
 ## Get list of species
 leftover <- 

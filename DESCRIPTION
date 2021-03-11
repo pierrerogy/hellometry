@@ -1,6 +1,6 @@
 Package: hellometry
 Title: biomass estimates for the BWG database
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: 
     person(given = "Pierre",
            family = "Rogy",
@@ -17,4 +17,9 @@ Imports:
     tidyverse,
     ggplot2,
     magrittr,
-    dplyr
+    dplyr,
+    tidyr
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

@@ -16,6 +16,7 @@
 #' @param biomass_kind Should data used in inference be "dry" for just dry biomass, or "both" for both dry and wet biomass
 #' @return new column with estimate biomass value 
 #' @export
+
 get_biomass <- function(specname, level, size_mm, abundance, stage, path, taxo, equation_table, measurement_table, biomass_kind){
   #browser()
   # Check if species is length_raw, and if size is present
@@ -55,7 +56,7 @@ get_biomass <- function(specname, level, size_mm, abundance, stage, path, taxo, 
   if(nrow(raw_meas) > 0)
     c(compute <- FALSE,
       biomass <- mean(raw_meas$biomass_mg),
-      path <- paste0(path, "_raw_", unique(raw_meas$biomass_type)),
+      path <- paste0(path, "-raw_", unique(raw_meas$biomass_type)),
       return(data.frame(biomass, as.character(path)))) else
       compute <- TRUE
     
@@ -128,7 +129,7 @@ get_biomass <- function(specname, level, size_mm, abundance, stage, path, taxo, 
   if(equations == "one")
     ## simply compute the biomass using correct equation
     c(biomass <- equation_finder(size_mm, allometry, taxo) * abundance,
-      path <- paste0(path,"_BM:", level, "_1", allometry$biomass_type[1]))
+      path <- paste0(path,"-BM:", level, "_",equation_number, "_", allometry$biomass_type[1]))
       
     
   # Case 2: more than one equation at the level
@@ -144,7 +145,7 @@ get_biomass <- function(specname, level, size_mm, abundance, stage, path, taxo, 
     ## Average the result
     biomass <- biomass/equation_number,
     ## Add equation information to path
-    path <- paste0(path,"_BM:", level, "_", type_count$biomass_type, type_count$count))
+    path <- paste0(path,"-BM:", level, "_",equation_number, "_", type_count$biomass_type[1]))
     
   # Case 3: no equations at the level
   ## Simply return NA
