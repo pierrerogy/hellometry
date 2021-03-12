@@ -39,12 +39,19 @@ library(hellometry)
 pitilla <- 
   pitilla_data()
 
+# Check data
+head(pitilla)
+
 # Get biomass estimates
 pitilla <- 
   hello_metry(pitilla, ## the data
               print = F, ## I don't want to see how fast the functions moves through the data
               biomass_kind = "both", ## I want both dry and wet biomasses (wet is more precise for odonates)
               database = TRUE) ## since this data is not in the BWG database, I can safely include measurements from there
+
+# Look at biomass estimates
+head(pitilla)
+
 
 # We now have biomass estimates, we can then summarise them easily with another function
 results <- 

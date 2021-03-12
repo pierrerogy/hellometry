@@ -7,7 +7,9 @@
 #' @export
 pitilla_data <- function(){
   pitilla <- 
-    read.csv(system.file("extdata", "pitilla.csv", package = "hellometry")) 
+    read.csv(system.file("extdata", "pitilla.csv", package = "hellometry")) %>%
+    ## Remove superfluous columns
+    dplyr::select(bwg_name, size_mm, abundance)
   ## Return data
   return(pitilla)       
   

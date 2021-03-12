@@ -192,10 +192,10 @@ hello_metry <- function(data_table, print, biomass_kind, database){
   return(data_return %>% 
            dplyr::rename(biomass_mg = biomass,
                   size_original = size_mm) %>% 
-           dplyr::left_join(measurement_table %>% 
-                       dplyr::select(bwg_name:species) %>% 
-                       unique()) %>% 
-           dplyr::relocate(size_original:path, .after = species) %>% 
+           # dplyr::left_join(measurement_table %>% 
+           #             dplyr::select(bwg_name:species) %>% 
+           #             unique()) %>% 
+           # dplyr::relocate(size_original:path, .after = species) %>% 
            ### to make things easy only put NA where size was not computed
            dplyr::mutate(size_used = ifelse(abundance == 0, NA, size_used)))
         
