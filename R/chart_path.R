@@ -5,7 +5,7 @@
 #' @param data_table Output data from hello_metry()
 #' @return A list with two elements. Element 1 returns how many unique
 #' estimations were performed for size categories (weighted average (WA) or size
-#' bins (BIN)) and biomass (BM)), and how many biomass values had raw wet or dry
+#' bins (BIN)) and allometric equations (AE)), and how many biomass values had raw wet or dry
 #' equivalence in the database. Element 2 returns the level, number of
 #' unique estimations, and mean number of values (numerical size measurement or
 #' number of allometric equation) for each of these.
@@ -52,7 +52,7 @@ chart_path <- function(data_table){
   est_failed <- 
     path %>%
     dplyr::filter(path %in% c("size_estimation_failed",
-                               "_no_equations")) %>% 
+                               "biomass_estimation_failed")) %>% 
     dplyr::group_by(path) %>%
     dplyr::count() %>% 
     dplyr::rename(what = path)
@@ -80,7 +80,7 @@ chart_path <- function(data_table){
     path %>% 
     unique() %>% 
     dplyr::filter(path %notin% c("null_biomass", "size_estimation_failed",
-                                 "_no_equations", "-raw_dry", "-raw_wet")) %>% 
+                                 "biomass_estimation_failed", "-raw_dry", "-raw_wet")) %>% 
     tidyr::separate(path,
                     into = c("size", "biomass"), 
                     sep = "-")
@@ -116,7 +116,7 @@ chart_path <- function(data_table){
       c(#### Cases where no equations were used
         temp2 <- 
           temp %>% 
-          dplyr::filter(what != "BM") %>% 
+          dplyr::filter(what != "AE") %>% 
           dplyr::select(what) %>% 
           dplyr::group_by(what) %>% 
           dplyr::count() %>% 
@@ -130,7 +130,7 @@ chart_path <- function(data_table){
         #### Cases where equations were used
         temp <- 
           temp %>% 
-          dplyr::filter(what == "BM") %>% 
+          dplyr::filter(what == "AE") %>% 
           ### Split between level and how many
           tidyr::separate(how,
                           into = c("level", "n", "type"),

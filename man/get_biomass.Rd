@@ -36,7 +36,10 @@ get_biomass(
 
 \item{measurement_table}{Table containing all measurements}
 
-\item{biomass_kind}{Should data used in inference be "dry" for just dry biomass, or "both" for both dry and wet biomass}
+\item{biomass_kind}{Should data used in inference be "dry" for just dry biomass, or "both" (default) for both dry and wet biomass.
+If both (the default) is chosen, then the function will determine which dry or wet equations or raw weight is present, and choose
+the most numerous. If there is the same number of dry and wet equations, dry equations are always favoured. Dry and wet
+measurements are never mixed.}
 }
 \value{
 new column with estimate biomass value

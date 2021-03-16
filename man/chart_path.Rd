@@ -12,7 +12,7 @@ chart_path(data_table)
 \value{
 A list with two elements. Element 1 returns how many unique
 estimations were performed for size categories (weighted average (WA) or size
-bins (BIN)) and biomass (BM)), and how many biomass values had raw wet or dry
+bins (BIN)) and allometric equations (AE)), and how many biomass values had raw wet or dry
 equivalence in the database. Element 2 returns the level, number of
 unique estimations, and mean number of values (numerical size measurement or
 number of allometric equation) for each of these.

@@ -9,28 +9,35 @@
 #' average of all measurements if the input is "unknown".
 #'
 #' @param data_table The input data table, please include columns columns "abundance", "bwg_name", "size_mm" are present
-#' @param print Do you want to see the printing of the rows (TRUE/FALSE)
-#' @param biomass_kind Should data used in inference be "dry" for just dry biomass, or "both" for both dry and wet biomass
-#' @param database Should data from the bwg database be used to supplement the measurements (TRUE/FALSE)
+#' @param print Do you want to see the printing of the rows (TRUE/FALSE (default))
+#' @param biomass_kind Should data used in inference be "dry" for just dry biomass, or "both" (default) for both dry and wet biomass.
+#' If both (the default) is chosen, then the function will determine which dry or wet equations or raw weight is present, and choose
+#' the most numerous. If there is the same number of dry and wet equations, dry equations are always favoured. Dry and wet
+#' measurements are never mixed. 
+#' @param database Should data from the bwg database be used to supplement the measurements (TRUE(default)/FALSE). This function uses numerical
+#' measurements both from the BWG database and from the data you provide. Only put FALSE if you are doing estimations from 
+#' data already present in the BWG database (estimation for these data available with database_data(TRUE)).
+#' 
 #' @return Your initial data table with three extra columns: value (in mm)
 #' of size estimation (NA if not done), total biomass for given row (in mg), 
 #' as well as path taken through the function. The nomenclature of this path column is as follows.
 #' ## Special cases
-#'- "null_biomass": if abundance was 0
-#'- "_size_failed": if there was not enough close relatives or species with matching traits to compute size
+#'- "null_biomass": abundance was 0
+#'- "_size_estimaton_failed": there were not enough close relatives or species with matching traits to compute size
+#'- "_biomass_estimation_failed": there were no allometric equation at to estimate biomass
 #'- "_raw_dry/wet": if there was a raw (direct) measurement for that particular species-size combination, and whether that measurement is dry or wet biomass
 #' ## Regular cases
 #'- if the species goes through estimation of size (sizest()): 
 #'  estimation kind:level_number of measurements.
-#'  For example,  _WA:genus_5 (size estimation using weighted average on 5 measurements from the species' genus), _BIN:subfamily_3 (size estimation using size bins (S, M, L) on three measurement a the subfamily level)
+#'  For example,  WA:genus_5 (size estimation using weighted average on 5 measurements from the species' genus), BIN:subfamily_3 (size estimation using size bins (S, M, L) on three measurement a the subfamily level)
 #'- if the allometric equations are used (get_biomass()): 
 #'  biomass estimation:taxonomic level of inference_number of equations_dry/wet.
-#'  For example, _BM:bwg_name_1_wet (one equation from wet biomass at the species level), _BM:subclass_5_dry (five equation from dry biomass s at the subclass level)
-#' # If a species went through both size estimation and biomass estimations, the path will be composite, e.g. _WA:genus_5_BM:bwg_name_1_wet
+#'  For example, -AE:bwg_name_1_wet (one allometric equation from wet biomass at the species level), -AE:subclass_5_dry (five allometric equation from dry biomass s at the subclass level)
+#' # If a species went through both size estimation and biomass estimations, the path will be composite, e.g. WA:genus_5-AE:bwg_name_1_wet
 
 
 #' @export
-hello_metry <- function(data_table, print, biomass_kind, database){
+hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", database = TRUE){
   # browser()
   # Function %notin%
   '%notin%' <- 
@@ -129,7 +136,7 @@ hello_metry <- function(data_table, print, biomass_kind, database){
    ### Make small frame to get taxonomy
      c(taxo <- 
         measurement_table %>% 
-         dplyr::filter(bwg_name == specname) %>% 
+        dplyr::filter(bwg_name == specname) %>% 
         dplyr::select(species_id:species) %>% 
         unique(),
      ### If not in database, give special biomass value
@@ -141,7 +148,8 @@ hello_metry <- function(data_table, print, biomass_kind, database){
       if(nrow(taxo) > 0)
           #### Check if we have a numeric size
           if(!is.na(as.numeric(size_mm))) 
-            size_mm <- as.numeric(size_mm) else
+            c(size_mm <- as.numeric(size_mm),
+              path <- paste0(path, "raw_size"))else
               #### If we don't, do a size estimation
               #### As long as size is not numeric
               while(!is.numeric(size_mm)){
@@ -162,7 +170,12 @@ hello_metry <- function(data_table, print, biomass_kind, database){
                       size_mm <- 
                         666)
                 }})
-          
+    
+    ### Change 666 to proper message
+         if(size_mm == 666)
+           size_mm <- 
+            "cannot_estimate"
+      
     ### Call the allometric equations
     #### As long as biomass is NA
     while(is.na(biomass)){
@@ -171,15 +184,18 @@ hello_metry <- function(data_table, print, biomass_kind, database){
         est <- get_biomass(specname, level, size_mm, abundance, stage, path, taxo, equation_table, measurement_table, biomass_kind)
         biomass <- est[,1]
         path <- est[,2]
-        #### Break loop if done
+        #### Round number and break loop if done
         if(!is.na(biomass))
-          break
+          c(biomass <- 
+              signif(biomass, digits =4),
+          break)
+        
         ###### If we got to the end and still nothing, give up
         if(is.na(biomass) & level == "phylum")
           c(biomass <-
               "cannot_estimate",
             path <- 
-              paste0(path, "_no_equations"))
+              paste0(path, "biomass_estimation_failed"))
       }}
   
     ### Add biomass and path value to data frame to return

@@ -31,7 +31,6 @@ data_table <-
 biomass_data <- 
   hello_metry(data_table, 
               print = TRUE,
-              biomass_kind = "both",
               database = F)
 ## Save data
 write.csv(biomass_data, "bwg_database_estimates.csv", row.names = F)

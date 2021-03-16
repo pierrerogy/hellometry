@@ -4,3 +4,5 @@
 .Ruserdata
 raw_data/
 inst/doc
+vignettes/*.hmtl
+vignettes/*.R

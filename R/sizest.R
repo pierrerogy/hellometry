@@ -1,7 +1,10 @@
 #' Returns size estimates based on taxonomic approach or trait approach
 #'
-#' Collect abundance/size distribution from species in both measurement and data tables. Look for #' at least three distinct numeric measurements in a given grouping in the following order: species #' to family, traits, suborder to phylum. Once threshold of at least three distinct numeric 
-#' measurements is met: if size category “unknown”, return weighted average of all available 
+#' Collect abundance/size distribution from species in both measurement and data tables. Look for 
+#' at least three distinct numeric measurements in a given grouping in the following order: species 
+#' to family, traits, suborder to phylum. The threshold has been set to three measurements because
+#' the algorithm needs to create three bins for small, medium and large measurements.
+#' Once this threshold is met: if size category “unknown”, return weighted average of all available 
 #' measurements, if size category one of S, M, L, divide measurements into three bins of unique 
 #' measurement values, if bins not equal, larger bins for S and L. Return average of     
 #' measurements within given bin
