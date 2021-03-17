@@ -4,11 +4,15 @@
 \alias{pitilla_data}
 \title{Get practice data}
 \usage{
-pitilla_data()
+pitilla_data(taxonomy = TRUE)
+}
+\arguments{
+\item{taxonomy}{Do you want all taxonomic columns to be included? (TRUE (default)/FALSE)}
 }
 \value{
 The Pitilla data
 }
 \description{
-Gets a toy dataset, collected in Pitilla (Guanacaste, Costa Rica) by Diane Srivastava in 2002
+Gets a toy dataset, collected in Pitilla (Guanacaste, Costa Rica) by Diane Srivastava in 2002.
+Some mock rows added by Pierre Rogy to demonstrate some aspects of the package
 }

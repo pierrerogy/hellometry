@@ -7,13 +7,11 @@
 add_taxonomy(data_table)
 }
 \arguments{
-\item{data_table}{The input data table}
-
-\item{measurement_table}{Table containing all measurements}
+\item{data_table}{The input data table, the column 'bwg_name' has to be present}
 }
 \value{
 An updated measurement table that will be used to estimate sizes and gather taxonomy
 }
 \description{
-Add all columns needed by the package
+Add all taxonomy columns needed by the package
 }
