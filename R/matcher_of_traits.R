@@ -24,7 +24,7 @@ matcher_of_traits <- function(specname, measurement_table){
     
   # If no NAS in traits get all species that have the same traits +/- 1 and make it a vector
   if(proceed)
-    spec_list <- 
+    suppressWarnings(spec_list <- 
       measurement_table %>% 
      ## Kept in that format to make explicit changes and allow flexibility in trait matching
       dplyr::filter(BS1 %in% c((traits$BS1 - 1):(traits$BS1 + 1)) &
@@ -52,7 +52,7 @@ matcher_of_traits <- function(specname, measurement_table){
              BF4 %in% c((traits$BF4 - 1):(traits$BF4 + 1))) %>% 
       dplyr::select(bwg_name) %>% 
       unique() %>% 
-      dplyr::pull()
+      dplyr::pull())
   
   # If we have NAs 
   if(!proceed)

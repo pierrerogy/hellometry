@@ -3,12 +3,14 @@
 #' Summarise estimations using path column
 #'
 #' @param data_table Output data from hello_metry()
-#' @return A list with two elements. Element 1 returns how many unique
-#' estimations were performed for size categories (weighted average (WA) or size
-#' bins (BIN)) and allometric equations (AE)), and how many biomass values had raw wet or dry
-#' equivalence in the database. Element 2 returns the level, number of
-#' unique estimations, and mean number of values (numerical size measurement or
+#' @return A list with three elements. Element 1 returns how many times
+#' a raw numerical measurement or biomass was used to estimate (or get 
+#' a biomass value). Element 2 returns how many unique estimations 
+#' were performed for size categories (weighted average (WA) or size
+#' bins (BIN)) and allometric equations (AE)). Element 3 returns the 
+#' level, number of unique estimations, and mean number of values (numerical size measurement or
 #' number of allometric equation) for each of these.
+#'
 #' @export
 chart_path <- function(data_table){
   # Notin functiom
@@ -40,7 +42,8 @@ chart_path <- function(data_table){
     dplyr::filter(path == "null_biomass") %>% 
     dplyr::group_by(path) %>% 
     dplyr::count() %>% 
-    dplyr::rename(what = path)
+    dplyr::rename(what = path) %>% 
+    dplyr::ungroup()
   ### If there are none
   if(nrow(null_biomass) == 0)
     null_biomass <- 
@@ -48,43 +51,67 @@ chart_path <- function(data_table){
                n = 0)
     
   
-  ## Extract estimation failures, count and add grouping column
+  ## Make frame for failed estimations
   est_failed <- 
     path %>%
-    dplyr::filter(path %in% c("size_estimation_failed",
-                               "biomass_estimation_failed")) %>% 
+    ### Filter rows containing 'failed'
+    dplyr::filter(stringr::str_detect(path, 'failed')) %>% 
     dplyr::group_by(path) %>%
     dplyr::count() %>% 
-    dplyr::rename(what = path)
+    dplyr::rename(what = path) %>% 
+    ### Just keep the biomass estimation failed part of the string
+    dplyr::mutate(what = ifelse(stringr::str_detect(what, "biomass_estimation_failed"), 
+                                "biomass_estimation_failed",
+                                 what)) %>% 
+    dplyr::ungroup()
   ### If there are none
   if(nrow(est_failed) == 0)
     est_failed <- 
-    data.frame(what = "est_failed",
+    data.frame(what = "size_estimation_failed",
                n = 0)
-    
-  ## Extract raw measurements
-  raw_meas <- 
-    path %>%
-    dplyr::filter(path %in% c("-raw_dry", "-raw_wet")) %>% 
-    dplyr::group_by(path) %>% 
-    dplyr::count() %>% 
-    dplyr::rename(what = path,
-                  unique_estimations = n) 
-  ### Remove the -
-  raw_meas$what <- 
-    stringr::str_remove_all(raw_meas$what,
-                            "-")
   
   ## Split path between different levels of estimations
   size_biomass <- 
     path %>% 
-    unique() %>% 
-    dplyr::filter(path %notin% c("null_biomass", "size_estimation_failed",
-                                 "biomass_estimation_failed", "-raw_dry", "-raw_wet")) %>% 
+    ## First remove paths already tallied
+    dplyr::filter(!stringr::str_detect(path, "size_estimation_failed"),
+                  path != "null_biomass") %>% 
     tidyr::separate(path,
                     into = c("size", "biomass"), 
                     sep = "-")
+    
+  ## Make frame for raw biomass and size measurements
+  raw_meas <- 
+    size_biomass %>%
+    dplyr::select(-biomass) %>% 
+    ### Tick two columns on top of each other
+    rbind(size_biomass %>% 
+            dplyr::select(-size) %>% 
+            dplyr::rename(size = biomass)) %>% 
+    ### Only keep rows including 'raw' and sum
+    dplyr::filter(stringr::str_detect(size, 'raw')) %>% 
+    dplyr::group_by(size) %>% 
+    dplyr::count() %>% 
+    dplyr::rename(what = size,
+                  n_instances = n) %>% 
+    dplyr::ungroup()
+  ### If there are none
+  if(nrow(raw_meas) == 0)
+    raw_meas <- 
+    data.frame(what = "raw",
+               n = 0)
   
+  ## Remove rows already fully tallied to make count of estimations easier
+  ## i.e. both size and biomass were raw, or size raw and biomass estimation failed
+  size_biomass <- 
+    size_biomass %>% 
+    unique() %>% 
+    dplyr::filter(!(stringr::str_detect(size, 'raw') & 
+                      stringr::str_detect(biomass, 'raw')),
+                  !(stringr::str_detect(size, 'raw') & 
+                      biomass == "biomass_estimation_failed"))
+  
+      
   ## Create two dataframes with mean number of measurements/equations for each level of estimation
   ### Suppressing warnings
   suppressWarnings(
@@ -98,40 +125,26 @@ chart_path <- function(data_table){
       tidyr::separate(i,
                       into = c("what", "how"), 
                       sep = ":") %>%
-      ### Remove rows where they were no estimation
-      dplyr::filter(what != "")
+      ### Remove rows where they were raw or no estimations
+      dplyr::filter(what != "" &
+                      !(stringr::str_detect(what, 'raw')))
     
     ### The amount of information differs between size and biomass
     ### Need to harmonise beforehand
     if(i == "size")
-      c(temp <- 
+      #### Split between level and how many
+        temp <- 
           temp %>% 
-          ### Split between level and how many
           tidyr::separate(how,
                           into = c("level", "n"),
                           sep = "_") %>% 
           ### Make howmany numeric (default is character)
-          dplyr::mutate(n = as.numeric(n)))
+          dplyr::mutate(n = as.numeric(n))
     if(i == "biomass")
-      c(#### Cases where no equations were used
-        temp2 <- 
-          temp %>% 
-          dplyr::filter(what != "AE") %>% 
-          dplyr::select(what) %>% 
-          dplyr::group_by(what) %>% 
-          dplyr::count() %>% 
-          dplyr::rename(unique_estimations = n),
-        #### Update raw measurements
-        raw_meas <- 
-          raw_meas %>% 
-          dplyr::bind_rows(temp2) %>% 
-          dplyr::group_by(what) %>% 
-          dplyr::summarise_all(sum),
-        #### Cases where equations were used
+      ### Split between level and how many
         temp <- 
           temp %>% 
           dplyr::filter(what == "AE") %>% 
-          ### Split between level and how many
           tidyr::separate(how,
                           into = c("level", "n", "type"),
                           sep = "_") %>% 
@@ -140,7 +153,7 @@ chart_path <- function(data_table){
                        col = "level",
                        sep = "_") %>% 
           ### Make howmany numeric (default is character)
-          dplyr::mutate(n = as.numeric(n)))
+          dplyr::mutate(n = as.numeric(n))
     
     
     ## Calculate sum for all levels
@@ -154,14 +167,16 @@ chart_path <- function(data_table){
              dplyr::left_join(temp %>% 
                                 dplyr::group_by(what, level) %>%
                                 dplyr::summarise_all(mean),
-                              by = c("what", "level")))
+                              by = c("what", "level")) %>% 
+             dplyr::ungroup())
     ## Calculate overall sum
     assign(paste0(i, "_overall"),
            temp %>% 
              dplyr::select(what, level) %>%
              dplyr::group_by(what) %>% 
              dplyr::count() %>% 
-             dplyr::rename(unique_estimations = n))
+             dplyr::rename(unique_estimations = n) %>% 
+             dplyr::ungroup())
 })
   
   ## Combine summary frames
@@ -174,23 +189,23 @@ chart_path <- function(data_table){
   ## Combine overall frames
   overall <- 
     size_overall %>% 
-    dplyr::bind_rows(biomass_overall,
-                     raw_meas) %>% 
+    dplyr::bind_rows(biomass_overall) %>% 
     dplyr::ungroup()
-    
+  
   ## Combine in a list
   dats <- 
-    list(overall = overall,
-         summary = summary)
+    list(raw = raw_meas,
+         overall_est = overall,
+         summary_est = summary)
   
-  ## Print general info
+  ## Print general info in a nice way
   cat(paste("Hello, thanks for using the package!", 
             paste0("There were ", nrow(data_table), " rows in your data."), 
             paste0("Of these ", sum(est_failed$n), " failed, and ",
             null_biomass$n, " had 0 abundance."),
-            paste0("You thus have ", nrow(data_table) -sum(est_failed$n) - null_biomass$n,
-                   " estimations."),
+            paste0("I performed ", nrow(size_biomass), " unique estimations."),
             sep = "\n"))
+  cat("/n")
   
   ## Return list
   return(dats)

@@ -43,14 +43,6 @@ hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", databa
   '%notin%' <- 
     Negate('%in%')
   
-  # Make copy of data table
-  data_return <- 
-    data_table %>% 
-    ## And add new columns to fill
-    dplyr::mutate(size_used = NA,
-           biomass = NA,
-           path = NA)
-  
   # Some error catching 
   ## Important columns have proper names
   if("abundance" %notin% colnames(data_table))
@@ -71,13 +63,33 @@ hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", databa
   if(biomass_kind %notin% c("dry", "both"))
     stop("Biomass kind has to be 'dry' or 'both'")
   
+  
   # Load measurement table
   # If user wants to use the database measurement or not
   measurement_table <- 
     get_measurements(database)
+  # Check if any BWG name missing, and if yes add names and append table
+  if(sum(is.na(data_table$bwg_name)) > 0)
+    c(## Get new species names
+      data_table <- 
+        name_herder(data_table),
+      ## Append measurement table
+      measurement_table <- 
+        append_names(measurement_table,
+                            data_table)
+      )
+  
   # Load equation table
   equation_table <- 
     get_equations()
+
+  # Make copy of data table
+  data_return <- 
+    data_table %>% 
+    ## And add new columns to fill
+    dplyr::mutate(size_used = NA,
+                  biomass = NA,
+                  path = NA)
   
   # Make list of taxonomic groups/traits to gro through
   # Note that after family we look at traits, and then back to higher trophic levels (the broad ones)
@@ -147,7 +159,7 @@ hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", databa
       ### If in database 
       if(nrow(taxo) > 0)
           #### Check if we have a numeric size
-          if(!is.na(as.numeric(size_mm))) 
+        suppressWarnings(if(!is.na(as.numeric(size_mm))) 
             c(size_mm <- as.numeric(size_mm),
               path <- paste0(path, "raw_size"))else
               #### If we don't, do a size estimation
@@ -169,7 +181,7 @@ hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", databa
                         "cannot_estimate",
                       size_mm <- 
                         666)
-                }})
+                }}))
     
     ### Change 666 to proper message
          if(size_mm == 666)
@@ -187,7 +199,8 @@ hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", databa
         #### Round number and break loop if done
         if(!is.na(biomass))
           c(biomass <- 
-              signif(biomass, digits =4),
+              signif(biomass, 
+                     digits = 4),
           break)
         
         ###### If we got to the end and still nothing, give up
@@ -195,7 +208,7 @@ hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", databa
           c(biomass <-
               "cannot_estimate",
             path <- 
-              paste0(path, "biomass_estimation_failed"))
+              paste0(path, "-biomass_estimation_failed"))
       }}
   
     ### Add biomass and path value to data frame to return

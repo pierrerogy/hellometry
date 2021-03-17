@@ -41,7 +41,7 @@ get_biomass <- function(specname, level, size_mm, abundance, stage, path, taxo, 
           raw_meas %>% 
           dplyr::count(biomass_type) %>% 
           ### Keep only the most common kind of measurement
-            dplyr::filter(n == max(n)),
+            suppressWarnings(dplyr::filter(n == max(n))),
           ## If we have the same number of measurements in both dry and wet, prioritise dry
           ifelse(nrow(type_count) == 2,
                  (type_count <- 
@@ -101,7 +101,7 @@ get_biomass <- function(specname, level, size_mm, abundance, stage, path, taxo, 
                 allometry %>% 
                 dplyr::count(biomass_type) %>% 
                 ### Keep only the most common kind of equation
-                dplyr::filter(n == max(n)),
+                suppressWarnings(dplyr::filter(n == max(n))),
               ## If we have the same number of equations in both dry and wet, prioritise dry
               ifelse(nrow(type_count) == 2,
                      type_count <- 

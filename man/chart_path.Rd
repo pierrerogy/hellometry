@@ -10,11 +10,12 @@ chart_path(data_table)
 \item{data_table}{Output data from hello_metry()}
 }
 \value{
-A list with two elements. Element 1 returns how many unique
-estimations were performed for size categories (weighted average (WA) or size
-bins (BIN)) and allometric equations (AE)), and how many biomass values had raw wet or dry
-equivalence in the database. Element 2 returns the level, number of
-unique estimations, and mean number of values (numerical size measurement or
+A list with three elements. Element 1 returns how many times
+a raw numerical measurement or biomass was used to estimate (or get
+a biomass value). Element 2 returns how many unique estimations
+were performed for size categories (weighted average (WA) or size
+bins (BIN)) and allometric equations (AE)). Element 3 returns the
+level, number of unique estimations, and mean number of values (numerical size measurement or
 number of allometric equation) for each of these.
 }
 \description{
