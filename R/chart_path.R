@@ -205,7 +205,7 @@ chart_path <- function(data_table){
             null_biomass$n, " had 0 abundance."),
             paste0("I performed ", nrow(size_biomass), " unique estimations."),
             sep = "\n"))
-  cat("/n")
+  cat("\n")
   
   ## Return list
   return(dats)

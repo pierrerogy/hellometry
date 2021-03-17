@@ -41,15 +41,15 @@ sizest <- function(specname, size_mm, level, stage, path, taxo, equation_table, 
         data_table %>% 
         dplyr::filter(bwg_name %in% spec_list)  %>% 
         #### Select relevant columns
-        dplyr::select(size_mm, abundance) %>% 
+        dplyr::select(stage, size_mm, abundance) %>% 
         #### Add measurements from allometry table
         dplyr::bind_rows(measurement_table %>% 
                     dplyr::filter(bwg_name %in% spec_list) %>%
-                    dplyr::select(size_mm, abundance) %>% 
+                    dplyr::select(stage, size_mm, abundance) %>% 
                     dplyr::rename(size_mm = size_mm) %>% 
                     dplyr::mutate(size_mm = as.character(size_mm))) %>% 
-        #### Group by size and sum
-        dplyr::group_by(size_mm) %>% 
+        #### Group by stage, size and sum
+        dplyr::group_by(stage, size_mm) %>% 
         dplyr::summarise_all(sum)  %>% 
         dplyr::mutate(size_mm = as.numeric(size_mm)) %>% 
         dplyr::filter(!is.na(size_mm)) %>% 
@@ -78,15 +78,15 @@ sizest <- function(specname, size_mm, level, stage, path, taxo, equation_table, 
             data_table %>% 
             dplyr::filter(bwg_name %in% spec_list)  %>% 
             #### Select relevant columns
-            dplyr::select(size_mm, abundance) %>% 
+            dplyr::select(stage, size_mm, abundance) %>% 
             #### Add measurements from allometry table
             dplyr::bind_rows(measurement_table %>% 
                         dplyr::filter(bwg_name %in% spec_list) %>%
                         dplyr::select(size_mm, abundance) %>% 
                         dplyr::rename(size_mm = size_mm) %>% 
                         dplyr::mutate(size_mm = as.character(size_mm))) %>% 
-            #### Group by size and sum
-            dplyr::group_by(size_mm) %>% 
+            #### Group by stage, size and sum
+            dplyr::group_by(stage, size_mm) %>% 
             dplyr::summarise_all(sum) %>% 
             dplyr::mutate(size_mm = as.numeric(size_mm)) %>% 
             dplyr::filter(!is.na(size_mm)) %>% 

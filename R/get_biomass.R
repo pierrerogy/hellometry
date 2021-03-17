@@ -27,7 +27,8 @@ get_biomass <- function(specname, level, size_mm, abundance, stage, path, taxo, 
     measurement_table %>% 
     dplyr::filter(provenance == "length.raw") %>% 
     dplyr::filter(bwg_name == specname,
-           size_mm == size_mm) %>% 
+           size_mm == size_mm,
+           stage == stage) %>% 
     unique()
   
   # Switch for wet and dry measurements
@@ -70,11 +71,11 @@ get_biomass <- function(specname, level, size_mm, abundance, stage, path, taxo, 
     if(do.call(paste, list(taxo[,level])) == "NA")
       allometry <- data.frame() else
          allometry <-
-            equation_table %>% 
+          equation_table %>% 
           dplyr::filter(equation_table[,level] == do.call(paste, list(taxo[,level]))) %>% 
           dplyr::filter(!is.na(intercept) | !is.na(ln_intercept)) %>% 
-            dplyr::select(biomass_type, intercept, slope, ln_intercept) %>% 
-            unique()
+          dplyr::select(biomass_type, intercept, slope, ln_intercept) %>% 
+          unique()
   ## If using trait, get custom list of species with other function
   if(level == "traits")
     c(spec_list <- 

@@ -7,7 +7,7 @@
 hello_metry(data_table, print = FALSE, biomass_kind = "both", database = TRUE)
 }
 \arguments{
-\item{data_table}{The input data table, please include columns columns "abundance", "bwg_name", "size_mm" are present}
+\item{data_table}{The input data table, please include columns columns "abundance", "bwg_name", "size_mm", "stage" (larva/pupa/adult, please only put 'adult' for adult insects) are present}
 
 \item{print}{Do you want to see the printing of the rows (TRUE/FALSE (default))}
 

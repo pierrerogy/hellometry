@@ -8,7 +8,7 @@
 #' the size distribution to estimate "small", "medium" and "large" inputs, or a weighted
 #' average of all measurements if the input is "unknown".
 #'
-#' @param data_table The input data table, please include columns columns "abundance", "bwg_name", "size_mm" are present
+#' @param data_table The input data table, please include columns columns "abundance", "bwg_name", "size_mm", "stage" (larva/pupa/adult, please only put 'adult' for adult insects) are present
 #' @param print Do you want to see the printing of the rows (TRUE/FALSE (default))
 #' @param biomass_kind Should data used in inference be "dry" for just dry biomass, or "both" (default) for both dry and wet biomass.
 #' If both (the default) is chosen, then the function will determine which dry or wet equations or raw weight is present, and choose
@@ -51,8 +51,8 @@ hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", databa
     stop("Please call column with bwg species names values 'bwg_name'")
   if("size_mm" %notin% colnames(data_table))
     stop("Please call column with specimen measurement values 'size_mm'")
-  # if("stage" %notin% colnames(data_table))
-  #   stop("Please call column with life stage (larva/pupa/adult) 'stage'")
+  if("stage" %notin% colnames(data_table))
+    stop("Please call column with life stage (larva/pupa/adult) 'stage'")
   ## Print is actually a true false
   if(print %notin% c(TRUE, FALSE))
     stop("Print has to be TRUE/FALSE")
@@ -76,8 +76,7 @@ hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", databa
       ## Append measurement table
       measurement_table <- 
         append_names(measurement_table,
-                            data_table)
-      )
+                            data_table))
   
   # Load equation table
   equation_table <- 
