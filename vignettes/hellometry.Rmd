@@ -32,31 +32,66 @@ The following figures shows how the different functions of this package are sequ
 </p>
 
 ## Quick working example
+### Case 1: I only have BWG some taxonomic information, and a few or no BWG names.
+In that case, you would first need to format your data. To quickly glance over the taxonomy present in the BWG database, you can use `get_bwgnames`
+```{r}
+head(hellometry::get_bwgnames())
+```
+
+As you can see there are a lot of columns here, and all are needed for proper estimation. You can quickly add them to your data using the `add_taxonomy()` function, which is essentially a join of the data above to your data. If you have a species without BWG, just put a random string in the 'bwg_name' column. This function will leave rows without an actual BWG name empty.
+
 ```{r}
 # Load library
 library(hellometry)
 
-# Get practice data
+# Get data without taxonomy
 pitilla <- 
-  pitilla_data()
+  pitilla_data(taxonomy = FALSE)
 
 # Check data
 head(pitilla)
+tail(pitilla)
+
+# Add taxonomy
+pitilla <- 
+  add_taxonomy(pitilla)
+
+# Check data
+head(pitilla)
+tail(pitilla)
+
+## Only the last few rows do not have a BWG name, their taxonomy needs to be entered manually
+## Just make sure to leave the bwg_name column empty before sending to hello_metry()
+pitilla[112:117, 14] <- pitilla[112:117, 1]
+pitilla[112:117, 1] <- NA
+tail(pitilla)
+
+
+```
+
+Now that you have entered the taxonomy you can finally use the functions!
+
+```{r}
+library(hellometry)
+
+# Get data without taxonomy
+pitilla <- 
+  pitilla_data()
 
 # Get biomass estimates
-pitilla <- 
-  hello_metry(pitilla, ## the data
-              print = F, ## I don't want to see how fast the functions moves through the data
-              biomass_kind = "both", ## I want both dry and wet biomasses (wet is more precise for odonates)
-              database = TRUE) ## since this data is not in the BWG database, I can safely include measurements from there
+pitilla_bm <- 
+  hello_metry(pitilla)
+# Here I am using the default arguments:
+# - print = F (I don't want to see how fast the functions moves through the data)
+# - biomass_kind = "both" (I want both dry and wet biomasses, these are never mixed for a single estimation)
+# - database = TRUE (## since (this data is not in the BWG database, I can safely include measurements from there)
 
 # Look at biomass estimates
-head(pitilla)
-
+head(pitilla_bm)
 
 # We now have biomass estimates, we can then summarise them easily with another function
 results <- 
-  chart_path(pitilla)
+  chart_path(pitilla_bm)
 
 # Examine its results
 results

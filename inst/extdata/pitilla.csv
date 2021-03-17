@@ -110,9 +110,9 @@ Odonata.4,Eukarya,Animalia,Arthropoda,NA,Insecta,Palaeoptera,Odonata,Zygoptera,P
 Odonata.4,Eukarya,Animalia,Arthropoda,NA,Insecta,Palaeoptera,Odonata,Zygoptera,Pseudostigmatidae,NA,NA,Mecistogaster,modesta,larva,19,1
 Odonata.4,Eukarya,Animalia,Arthropoda,NA,Insecta,Palaeoptera,Odonata,Zygoptera,Pseudostigmatidae,NA,NA,Mecistogaster,modesta,larva,21,1
 Odonata.4,Eukarya,Animalia,Arthropoda,NA,Insecta,Palaeoptera,Odonata,Zygoptera,Pseudostigmatidae,NA,NA,Mecistogaster,modesta,larva,22,1
-NA,Eukarya,Animalia,Arthropoda,NA,Insecta,Palaeoptera,Odonata,Zygoptera,Pseudostigmatidae,NA,NA,NA,NA,larva,unknown,1
-NA,Eukarya,Animalia,Arthropoda,NA,Insecta,Palaeoptera,Odonata,Zygoptera,Pseudostigmatidae,NA,NA,NA,NA,larva,13,2
-NA,Eukarya,Animalia,Platyhelminthes,NA,NA,NA,NA,NA,Iamnotarealworm,NA,NA,NA,NA,larva,small,3
-NA,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Brachycera,Tabanidae,NA,NA,NA,NA,larva,unknown,2
-NA,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,NA,NA,NA,NA,NA,larva,1.5,5
-NA,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Iamnotarealinsect,NA,NA,NA,NA,larva,unknown,1
+damsel_A,Eukarya,Animalia,Arthropoda,NA,Insecta,Palaeoptera,Odonata,Zygoptera,Pseudostigmatidae,NA,NA,NA,NA,larva,unknown,1
+damsel_B,Eukarya,Animalia,Arthropoda,NA,Insecta,Palaeoptera,Odonata,Zygoptera,Pseudostigmatidae,NA,NA,NA,NA,larva,13,2
+unreal_worm,Eukarya,Animalia,Platyhelminthes,NA,NA,NA,NA,NA,Iamnotarealworm,NA,NA,NA,NA,larva,small,3
+tabanid_A,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Brachycera,Tabanidae,NA,NA,NA,NA,larva,unknown,2
+grub_A,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,NA,NA,NA,NA,NA,larva,1.5,5
+unreal_fly,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Iamnotarealinsect,NA,NA,NA,NA,larva,unknown,1
