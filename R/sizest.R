@@ -67,10 +67,11 @@ sizest <- function(specname, size_mm, level, stage, path, taxo, equation_table, 
             dplyr::select(all_of(level)) %>% 
             unique() %>% 
             dplyr::pull(), #### pull transforms it from a column to a vector
-          ### Get a vector of all species from that specific level
+          ### Get a vector of all species from that specific level and stage
           spec_list <- 
             measurement_table %>% 
-            dplyr::filter(measurement_table[,level] == level_name) %>% 
+            dplyr::filter(measurement_table[,level] == level_name & 
+                            measurement_table$stage == stage) %>% 
             dplyr::select(bwg_name) %>% 
             unique() %>% 
             dplyr::pull(),
@@ -78,7 +79,7 @@ sizest <- function(specname, size_mm, level, stage, path, taxo, equation_table, 
             data_table %>% 
             dplyr::filter(bwg_name %in% spec_list)  %>% 
             #### Select relevant columns
-            dplyr::select(stage, size_mm, abundance) %>% 
+            dplyr::select(size_mm, abundance) %>% 
             #### Add measurements from allometry table
             dplyr::bind_rows(measurement_table %>% 
                         dplyr::filter(bwg_name %in% spec_list) %>%
@@ -86,7 +87,7 @@ sizest <- function(specname, size_mm, level, stage, path, taxo, equation_table, 
                         dplyr::rename(size_mm = size_mm) %>% 
                         dplyr::mutate(size_mm = as.character(size_mm))) %>% 
             #### Group by stage, size and sum
-            dplyr::group_by(stage, size_mm) %>% 
+            dplyr::group_by(size_mm) %>% 
             dplyr::summarise_all(sum) %>% 
             dplyr::mutate(size_mm = as.numeric(size_mm)) %>% 
             dplyr::filter(!is.na(size_mm)) %>% 

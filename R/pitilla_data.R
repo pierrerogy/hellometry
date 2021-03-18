@@ -17,12 +17,6 @@ pitilla_data <- function(taxonomy = TRUE){
       pitilla %>% 
       dplyr::select(bwg_name, size_mm, stage, abundance)
   
-  ## If taxonomy is wanted, put weird species name is species column
-  if(taxonomy)
-    c(pitilla[112:117, 14] <- pitilla[112:117, 1],
-      pitilla[112:117, 1] <- NA)
-      
-  
   ## Return data
   return(pitilla)       
   

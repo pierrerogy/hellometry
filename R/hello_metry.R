@@ -148,7 +148,7 @@ hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", databa
      c(taxo <- 
         measurement_table %>% 
         dplyr::filter(bwg_name == specname) %>% 
-        dplyr::select(species_id:species) %>% 
+        dplyr::select(species_id:species, stage) %>% 
         unique(),
      ### If not in database, give special biomass value
       if(nrow(taxo) == 0)

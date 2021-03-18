@@ -72,7 +72,8 @@ get_biomass <- function(specname, level, size_mm, abundance, stage, path, taxo, 
       allometry <- data.frame() else
          allometry <-
           equation_table %>% 
-          dplyr::filter(equation_table[,level] == do.call(paste, list(taxo[,level]))) %>% 
+          dplyr::filter(equation_table[,level] == do.call(paste, list(taxo[,level])) &
+                          equation_table$stage == taxo$stage) %>% 
           dplyr::filter(!is.na(intercept) | !is.na(ln_intercept)) %>% 
           dplyr::select(biomass_type, intercept, slope, ln_intercept) %>% 
           unique()

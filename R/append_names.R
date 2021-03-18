@@ -8,23 +8,29 @@
 #' @return An updated measurement table that will be used to estimate sizes and gather taxonomy
 #' @export
 append_names <- function(measurement_table, data_table){
-  # Add rows to measurement table
-  measurement_table <- 
-    measurement_table %>%
-    dplyr::bind_rows(data_table %>% 
-                       ## Only select taxonomy rows
-                       dplyr::select(bwg_name:species) %>% 
-                       unique() %>% 
-                       ## Use anti join to only keep those not present in the measurement table
-                       dplyr::anti_join(measurement_table %>% 
-                                          dplyr::select(bwg_name:species) %>% 
-                                          unique,
-                                        by = c("bwg_name", "domain", "kingdom", 
-                                               "phylum", "subphylum", "class", "subclass", 
-                                               "ord", "subord", "family", "subfamily", "tribe", 
-                                               "genus", "species")))
+  # Make stub of measurement_table 
+  measurement_stub <- 
+    measurement_table %>% 
+    dplyr::select(species_id:stage) %>% 
+    unique()
   
-  # Return updated data
+  # Check if any species not present in the database
+  data_stub <- 
+    data_table %>% 
+    dplyr::select(bwg_name, domain:species, stage) %>% 
+    unique() %>% 
+    ## Remove all species present in the database already
+    dplyr::anti_join(measurement_stub,
+                     by = c("bwg_name", "domain", "kingdom", "phylum", 
+                            "subphylum", "class", "subclass", "ord", 
+                            "subord", "family", "subfamily", "tribe", 
+                            "genus", "species", "stage"))
+  
+  # Bind new species to measurement table
+  measurement_table <-
+    measurement_table %>% 
+    dplyr::bind_rows(data_stub)
+  
   return(measurement_table)
   
 }

@@ -61,11 +61,6 @@ head(pitilla)
 tail(pitilla)
 
 ## Only the last few rows do not have a BWG name, their taxonomy needs to be entered manually
-## Just make sure to leave the bwg_name column empty before sending to hello_metry()
-pitilla[112:117, 14] <- pitilla[112:117, 1]
-pitilla[112:117, 1] <- NA
-tail(pitilla)
-
 
 ```
 
