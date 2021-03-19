@@ -9,8 +9,6 @@ hello_metry(data_table, print = FALSE, biomass_kind = "both", database = TRUE)
 \arguments{
 \item{data_table}{The input data table, please include columns columns "abundance", "bwg_name", "size_mm", "stage" (larva/pupa/adult, please only put 'adult' for adult insects) are present}
 
-\item{print}{Do you want to see the printing of the rows (TRUE/FALSE (default))}
-
 \item{biomass_kind}{Should data used in inference be "dry" for just dry biomass, or "both" (default) for both dry and wet biomass.
 If both (the default) is chosen, then the function will determine which dry or wet equations or raw weight is present, and choose
 the most numerous. If there is the same number of dry and wet equations, dry equations are always favoured. Dry and wet
