@@ -189,7 +189,7 @@ hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", databa
     #### As long as biomass is NA
     while(is.na(biomass)){
       ##### Go through my list of group
-      suppressWarnings(for(level in level_list){
+      for(level in level_list){
         est <- get_biomass(specname, level, size_mm, abundance, stage, path, taxo, equation_table, measurement_table, biomass_kind)
         biomass <- est[,1]
         path <- est[,2]
@@ -206,7 +206,7 @@ hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", databa
               "cannot_estimate",
             path <- 
               paste0(path, "-biomass_estimation_failed"))
-      })}
+      }}
   
     ### Add biomass and path value to data frame to return
     data_return[i,(ncol(data_return)-2)] <- size_mm
