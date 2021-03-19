@@ -9,7 +9,6 @@
 #' average of all measurements if the input is "unknown".
 #'
 #' @param data_table The input data table, please include columns columns "abundance", "bwg_name", "size_mm", "stage" (larva/pupa/adult, please only put 'adult' for adult insects) are present
-#' @param print Do you want to see the printing of the rows (TRUE/FALSE (default))
 #' @param biomass_kind Should data used in inference be "dry" for just dry biomass, or "both" (default) for both dry and wet biomass.
 #' If both (the default) is chosen, then the function will determine which dry or wet equations or raw weight is present, and choose
 #' the most numerous. If there is the same number of dry and wet equations, dry equations are always favoured. Dry and wet
@@ -53,9 +52,6 @@ hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", databa
     stop("Please call column with specimen measurement values 'size_mm'")
   if("stage" %notin% colnames(data_table))
     stop("Please call column with life stage (larva/pupa/adult) 'stage'")
-  ## Print is actually a true false
-  if(print %notin% c(TRUE, FALSE))
-    stop("Print has to be TRUE/FALSE")
   ## Database is actually a true false
   if(database %notin% c(TRUE, FALSE))
     stop("Print has to be TRUE/FALSE")
@@ -114,12 +110,14 @@ hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", databa
     dplyr::mutate(family = ifelse(family %in% c("Tipulidae", "Limoniidae"),
                            "Tipulidae_Limoniidae", family))
   
- # Loop to fill row by row
+  # Initiate progress bar
+  pb <- 
+    progress::progress_bar$new(format = "[:bar] :current/:total (:percent)", 
+                               total = nrow(data_return))
+  pb$tick(0)
+
+  # Loop to fill row by row
   for(i in 1:nrow(data_return)){
-    ## If people want to print row names to track progress
-    if(print == TRUE)
-      print(i)
-    
     ## Initialise function parameters
     row <- data_return[i,]
     specname <- row$bwg_name
@@ -214,6 +212,9 @@ hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", databa
     data_return[i,(ncol(data_return)-2)] <- size_mm
     data_return[i,(ncol(data_return)-1)] <- biomass
     data_return[i,ncol(data_return)] <- as.character(path)
+    
+    ### Add tick
+    pb$tick()
     
   } 
   ## Return new data frame

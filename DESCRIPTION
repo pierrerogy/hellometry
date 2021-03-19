@@ -18,7 +18,8 @@ Imports:
     magrittr,
     dplyr,
     tidyr,
-    stringr
+    stringr,
+    progress
 Suggests: 
     knitr,
     rmarkdown
