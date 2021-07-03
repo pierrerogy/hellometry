@@ -37,7 +37,7 @@
 
 #' @export
 hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", database = TRUE){
-  # browser()
+  #browser()
   # Function %notin%
   '%notin%' <- 
     Negate('%in%')
