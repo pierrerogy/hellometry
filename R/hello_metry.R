@@ -82,7 +82,7 @@ hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", databa
   data_return <- 
     data_table %>% 
     ## And add new columns to fill
-    dplyr::mutate(size_used = NA,
+    dplyr::mutate(size_used_mm = NA,
                   biomass = NA,
                   path = NA)
   
@@ -101,6 +101,10 @@ hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", databa
       "phylum")
   
   ## Limoniidae and Tipulidae essentially the same thing so can be considered together
+  data_return <- 
+    data_return %>% 
+    dplyr::mutate(family = ifelse(family %in% c("Tipulidae", "Limoniidae"),
+                                  "Tipulidae_Limoniidae", family))
   measurement_table <- 
     measurement_table %>% 
     dplyr::mutate(family = ifelse(family %in% c("Tipulidae", "Limoniidae"),
@@ -150,12 +154,12 @@ hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", databa
         unique(),
      ### If not in database, give special biomass value
       if(nrow(taxo) == 0)
-        c(biomass <-
-        "notindatabase",
-        path <- paste0(path, "not_in_database")),
-      ### If in database 
-      if(nrow(taxo) > 0)
-          #### Check if we have a numeric size
+        c(taxo <- 
+            row %>% 
+            dplyr::select(domain:species, stage, bwg_name)),
+      # ### If in database 
+      # if(nrow(taxo) > 0)
+      #     #### Check if we have a numeric size
         suppressWarnings(if(!is.na(as.numeric(size_mm))) 
             c(size_mm <- as.numeric(size_mm),
               path <- paste0(path, "raw_size"))else
@@ -226,6 +230,6 @@ hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", databa
            #             unique()) %>% 
            # dplyr::relocate(size_original:path, .after = species) %>% 
            ### to make things easy only put NA where size was not computed
-           dplyr::mutate(size_used = ifelse(abundance == 0, NA, size_used)))
+           dplyr::mutate(size_used_mm = ifelse(abundance == 0, NA, size_used_mm)))
         
 }

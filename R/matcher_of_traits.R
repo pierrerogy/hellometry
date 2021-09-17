@@ -17,8 +17,8 @@ matcher_of_traits <- function(specname, measurement_table){
     dplyr::filter(bwg_name == specname) %>% 
     dplyr::select(BS1:BF4)
   
-  # NA catcher 
-  if(ncol(traits) == ncol(traits[!is.na(colSums(traits))]))
+  # NA and no trait catcher 
+  if(ncol(traits) == ncol(traits[!is.na(colSums(traits))]) & nrow(traits) != 0)
     proceed <- TRUE else
       proceed <- FALSE
     

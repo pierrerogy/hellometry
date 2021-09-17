@@ -29,9 +29,10 @@ name_herder <- function(data_table){
   
   # Loop to examine if species is already in BWG database
   for(i in 1:n_noname)
-    c(## Get row of species,
+    c(## Get row of species as character,
       row <- 
-        data_noname[i,],
+        data_noname[i,] %>%
+        dplyr::mutate(across(everything(), as.character)),
       ## Use inner join to see if species is present in database or not
       bwgnames <- 
         get_bwgnames() %>% 
