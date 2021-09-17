@@ -209,8 +209,8 @@ hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", databa
       }}
   
     ### Add biomass and path value to data frame to return
-    data_return[i,(ncol(data_return)-2)] <- size_mm
-    data_return[i,(ncol(data_return)-1)] <- biomass
+    data_return[i,(ncol(data_return)-2)] <- as.character(size_mm)
+    data_return[i,(ncol(data_return)-1)] <- as.character(biomass)
     data_return[i,ncol(data_return)] <- as.character(path)
     
     ### Add tick
