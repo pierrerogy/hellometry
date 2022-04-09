@@ -28,6 +28,7 @@ as well as path taken through the function. The nomenclature of this path column
 \item "_size_estimaton_failed": there were not enough close relatives or species with matching traits to compute size
 \item "_biomass_estimation_failed": there were no allometric equation at to estimate biomass
 \item "_raw_dry/wet": if there was a raw (direct) measurement for that particular species-size combination, and whether that measurement is dry or wet biomass
+\item "_external_dry_equations": data provided was not sufficient so equations from the literature were used
 }
 }
 
@@ -38,8 +39,8 @@ estimation kind:level_number of measurements.
 For example,  WA:genus_5 (size estimation using weighted average on 5 measurements from the species' genus), BIN:subfamily_3 (size estimation using size bins (S, M, L) on three measurement a the subfamily level)
 \item if the allometric equations are used (get_biomass()):
 biomass estimation:taxonomic level of inference_number of equations_dry/wet.
-For example, -AE:bwg_name_1_wet (one allometric equation from wet biomass at the species level), -AE:subclass_5_dry (five allometric equation from dry biomass s at the subclass level)
-}If a species went through both size estimation and biomass estimations, the path will be composite, e.g. WA:genus_5-AE:bwg_name_1_wet
+For example, -AE:bwg_name_wet (allometric equation from wet biomass at the species level), -AE:subclass_dry (allometric equation from dry biomass at the subclass level)
+}If a species went through both size estimation and biomass estimations, the path will be composite, e.g. WA:genus_5-AE:bwg_name_wet
 }
 }
 \description{

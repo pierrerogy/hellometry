@@ -7,12 +7,11 @@
 get_biomass(
   specname,
   level,
-  size_mm,
+  size_input,
   abundance,
   stage,
   path,
   taxo,
-  equation_table,
   measurement_table,
   biomass_kind
 )
@@ -22,8 +21,6 @@ get_biomass(
 
 \item{level}{Taxonomic level of estimation}
 
-\item{size_mm}{Size in mm}
-
 \item{abundance}{Abundance of individuals of the species/size combination}
 
 \item{stage}{Developmental stage of the invertebrate (larva/pupa/adult)}
@@ -32,20 +29,24 @@ get_biomass(
 
 \item{taxo}{Taxonomic information about the species}
 
-\item{equation_table}{Table containing all allometric equation}
-
 \item{measurement_table}{Table containing all measurements}
 
 \item{biomass_kind}{Should data used in inference be "dry" for just dry biomass, or "both" (default) for both dry and wet biomass.
 If both (the default) is chosen, then the function will determine which dry or wet equations or raw weight is present, and choose
 the most numerous. If there is the same number of dry and wet equations, dry equations are always favoured. Dry and wet
 measurements are never mixed.}
+
+\item{size_mm}{Size in mm}
+
+\item{equation_table}{Table containing all allometric equation}
 }
 \value{
 new column with estimate biomass value
 }
 \description{
-Look if raw biomass value exists for given measurement, use it if #' available. Look for at least one allometric equation in a given #' grouping in the following order: species to family, traits,
-suborder to phylum. Once threshold of at least one allometric
-equation is met: if there is only one equation, compute value of #' biomass; if there is more than one allometric equation, average #' the computed values of biomass.
+Looks if raw biomass value exists for given measurement, use it if #' available.
+Looks for at least three length measurement to compute allometric equation in a given
+grouping in the following order: species to family, traits,
+suborder to class. Once threshold of at least three length measurements
+equation is met calls the get_equation function to compute equation
 }

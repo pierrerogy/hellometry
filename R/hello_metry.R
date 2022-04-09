@@ -25,14 +25,15 @@
 #'- "_size_estimaton_failed": there were not enough close relatives or species with matching traits to compute size
 #'- "_biomass_estimation_failed": there were no allometric equation at to estimate biomass
 #'- "_raw_dry/wet": if there was a raw (direct) measurement for that particular species-size combination, and whether that measurement is dry or wet biomass
+#'- "_external_dry_equations": data provided was not sufficient so equations from the literature were used
 #' ## Regular cases
 #'- if the species goes through estimation of size (sizest()): 
 #'  estimation kind:level_number of measurements.
 #'  For example,  WA:genus_5 (size estimation using weighted average on 5 measurements from the species' genus), BIN:subfamily_3 (size estimation using size bins (S, M, L) on three measurement a the subfamily level)
 #'- if the allometric equations are used (get_biomass()): 
 #'  biomass estimation:taxonomic level of inference_number of equations_dry/wet.
-#'  For example, -AE:bwg_name_1_wet (one allometric equation from wet biomass at the species level), -AE:subclass_5_dry (five allometric equation from dry biomass s at the subclass level)
-#' # If a species went through both size estimation and biomass estimations, the path will be composite, e.g. WA:genus_5-AE:bwg_name_1_wet
+#'  For example, -AE:bwg_name_wet (allometric equation from wet biomass at the species level), -AE:subclass_dry (allometric equation from dry biomass at the subclass level)
+#' # If a species went through both size estimation and biomass estimations, the path will be composite, e.g. WA:genus_5-AE:bwg_name_wet
 
 
 #' @export
@@ -63,7 +64,7 @@ hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", databa
   # Load measurement table
   # If user wants to use the database measurement or not
   measurement_table <- 
-    get_measurements(database)
+    get_measurements(database = database)
   # Check if any BWG name missing, and if yes add names and append table
   if(sum(is.na(data_table$bwg_name)) > 0)
     c(## Get new species names
@@ -73,10 +74,6 @@ hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", databa
       measurement_table <- 
         append_names(measurement_table,
                             data_table))
-  
-  # Load equation table
-  equation_table <- 
-    get_equations()
 
   # Make copy of data table
   data_return <- 
@@ -84,6 +81,8 @@ hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", databa
     ## And add new columns to fill
     dplyr::mutate(size_used_mm = NA,
                   biomass = NA,
+                  ci_lwr = NA,
+                  ci_upr = NA,
                   path = NA)
   
   # Make list of taxonomic groups/traits to gro through
@@ -97,22 +96,11 @@ hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", databa
       "subord",
       "ord",
       "subclass",
-      "class",
-      "phylum")
+      "class")
   
   ## Limoniidae and Tipulidae essentially the same thing so can be considered together
-  data_return <- 
-    data_return %>% 
-    dplyr::mutate(family = ifelse(family %in% c("Tipulidae", "Limoniidae"),
-                                  "Tipulidae_Limoniidae", family))
   measurement_table <- 
-    measurement_table %>% 
-    dplyr::mutate(family = ifelse(family %in% c("Tipulidae", "Limoniidae"),
-                           "Tipulidae_Limoniidae", family))
-  equation_table <- 
-    equation_table %>% 
-    dplyr::mutate(family = ifelse(family %in% c("Tipulidae", "Limoniidae"),
-                           "Tipulidae_Limoniidae", family))
+    tipulimo(measurement_table)
   
   # Initiate progress bar
   pb <- 
@@ -139,10 +127,10 @@ hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", databa
     
    ## Let's not waste time if abundance is zero
     if(abundance == 0) 
-      c(biomass <- 0, 
+      c(biomass <- rep(0,3) , 
        path <- "null_biomass") else
           biomass <- 
-            NA
+            rep(NA, 3)
   
    ## Check if species is in the database
    if(abundance > 0)
@@ -157,9 +145,8 @@ hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", databa
         c(taxo <- 
             row %>% 
             dplyr::select(domain:species, stage, bwg_name)),
-      # ### If in database 
-      # if(nrow(taxo) > 0)
-      #     #### Check if we have a numeric size
+      ### If in database 
+      #### Check if we have a numeric size
         suppressWarnings(if(!is.na(as.numeric(size_mm))) 
             c(size_mm <- as.numeric(size_mm),
               path <- paste0(path, "raw_size"))else
@@ -175,7 +162,7 @@ hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", databa
                   if(is.numeric(size_mm))
                     break
                   ###### If we got to the end and still nothing, give up
-                  if(!is.numeric(size_mm) & level == "phylum")
+                  if(!is.numeric(size_mm) & level == "class")
                     c(path <- 
                         paste0(path, "size_estimation_failed"),
                       biomass <- 
@@ -189,33 +176,47 @@ hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", databa
            size_mm <- 
             "cannot_estimate"
       
-    ### Call the allometric equations
+    ### Call the allometric equations if we have a numerical measurement
+    if(is.numeric(size_mm)){
     #### As long as biomass is NA
-    while(is.na(biomass)){
+    #### Vector of three elements, so using first one
       ##### Go through my list of group
       for(level in level_list){
-        est <- get_biomass(specname, level, size_mm, abundance, stage, path, taxo, equation_table, measurement_table, biomass_kind)
-        biomass <- est[,1]
-        path <- est[,2]
+        c(est <- 
+            get_biomass(specname, level, size_mm, abundance, stage, path, taxo, measurement_table, biomass_kind),
+        path <- 
+          est[4],
+        biomass <- 
+          as.numeric(est[1:3]) * abundance,
         #### Round number and break loop if done
-        if(!is.na(biomass))
+        if(!is.na(biomass[1]))
           c(biomass <- 
               signif(biomass, 
                      digits = 4),
-          break)
-        
-        ###### If we got to the end and still nothing, give up
-        if(is.na(biomass) & level == "phylum")
+          break),
+        ###### If we got to the end and still nothing,call the firefighterss
+        if(is.na(biomass[1]) & level == "class")
           c(biomass <-
-              "cannot_estimate",
-            path <- 
-              paste0(path, "-biomass_estimation_failed"))
+              firetruck(size_mm, abundance, taxo),
+              ifelse(is.na(biomass[1]),
+                     c(biomass <- rep("cannot_estimate", 3),
+                       path <- paste0(path, "_cannot_estimate")),
+                     c(biomass <- c(signif(as.numeric(biomass[1]), 
+                                           digits = 4),
+                                    rep("cannot_estimate", 2)),
+                     path <- paste0(path, "-external_dry_equations")))))
+        
+
       }}
   
     ### Add biomass and path value to data frame to return
-    data_return[i,(ncol(data_return)-2)] <- as.character(size_mm)
-    data_return[i,(ncol(data_return)-1)] <- as.character(biomass)
-    data_return[i,ncol(data_return)] <- as.character(path)
+    data_return[i,(ncol(data_return)-4)] <- 
+      size_mm
+    ### Need to reverse the order of elements in the vector
+    data_return[i,(ncol(data_return)-1):(ncol(data_return)-3)] <- 
+      as.character(rev(biomass))
+    data_return[i,ncol(data_return)] <- 
+      as.character(path)
     
     ### Add tick
     pb$tick()
@@ -225,10 +226,6 @@ hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", databa
   return(data_return %>% 
            dplyr::rename(biomass_mg = biomass,
                   size_original = size_mm) %>% 
-           # dplyr::left_join(measurement_table %>% 
-           #             dplyr::select(bwg_name:species) %>% 
-           #             unique()) %>% 
-           # dplyr::relocate(size_original:path, .after = species) %>% 
            ### to make things easy only put NA where size was not computed
            dplyr::mutate(size_used_mm = ifelse(abundance == 0, NA, size_used_mm)))
         

@@ -142,19 +142,15 @@ chart_path <- function(data_table){
           dplyr::mutate(n = as.numeric(n))
     if(i == "biomass")
       ### Split between level and how many
-        temp <- 
-          temp %>% 
-          dplyr::filter(what == "AE") %>% 
-          tidyr::separate(how,
-                          into = c("level", "n", "type"),
-                          sep = "_") %>% 
-          ### Put back together level and type
-          tidyr::unite(c("level", "type"),
-                       col = "level",
-                       sep = "_") %>% 
-          ### Make howmany numeric (default is character)
-          dplyr::mutate(n = as.numeric(n))
-    
+      temp <- 
+        temp %>% 
+        ### Add how many external
+        dplyr::mutate(how = ifelse(stringr::str_detect(what, "external"),
+                                   "external_dry_equations",
+                                   how)) %>% 
+        dplyr::rename(level = how)
+          
+        
     
     ## Calculate sum for all levels
     ### Assign can be used to create a dataframe with "paste"

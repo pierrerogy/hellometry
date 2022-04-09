@@ -25,12 +25,6 @@ The data requirements of the package are as follow: <br>
 - column with development stage of specimens (larva/pupa/adult) needs to be called "abundance" (please only put adult for adult insects)<br>
 - column with abundance of specimens needs to be called "abundance" <br>
 
-## Inner workings of the algorithm
-The following figures shows how the different functions of this package are sequentially called to estimate size and biomass in an entire dataframe. They can all be used in isolation.
-<p align="center">
-<img src="functions.JPG" width ="600" height = "700">
-</p>
-
 ## Quick working example
 ### Case 1: I only have BWG some taxonomic information, and a few or no BWG names.
 In that case, you would first need to format your data. To quickly glance over the taxonomy present in the BWG database, you can use `get_bwgnames`
@@ -40,7 +34,7 @@ head(hellometry::get_bwgnames())
 
 As you can see there are a lot of columns here, and all are needed for proper estimation. You can quickly add them to your data using the `add_taxonomy()` function, which is essentially a join of the data above to your data. If you have a species without BWG, just put a random string in the 'bwg_name' column. This function will leave rows without an actual BWG name empty.
 
-```{r}
+```{r sup, warning=FALSE}
 # Load library
 library(hellometry)
 
@@ -66,7 +60,7 @@ tail(pitilla)
 
 Now that you have entered the taxonomy you can finally use the functions!
 
-```{r}
+```{r, warning=FALSE}
 library(hellometry)
 
 # Get data without taxonomy
