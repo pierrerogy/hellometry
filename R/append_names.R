@@ -1,6 +1,6 @@
 #' Append measurement table with new species names
 #'
-#' Append measuremement table with new species and measurements, because this table
+#' Append measuremement table with new species names, because this table
 #' also compiles taxonomy for all species
 #' 
 #' @param measurement_table Table containing all measurements

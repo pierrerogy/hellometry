@@ -6,7 +6,10 @@
 #' do size estimations if you input "small", "medium", "large" or "unknown". In this
 #' case, the algorithm will use existing size measurements for the species, and use 
 #' the size distribution to estimate "small", "medium" and "large" inputs, or a weighted
-#' average of all measurements if the input is "unknown".
+#' average of all measurements if the input is "unknown". If you feed in a dataframe that already
+#' has some biomass measurements but not everywhere, please name this column "biomass_mg", and include
+#' another column "biomass_kind" that says if the biomass is "dry" or "wet". This is important as this
+#' information is used in the estimations.
 #'
 #' @param data_table The input data table, please include columns columns "abundance", "bwg_name", "size_mm", "stage" (larva/pupa/adult, please only put 'adult' for adult insects) are present
 #' @param biomass_kind Should data used in inference be "dry" for just dry biomass, or "both" (default) for both dry and wet biomass.
@@ -74,17 +77,34 @@ hello_metry <- function(data_table, biomass_kind = "both", database = TRUE){
       measurement_table <- 
         append_names(measurement_table,
                             data_table))
-
-  # Make copy of data table
-  data_return <- 
-    data_table %>% 
-    ## And add new columns to fill
-    dplyr::mutate(size_used_mm = NA,
-                  biomass = NA,
-                  ci_lwr = NA,
-                  ci_upr = NA,
-                  path = NA)
   
+  # Add if any measurement table
+  measurement_table <- 
+    append_measurements(measurement_table,
+                        data_table)
+  
+  # Make copy of data table
+  # Make it so that it incorporates measurements present
+  # If biomass column is present make a fork here
+  if("biomass_mg" %notin% colnames(data_table))
+    {data_return <- 
+      data_table %>% 
+      ## And add new columns to fill
+      dplyr::mutate(size_used_mm = NA,
+                    biomass = NA,
+                    ci_lwr = NA,
+                    ci_upr = NA,
+                    path = NA)} else
+                      {data_return <- 
+                        data_table %>% 
+                        ## And add new columns to fill
+                        dplyr::mutate(size_used_mm = NA,
+                                     biomass = biomass_mg,
+                                     ci_lwr = NA,
+                                     ci_upr = NA,
+                                      path = NA) %>% 
+                        dplyr::select(-biomass_mg)}
+
   # Make list of taxonomic groups/traits to gro through
   # Note that after family we look at traits, and then back to higher trophic levels (the broad ones)
   level_list <- 
@@ -110,8 +130,13 @@ hello_metry <- function(data_table, biomass_kind = "both", database = TRUE){
 
   # Loop to fill row by row
   for(i in 1:nrow(data_return)){
+    
+    
     ## Initialise function parameters
     row <- data_return[i,]
+    biomass <- row$biomass
+    ## If we already have a biomass value go to the next iteration
+    if(!is.na(biomass)) next
     specname <- row$bwg_name
     size_mm <- row$size_mm
     abundance <- row$abundance
