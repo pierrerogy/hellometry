@@ -50,5 +50,8 @@ If you do not have a numerical measurement for a given specimen, the algorithm c
 do size estimations if you input "small", "medium", "large" or "unknown". In this
 case, the algorithm will use existing size measurements for the species, and use
 the size distribution to estimate "small", "medium" and "large" inputs, or a weighted
-average of all measurements if the input is "unknown".
+average of all measurements if the input is "unknown". If you feed in a dataframe that already
+has some biomass measurements but not everywhere, please name this column "biomass_mg", and include
+another column "biomass_kind" that says if the biomass is "dry" or "wet". This is important as this
+information is used in the estimations.
 }

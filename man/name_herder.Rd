@@ -16,7 +16,7 @@ The input data table with missing BWG names filled
 \description{
 Looks into measurement table, if finds a single matching taxonomy,
 gives this name to the species, otherwise gives a new name. Please
-make sure that each species has a unique taxonomy. If there are two
+Make sure that each species has a unique taxonomy. If there are two
 unidentified species at the same level (e.g. two <i>Stibasoma</i>, then put
 any arbitrary string in the 'species' column to contrast between the two)
 }
