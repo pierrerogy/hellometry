@@ -56,6 +56,6 @@ fill_blanks <- function(data_table){
   
 }
 
-data_table <- 
-  readr::read_csv(here::here("bichos_biomass_est.csv")) %>% 
-  dplyr::rename(biomass_mg = dry_mass_mg)
+# data_table <- 
+#   readr::read_csv(here::here("bichos_biomass_est.csv")) %>% 
+#   dplyr::rename(biomass_mg = dry_mass_mg)

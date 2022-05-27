@@ -15,6 +15,6 @@ append_names(measurement_table, data_table)
 An updated measurement table that will be used to estimate sizes and gather taxonomy
 }
 \description{
-Append measuremement table with new species, because this table
+Append measuremement table with new species and measurements, because this table
 also compiles taxonomy for all species
 }
