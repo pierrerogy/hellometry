@@ -10,7 +10,7 @@ add_taxonomy(data_table)
 \item{data_table}{The input data table, the column 'bwg_name' has to be present}
 }
 \value{
-An updated measurement table that will be used to estimate sizes and gather taxonomy
+An updated data frame with taxonomy added
 }
 \description{
 Add all taxonomy columns needed by the package

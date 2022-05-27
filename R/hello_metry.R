@@ -37,7 +37,7 @@
 
 
 #' @export
-hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", database = TRUE){
+hello_metry <- function(data_table, biomass_kind = "both", database = TRUE){
   #browser()
   # Function %notin%
   '%notin%' <- 
@@ -55,7 +55,7 @@ hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", databa
     stop("Please call column with life stage (larva/pupa/adult) 'stage'")
   ## Database is actually a true false
   if(database %notin% c(TRUE, FALSE))
-    stop("Print has to be TRUE/FALSE")
+    stop("Database has to be TRUE/FALSE")
   ## Biomass kind needs to be dry or both
   if(biomass_kind %notin% c("dry", "both"))
     stop("Biomass kind has to be 'dry' or 'both'")
@@ -211,10 +211,10 @@ hello_metry <- function(data_table, print = FALSE, biomass_kind = "both", databa
   
     ### Add biomass and path value to data frame to return
     data_return[i,(ncol(data_return)-4)] <- 
-      size_mm
+      as.character(size_mm)
     ### Need to reverse the order of elements in the vector
     data_return[i,(ncol(data_return)-1):(ncol(data_return)-3)] <- 
-      as.character(rev(biomass))
+      matrix(as.character(rev(biomass)), nrow = 1)
     data_return[i,ncol(data_return)] <- 
       as.character(path)
     

@@ -3,7 +3,7 @@
 #' Add all taxonomy columns needed by the package
 #' 
 #' @param data_table The input data table, the column 'bwg_name' has to be present 
-#' @return An updated measurement table that will be used to estimate sizes and gather taxonomy
+#' @return An updated data frame with taxonomy added
 #' @export
 add_taxonomy <- function(data_table){
   
