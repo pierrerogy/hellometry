@@ -24,9 +24,10 @@ equation_user <- function(size_mm, eq, taxo){
   
   ## Exceptions
   ### With equation of Acari, weight is in micrograms, need to convert to milligrams
-  if(!is.na(taxo$subclass) & taxo$subclass == "Acari")
-    per_cap_biomass <-
-      per_cap_biomass/1000
+  suppressWarnings(
+    if(!is.na(taxo$subclass) & taxo$subclass == "Acari")
+      per_cap_biomass <-
+      per_cap_biomass/1000)
   
   ## Return value  
   return(per_cap_biomass)

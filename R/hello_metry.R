@@ -131,7 +131,6 @@ hello_metry <- function(data_table, biomass_kind = "both", database = TRUE){
   # Loop to fill row by row
   for(i in 1:nrow(data_return)){
     
-    
     ## Initialise function parameters
     row <- data_return[i,]
     biomass <- row$biomass
@@ -212,7 +211,7 @@ hello_metry <- function(data_table, biomass_kind = "both", database = TRUE){
         path <- 
           est[4],
         biomass <- 
-          as.numeric(est[1:3]) * abundance,
+          as.numeric(est[1:3]),
         #### Round number and break loop if done
         if(!is.na(biomass[1]))
           c(biomass <- 

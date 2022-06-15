@@ -25,9 +25,9 @@ append_measurements <- function(measurement_table, data_table){
       ## Suppress warnings too
       dplyr::mutate(size_mm = as.numeric(size_mm)) %>% 
       dplyr::filter(!is.na(size_mm)) %>% 
-      dplyr::select(dplyr::any_of(taxo_vec),
-                    stage, abundance, size_mm, 
-                    biomass_mg, biomass_type))
+      dplyr::select(tidyselect::any_of(c(taxo_vec,
+                    "stage", "abundance", "size_mm", 
+                    "biomass_mg", "biomass_type"))))
   
   # Bind new species to measurement table
   measurement_table <-

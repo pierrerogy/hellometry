@@ -30,9 +30,10 @@ firehose <- function(size_input, row, taxo){
   
   ## Exceptions
   ### With equation of Acari, weight is in micrograms, need to convert to milligrams
-  if(!is.na(taxo$subclass) & taxo$subclass == "Acari")
+  suppressWarnings(
+    if(!is.na(taxo$subclass) & taxo$subclass == "Acari")
     per_cap_biomass <-
-      per_cap_biomass/1000
+      per_cap_biomass/1000)
   
   ## Return value  
   return(per_cap_biomass)

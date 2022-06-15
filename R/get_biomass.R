@@ -53,10 +53,11 @@ get_biomass <- function(specname, level, size_input, abundance, stage, path, tax
   
   # Make bifurcation depending on number of equations
   if(compute)
-    c(# Get equation
+    c(# Get equation and suppress warnings from function
+    suppressWarnings(
     eq <- 
       get_equation(measurement_table, specname,
-                   taxo, level, biomass_kind),
+                   taxo, level, biomass_kind)),
     ## Check if presence of equation, input can be model so suppress warnings
     suppressWarnings(
     if(is.na(eq[[1]])) 
