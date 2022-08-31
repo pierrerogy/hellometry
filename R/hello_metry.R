@@ -139,7 +139,7 @@ hello_metry <- function(data_table, biomass_kind = "both", database = TRUE){
     specname <- row$bwg_name
     size_mm <- row$size_mm
     abundance <- row$abundance
-    stage <- row$stage
+    stage0 <- row$stage
     
     ## Initialise path to record what happens in this function
     path <- ""
@@ -161,8 +161,8 @@ hello_metry <- function(data_table, biomass_kind = "both", database = TRUE){
    ### Make small frame to get taxonomy
      c(taxo <- 
         measurement_table %>% 
-        dplyr::filter(bwg_name == specname) %>% 
-        dplyr::select(species_id:species, stage) %>% 
+        dplyr::filter(bwg_name == specname & stage == stage0) %>% 
+        dplyr::select(bwg_name:species, stage) %>% 
         unique(),
      ### If not in database, give special biomass value
       if(nrow(taxo) == 0)
@@ -173,13 +173,13 @@ hello_metry <- function(data_table, biomass_kind = "both", database = TRUE){
       #### Check if we have a numeric size
         suppressWarnings(if(!is.na(as.numeric(size_mm))) 
             c(size_mm <- as.numeric(size_mm),
-              path <- paste0(path, "raw_size"))else
+              path <- paste0(path, "raw_size")) else
               #### If we don't, do a size estimation
               #### As long as size is not numeric
               while(!is.numeric(size_mm)){
                 ##### Go through my list of group
                 for(level in level_list){
-                  est <- sizest(specname, size_mm, level, stage, path, taxo, equation_table, measurement_table, data_table)
+                  est <- sizest(specname, size_mm, level, stage0, path, taxo, equation_table, measurement_table, data_table)
                   size_mm <- est[,1]
                   path <- est[,2]
                   #### Break loop if done
@@ -207,7 +207,7 @@ hello_metry <- function(data_table, biomass_kind = "both", database = TRUE){
       ##### Go through my list of group
       for(level in level_list){
         c(est <- 
-            get_biomass(specname, level, size_mm, abundance, stage, path, taxo, measurement_table, biomass_kind),
+            get_biomass(specname, level, size_mm, abundance, stage0, path, taxo, measurement_table, biomass_kind),
         path <- 
           est[4],
         biomass <- 

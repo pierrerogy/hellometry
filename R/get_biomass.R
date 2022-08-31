@@ -60,10 +60,9 @@ get_biomass <- function(specname, level, size_input, abundance, stage, path, tax
                    taxo, level, biomass_kind)),
     ## Check if presence of equation, input can be model so suppress warnings
     suppressWarnings(
-    if(is.na(eq[[1]])) 
-      equations <- "none"  else 
-        if(!is.na(eq[[1]])) 
-          equations <- "one"))
+    if(length(eq[[1]]) > 1) 
+      equations <- "one"  else 
+        equations <- "none"))
       
   # Case 1: one equation for the level
   if(equations == "one")
