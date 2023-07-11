@@ -29,8 +29,8 @@ get_equation <- function(measurement_table, specname,
         dats <- 
           measurement_table %>% 
           ## Filter by correct level
-          dplyr::filter(measurement_table[,level] == do.call(paste, list(taxo[,level])) &
-                          measurement_table$stage == taxo$stage)) else
+          dplyr::filter(measurement_table[,level] == do.call(paste, list(taxo[,level]))) %>% 
+          dplyr::filter(measurement_table$stage == taxo$stage)) else
         c(spec_list <- 
             matcher_of_traits(specname, measurement_table),
           dats <-

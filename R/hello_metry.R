@@ -45,6 +45,10 @@ hello_metry <- function(data_table, biomass_kind = "both", database = TRUE){
   # Function %notin%
   '%notin%' <- 
     Negate('%in%')
+  # List of taxa
+  taxa <- 
+    c("domain", "kingdom", "phylum", "subphylum", "class", "subclass", 
+      "ord", "subord", "family", "subfamily", "tribe", "genus", "species")
   
   # Some error catching 
   ## Important columns have proper names
@@ -162,13 +166,13 @@ hello_metry <- function(data_table, biomass_kind = "both", database = TRUE){
      c(taxo <- 
         measurement_table %>% 
         dplyr::filter(bwg_name == specname & stage == stage0) %>% 
-        dplyr::select(bwg_name:species, stage) %>% 
+        dplyr::select(all_of(taxa), stage) %>% 
         unique(),
      ### If not in database, give special biomass value
       if(nrow(taxo) == 0)
         c(taxo <- 
             row %>% 
-            dplyr::select(domain:species, stage, bwg_name)),
+            dplyr::select(all_of(taxa), stage, bwg_name)),
       ### If in database 
       #### Check if we have a numeric size
         suppressWarnings(if(!is.na(as.numeric(size_mm))) 
