@@ -48,7 +48,7 @@ hello_metry <- function(data_table, biomass_kind = "both", database = TRUE){
   # List of taxa
   taxa <- 
     c("domain", "kingdom", "phylum", "subphylum", "class", "subclass", 
-      "ord", "subord", "family", "subfamily", "tribe", "genus", "species")
+      "ord", "subord", "family", "subfamily", "tribe", "genus", "species", "bwg_name")
   
   # Some error catching 
   ## Important columns have proper names
