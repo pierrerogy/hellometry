@@ -12,16 +12,11 @@
 #' @export
 name_herder <- function(data_table){
   
-  # List of taxa
-  taxa <- 
-    c("domain", "kingdom", "phylum", "subphylum", "class", "subclass", 
-  "ord", "subord", "family", "subfamily", "tribe", "genus", "species")
-  
   # First get species without bwg name
   data_noname <- 
     data_table %>% 
     dplyr::filter(is.na(bwg_name)) %>% 
-    dplyr::select(all_of(taxa)) %>% 
+    dplyr::select(domain:species) %>% 
     unique()
   
   # Record hwo many species were missing a BWG name
@@ -42,7 +37,8 @@ name_herder <- function(data_table){
       bwgnames <- 
         get_bwgnames() %>% 
         dplyr::inner_join(row,
-                          by = c(taxa)),
+                          by = c("domain", "kingdom", "phylum", "subphylum", "class", "subclass", 
+                                 "ord", "subord", "family", "subfamily", "tribe", "genus", "species")),
       ## If there is no row, it means that there was no match
       ## So give a custom name and add it to vector of names
       if(nrow(bwgnames) == 0)
