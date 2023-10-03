@@ -20,7 +20,7 @@
 #' @param data_table Input data
 #' @return An extra column with size estimate
 #' @export
-sizest <- function(specname, size_mm, level, stage, path, taxo, equation_table, measurement_table, data_table){
+sizest <- function(specname, size_mm, level, stage0, path, taxo, equation_table, measurement_table, data_table){
 
   ## Decide where to go depending on value of size
   if(size_mm == "unknown")
@@ -70,8 +70,8 @@ sizest <- function(specname, size_mm, level, stage, path, taxo, equation_table, 
           ### Get a vector of all species from that specific level and stage
           spec_list <- 
             measurement_table %>% 
-            dplyr::filter(measurement_table[,level] == level_name & 
-                            measurement_table$stage == stage) %>% 
+            dplyr::filter(measurement_table[,level] == level_name) %>%  
+            dplyr::filter(stage == stage0) %>% 
             dplyr::select(bwg_name) %>% 
             unique() %>% 
             dplyr::pull(),
