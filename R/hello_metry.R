@@ -42,31 +42,14 @@
 #' @export
 hello_metry <- function(data_table, biomass_kind = "both", database = TRUE){
   #browser()
-  # Function %notin%
-  '%notin%' <- 
-    Negate('%in%')
-  # List of taxa
+ 
   taxa <- 
     c("domain", "kingdom", "phylum", "subphylum", "class", "subclass", 
-      "ord", "subord", "family", "subfamily", "tribe", "genus", "species", "bwg_name")
+      "order", "suborder", "family", "subfamily", "tribe", "genus", "species", "bwg_name")
   
   # Some error catching 
-  ## Important columns have proper names
-  if("abundance" %notin% colnames(data_table))
-    stop("Please call column with abundance values 'abundance'")
-  if("bwg_name" %notin% colnames(data_table))
-    stop("Please call column with bwg species names values 'bwg_name'")
-  if("size_mm" %notin% colnames(data_table))
-    stop("Please call column with specimen measurement values 'size_mm'")
-  if("stage" %notin% colnames(data_table))
-    stop("Please call column with life stage (larva/pupa/adult) 'stage'")
-  ## Database is actually a true false
-  if(database %notin% c(TRUE, FALSE))
-    stop("Database has to be TRUE/FALSE")
-  ## Biomass kind needs to be dry or both
-  if(biomass_kind %notin% c("dry", "both"))
-    stop("Biomass kind has to be 'dry' or 'both'")
-  
+  error_check(dats, 
+              biomass_kind)
   
   # Load measurement table
   # If user wants to use the database measurement or not

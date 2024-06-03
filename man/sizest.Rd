@@ -2,49 +2,16 @@
 % Please edit documentation in R/sizest.R
 \name{sizest}
 \alias{sizest}
-\title{Returns size estimates based on taxonomic approach or trait approach}
+\title{Get all size estimates}
 \usage{
-sizest(
-  specname,
-  size_mm,
-  level,
-  stage,
-  path,
-  taxo,
-  equation_table,
-  measurement_table,
-  data_table
-)
+sizest(dats)
 }
 \arguments{
-\item{specname}{BWG name of the species}
-
-\item{size_mm}{Size in mm}
-
-\item{level}{Taxonomic level of estimation}
-
-\item{stage}{Developmental stage of the invertebrate (larva/pupa/adult)}
-
-\item{path}{Path taken trough function}
-
-\item{taxo}{Taxonomic information about the species}
-
-\item{equation_table}{Table containing all allometric equation}
-
-\item{measurement_table}{Table containing all measurements}
-
-\item{data_table}{Input data}
+\item{dats}{Input data}
 }
 \value{
-An extra column with size estimate
+A vector with weighted average of sieze, and estimations for small, medium and large sizes
 }
 \description{
-Collect abundance/size distribution from species in both measurement and data tables. Look for
-at least three distinct numeric measurements in a given grouping in the following order: species
-to family, traits, suborder to phylum. The threshold has been set to three measurements because
-the algorithm needs to create three bins for small, medium and large measurements.
-Once this threshold is met: if size category “unknown”, return weighted average of all available
-measurements, if size category one of S, M, L, divide measurements into three bins of unique
-measurement values, if bins not equal, larger bins for S and L. Return average of
-measurements within given bin
+Computes weigthed average and small, medium, large size categories for input data
 }

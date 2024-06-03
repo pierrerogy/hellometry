@@ -9,10 +9,10 @@ dry_wet(dats, biomass_kind)
 \arguments{
 \item{dats}{Input data}
 
-\item{biomass_kind}{If biomass should be wet or dry}
+\item{biomass_kind}{If biomass should be wet, dry, most numerous, or both}
 }
 \value{
-Dataframe with filtered biomass kind, and chosen one (dry or wet)
+List with filtered dataframe and biomass kind
 }
 \description{
 Filter dataframe based on required biomass type (dry or wet),
