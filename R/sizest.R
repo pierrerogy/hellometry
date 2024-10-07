@@ -14,7 +14,7 @@ sizest <- function(dats){
       # First compute weighted average
       weighted.mean(dats$size_mm),
       # Second compute size categories
-      dats2$size_mm %>%
+      dats$size_mm %>%
         ## Order vector
         sort(decreasing = TRUE) %>% 
         ## Split into three chunks along order values

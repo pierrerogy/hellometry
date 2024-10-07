@@ -3,22 +3,28 @@
 #' Computes a linear model that will be used as allometric equation
 #'
 #' @param dats A table with the numerical measurements and biomass used to compute allometric models
-#' @param equation_type Which package should be used to compute the models. LIST TBD
-#' @param biomass_kind Should data used in inference be "dry" or "wet", "most_common" or "both"
+#' @param equation_type Which package should be used to compute the models. "lm" is default, "ols"
+#' is for lmodel2 (options used are "interval" for both x and y, and 100 permutations)
 
-#' @return Dataframe wiht computed models at which level
+#' @return Dataframe with computed models at which level, *please double check models*
 #' @export
-get_equations <- function(dats, equation_type){
+get_equations <- function(dats, equation_type = "lm"){
   # Packages to get equations
   ## lm already in base r
-  require(lme4) ## when I will add mixed effects
-  require(brms) ## when I will add mixed effects
   require(lmodel2) ## OLS 
   
-  # Make data frame to return
+  # Make model to return, depending on which package is asked
+  if(equation_type == "lm")
   ret <- 
     lm(log10(mass_mg) ~ log10(size_mm), 
        data = dats)
+  else if(equation_type == "ols")
+    ret <- 
+      lmodel2::lmodel2(log10(mass_mg) ~ log10(size_mm), 
+                       range.x = "interval", 
+                       range.y = "interval", 
+                       nperm = 100,
+                       data = dats)
   
   # Return table
   return(ret)
