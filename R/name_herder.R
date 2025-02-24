@@ -38,7 +38,7 @@ name_herder <- function(data_table){
         get_bwgnames() %>% 
         dplyr::inner_join(row,
                           by = c("domain", "kingdom", "phylum", "subphylum", "class", "subclass", 
-                                 "ord", "subord", "family", "subfamily", "tribe", "genus", "species")),
+                                 "order", "suborder", "family", "subfamily", "tribe", "genus", "species")),
       ## If there is no row, it means that there was no match
       ## So give a custom name and add it to vector of names
       if(nrow(bwgnames) == 0)
@@ -68,7 +68,7 @@ name_herder <- function(data_table){
     ## Merge the two together to align columns
     merge(data_noname, 
           by = c("domain", "kingdom", "phylum", "subphylum", "class", 
-                 "subclass", "ord", "subord", "family", "subfamily", 
+                 "subclass", "order", "suborder", "family", "subfamily", 
                  "tribe", "genus", "species"),
           all = T) %>% 
     ## Replace NAs in original bwg_name columns by the new names

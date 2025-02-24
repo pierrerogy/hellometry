@@ -22,8 +22,8 @@ append_names <- function(measurement_table, data_table){
     ## Remove all species present in the database already
     dplyr::anti_join(measurement_stub,
                      by = c("bwg_name", "domain", "kingdom", "phylum", 
-                            "subphylum", "class", "subclass", "ord", 
-                            "subord", "family", "subfamily", "tribe", 
+                            "subphylum", "class", "subclass", "order", 
+                            "suborder", "family", "subfamily", "tribe", 
                             "genus", "species", "stage"))
   
   # Bind new species to measurement table
