@@ -6,7 +6,7 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-```{r, include = FALSE}
+```{r include=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -22,7 +22,7 @@ The package consists of an algorithm that proceeds in two steps. In Step 1, the 
 The data requirements of the package are as follow: <br>
 - column with BWG names needs to be called "bwg_name", <br>
 - column with measurements needs to be called "size_mm", and only accepts "unknown", "small", "medium" or "large" as categorical values <br>
-- column with development stage of specimens (larva/pupa/adult) needs to be called "abundance" (please only put adult for adult insects)<br>
+- column with development stage of specimens (larva/pupa/adult) needs to be called "stage" (please only put adult for adult insects)<br>
 - column with abundance of specimens needs to be called "abundance" <br>
 
 ## Quick working example
@@ -58,12 +58,16 @@ tail(pitilla)
 
 ```
 
+```{r}
+
+```
+
 Now that you have entered the taxonomy you can finally use the functions!
 
-```{r, warning=FALSE}
+```{r warning=FALSE}
 library(hellometry)
 
-# Get data without taxonomy
+# Get data with taxonomy
 pitilla <- 
   pitilla_data()
 
