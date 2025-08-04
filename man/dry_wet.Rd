@@ -15,7 +15,5 @@ dry_wet(dats, biomass_type)
 Dataframe with filtered biomass type, and chosen one (dry or wet)
 }
 \description{
-Filter dataframe based on required biomass type (dry or wet),
-or most common one (most_common). If there are the same number of
-dry and wet measurements, keep dry
+Filter dataframe based on required biomass type (dry or wet).
 }
