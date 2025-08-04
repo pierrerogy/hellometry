@@ -3,12 +3,12 @@
 \name{name_herder}
 \alias{name_herder}
 \title{Assign species name if BWG name is missing
-Gets or generates mising BWG names}
+Gets or generates missing BWG names}
 \usage{
-name_herder(data_table)
+name_herder(dats, level_list)
 }
 \arguments{
-\item{data_table}{The input data table}
+\item{dats}{The input data table}
 }
 \value{
 The input data table with missing BWG names filled
@@ -17,6 +17,6 @@ The input data table with missing BWG names filled
 Looks into measurement table, if finds a single matching taxonomy,
 gives this name to the species, otherwise gives a new name. Please
 Make sure that each species has a unique taxonomy. If there are two
-unidentified species at the same level (e.g. two <i>Stibasoma</i>, then put
+unidentified species at the same level (e.g. two \if{html}{\out{<i>}}Stibasoma\if{html}{\out{</i>}}, then put
 any arbitrary string in the 'species' column to contrast between the two)
 }

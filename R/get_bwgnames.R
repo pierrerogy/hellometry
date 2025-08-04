@@ -2,7 +2,7 @@
 #'
 #' Gets dataframe with equation used in estimations
 #'
-#' @param 
+#' @param none Directly loads BWG data to get list of BWG names
 #' @return Dataframe with BWG names and corresponding taxonomy
 #' @export
 get_bwgnames <- function(){

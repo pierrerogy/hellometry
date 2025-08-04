@@ -4,17 +4,18 @@
 \alias{dry_wet}
 \title{Parsing dry and wet measurements}
 \usage{
-dry_wet(dats, biomass_kind)
+dry_wet(dats, biomass_type)
 }
 \arguments{
 \item{dats}{Input data}
 
-\item{biomass_kind}{If biomass should be wet or dry}
+\item{biomass_type}{If biomass should be wet or dry, or most common}
 }
 \value{
-Dataframe with filtered biomass kind, and chosen one (dry or wet)
+Dataframe with filtered biomass type, and chosen one (dry or wet)
 }
 \description{
 Filter dataframe based on required biomass type (dry or wet),
-or most common one (both)
+or most common one (most_common). If there are the same number of
+dry and wet measurements, keep dry
 }

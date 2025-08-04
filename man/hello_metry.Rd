@@ -2,56 +2,70 @@
 % Please edit documentation in R/hello_metry.R
 \name{hello_metry}
 \alias{hello_metry}
-\title{Wrapper function going row-by-row to estimate size (mm) and biomass (mg)}
+\title{Wrapper function to estimate size (mm) and biomass (mg) from an input dataset}
 \usage{
-hello_metry(data_table, biomass_kind = "both", database = TRUE)
+hello_metry(
+  dats,
+  level_list,
+  biomass_type = "dry",
+  database = TRUE,
+  nothing = FALSE
+)
 }
 \arguments{
-\item{data_table}{The input data table, please include columns columns "abundance", "bwg_name", "size_mm", "stage" (larva/pupa/adult, please only put 'adult' for adult insects) are present}
+\item{dats}{The input data table, please include columns columns "abundance",
+"size_mm", "biomass_mg", "stage" (larva/pupa/adult, please only put 'adult' for
+adult insects)}
 
-\item{biomass_kind}{Should data used in inference be "dry" for just dry biomass, or "both" (default) for both dry and wet biomass.
-If both (the default) is chosen, then the function will determine which dry or wet equations or raw weight is present, and choose
-the most numerous. If there is the same number of dry and wet equations, dry equations are always favoured. Dry and wet
-measurements are never mixed.}
+\item{level_list}{A character vector indicating the taxonomic levels present
+in your data, in indecreasing order of taxonomic resolution.}
 
-\item{database}{Should data from the bwg database be used to supplement the measurements (TRUE(default)/FALSE). This function uses numerical
-measurements both from the BWG database and from the data you provide. Only put FALSE if you are doing estimations from
-data already present in the BWG database (estimation for these data available with database_data(TRUE)).}
+\item{biomass_type}{"dry"/"wet". Should data used in inference be "dry" for
+just dry biomass (default), or "wet" for just wet biomass. See \code{dry_wet()}
+for more information on how this works.}
+
+\item{database}{Logical. Should data from the BWG database be used to supplement
+a set of BWG-specific measurements, not present in the database
+(TRUE(default)/FALSE). This function uses numerical measurements both from the
+BWG database and from the data you provide. Only put FALSE if you are doing
+estimations from data already present in the BWG database (estimation for
+these data available with \code{database_data(TRUE)}).}
+
+\item{nothing}{Logical. If TRUE, no BWG-specific data will be used for estimations,
+only the data you provide. This is useful if you have your own measurement
+database or work on a different system (default FALSE).}
 }
 \value{
-Your initial data table with three extra columns: value (in mm)
-of size estimation (NA if not done), total biomass for given row (in mg),
-as well as path taken through the function. The nomenclature of this path column is as follows.
-\subsection{Special cases}{
+A list with three dataframes:
 \itemize{
-\item "null_biomass": abundance was 0
-\item "_size_estimaton_failed": there were not enough close relatives or species with matching traits to compute size
-\item "_biomass_estimation_failed": there were no allometric equation at to estimate biomass
-\item "_raw_dry/wet": if there was a raw (direct) measurement for that particular species-size combination, and whether that measurement is dry or wet biomass
-\item "_external_dry_equations": data provided was not sufficient so equations from the literature were used
-}
-}
-
-\subsection{Regular cases}{
-\itemize{
-\item if the species goes through estimation of size (sizest()):
-estimation kind:level_number of measurements.
-For example,  WA:genus_5 (size estimation using weighted average on 5 measurements from the species' genus), BIN:subfamily_3 (size estimation using size bins (S, M, L) on three measurement a the subfamily level)
-\item if the allometric equations are used (get_biomass()):
-biomass estimation:taxonomic level of inference_number of equations_dry/wet.
-For example, -AE:bwg_name_wet (allometric equation from wet biomass at the species level), -AE:subclass_dry (allometric equation from dry biomass at the subclass level)
-}If a species went through both size estimation and biomass estimations, the path will be composite, e.g. WA:genus_5-AE:bwg_name_wet
+\item data: the input data with added size and biomass estimations, and new columns
+with the taxonomic level and name of the taxon at which the estimation
+was made.
+\item size_estimations: dataframe with size estimations that were used,
+with columns for taxonomic level, name and size category
+of the estimation.
+\item model_estimations: dataframe with biomass models that were used, with columns
+for taxonomic level and name.
+See \code{full_estimation_table()} to get all possible size estimations and models
+for your data
 }
 }
 \description{
-Wrapper function, input your data and get size and measurement . Please name column with number of specimen "abundance",
-column with BWG name "bwg_name",  and column with measurement in mm "size_mm".
-If you do not have a numerical measurement for a given specimen, the algorithm can
-do size estimations if you input "small", "medium", "large" or "unknown". In this
-case, the algorithm will use existing size measurements for the species, and use
-the size distribution to estimate "small", "medium" and "large" inputs, or a weighted
-average of all measurements if the input is "unknown". If you feed in a dataframe that already
-has some biomass measurements but not everywhere, please name this column "biomass_mg", and include
-another column "biomass_kind" that says if the biomass is "dry" or "wet". This is important as this
-information is used in the estimations.
+Wrapper function, input your data and get size and measurement .
+Please name column with number of specimen "abundance", column with measurement
+in mm "size_mm", column with life stage (larva/pupa/adult) "stage", column
+with biomass type (dry/wet) "biomass_type", and the column with biomass in mg
+"biomass_mg".
+If you do not have a numerical measurement for a given specimen, the function
+can do size estimations if you input "small", "medium", "large" or "unknown".
+In this case, the algorithm will use existing size measurements for the species,
+and use the size distribution to estimate "small", "medium" and "large" inputs,
+or a weighted average of all measurements if the input is "unknown". For biomass
+measurements, just leave NA for those cells you want estimations in.
+If you are using BWG data, please make sure that the column with BWG names is
+called "bwg_name".
+}
+\details{
+Please make sure that the level_list parameter has levels in increasing order
+of resolution, e.g. from species to order.
 }
