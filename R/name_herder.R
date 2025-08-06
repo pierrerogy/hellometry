@@ -1,5 +1,5 @@
 #' Assign species name if BWG name is missing
-#' Gets or generates mising BWG names
+#' Gets or generates missing BWG names
 #' 
 #' Looks into measurement table, if finds a single matching taxonomy,
 #' gives this name to the species, otherwise gives a new name. Please 
@@ -7,82 +7,93 @@
 #' unidentified species at the same level (e.g. two <i>Stibasoma</i>, then put 
 #' any arbitrary string in the 'species' column to contrast between the two)
 #'
-#' @param data_table The input data table
+#' @param dats The input data table
 #' @return The input data table with missing BWG names filled
 #' @export
-name_herder <- function(data_table){
+name_herder <- function(dats, level_list){
+  
+  # Remove traits from level_list
+  level_list <- 
+    level_list[level_list %notin% "traits"]
   
   # First get species without bwg name
   data_noname <- 
-    data_table %>% 
+    dats %>% 
     dplyr::filter(is.na(bwg_name)) %>% 
-    dplyr::select(domain:species) %>% 
+    dplyr::select(dplyr::all_of(level_list)) %>% 
     unique()
+
+  # Count how many "species" do not have bwg_name
+  data_noname_chr <-
+    data_noname %>%
+    ## Just make sure everything is a character
+    dplyr::mutate(dplyr::across(dplyr::everything(), 
+                                as.character)) %>%
+    ## Count with row number
+    dplyr::mutate(row_id = row_number())
   
-  # Record hwo many species were missing a BWG name
-  n_noname <- 
-    nrow(data_noname)
+  # Get all bwg names from the database
+  bwgnames_df <- 
+    get_bwgnames() %>%
+    ## Filter the taxonomic level we want, and make sure they are characters
+    dplyr::mutate(dplyr::across(level_list, 
+                                as.character))
   
-  # Make empty vector to store new species name 
-  new_names <- 
-    vector()
+  # Join data with bwg names, and get unique combinations
+  match_counts <- 
+    bwgnames_df %>%
+    ## Join
+    dplyr::inner_join(data_noname_chr, 
+                      by = level_list) %>%
+    ## Group by row_id
+    dplyr::group_by(row_id) %>%
+    ## Count matches and keep first one if more than one
+    dplyr::summarise(n = n(), 
+                     bwg_name = first(bwg_name), 
+                     .groups = "drop")
   
-  # Loop to examine if species is already in BWG database
-  for(i in 1:n_noname)
-    c(## Get row of species as character,
-      row <- 
-        data_noname[i,] %>%
-        dplyr::mutate(across(everything(), as.character)),
-      ## Use inner join to see if species is present in database or not
-      bwgnames <- 
-        get_bwgnames() %>% 
-        dplyr::inner_join(row,
-                          by = c("domain", "kingdom", "phylum", "subphylum", "class", "subclass", 
-                                 "order", "suborder", "family", "subfamily", "tribe", "genus", "species")),
-      ## If there is no row, it means that there was no match
-      ## So give a custom name and add it to vector of names
-      if(nrow(bwgnames) == 0)
-        new_names <- 
-            rbind(new_names,
-                  paste0("new_", i)),
-      ## If there is one row, then there is a match!
-      if(nrow(bwgnames) == 1)
-        new_names <- 
-            rbind(new_names,
-                  bwgnames$bwg_name),
-      ## If there is more than one match, also give a new name
-      if(nrow(bwgnames) > 1)
-        new_names <- 
-        rbind(new_names,
-              paste0("new_", i)))
+  # Merge match counts back to original data
+  result <-
+    data_noname_chr %>%
+    ## Just keep row_id
+    dplyr::select(row_id) %>%
+    ## Left join with match counts
+    dplyr::left_join(match_counts, 
+                     by = "row_id") %>%
+    ## Create new name based on match counts
+    dplyr::mutate(new_name = dplyr::case_when(
+      is.na(n) ~ paste0("new_", row_id),        # no match
+      n == 1   ~ bwg_name,                      # one match
+      n > 1    ~ paste0("new_", row_id)         # multiple matches
+    ))
   
   # Add species names to data_noname
   data_noname <- 
-    cbind(new_names,
-          data_noname) %>% 
-    dplyr::rename(bwg_name = new_names)
+    cbind(bwg_name2 = result$new_name,
+          data_noname %>% 
+            dplyr::select(-bwg_name))
   
   # Now bring back to dataframe
-  data_table <- 
-    data_table %>% 
+  dats <- 
+    dats %>% 
     ## Merge the two together to align columns
+<<<<<<< HEAD
+    dplyr::left_join(data_noname, 
+                     by = level_list[which(level_list != "bwg_name")]) %>% 
+=======
     merge(data_noname, 
           by = c("domain", "kingdom", "phylum", "subphylum", "class", 
                  "subclass", "order", "suborder", "family", "subfamily", 
                  "tribe", "genus", "species"),
           all = T) %>% 
+>>>>>>> main
     ## Replace NAs in original bwg_name columns by the new names
-    dplyr::mutate(bwg_name.x = ifelse(is.na(bwg_name.x),
-                                      bwg_name.y, bwg_name.x)) %>% 
-    ## Remove the column with computed names only
-    dplyr::select(-bwg_name.y) %>% 
-    ## Change back name to proper
-    dplyr::rename(bwg_name = bwg_name.x) %>% 
-    ## Put it back where I like it
-    dplyr::relocate(bwg_name, .before = domain)
+    dplyr::mutate(bwg_name = dplyr::coalesce(bwg_name, bwg_name2)) %>% 
+    ## Remove bwg_name2 column
+    dplyr::select(-bwg_name2)
   
   # Return data 
-  return(data_table)
+  return(dats)
   
 }
 

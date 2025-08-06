@@ -4,17 +4,19 @@
 \alias{append_measurements}
 \title{Append measurement table with new measurements}
 \usage{
-append_measurements(measurement_table, data_table)
+append_measurements(measurement_table, dats, level_list)
 }
 \arguments{
 \item{measurement_table}{Table containing all measurements}
 
-\item{data_table}{The input data table}
+\item{dats}{Dataframe to be used for estimations}
+
+\item{level_list}{List of taxonomic levels to be used in the measurement table}
 }
 \value{
 An updated measurement table that will be used to estimate sizes and gather taxonomy
 }
 \description{
-Append measuremement table with new measurements, because this table
+Append measurement table with new measurements, because this table
 also compiles measurements for all species
 }

@@ -3,12 +3,12 @@
 \name{name_herder}
 \alias{name_herder}
 \title{Assign species name if BWG name is missing
-Gets or generates mising BWG names}
+Gets or generates missing BWG names}
 \usage{
-name_herder(data_table)
+name_herder(dats, level_list)
 }
 \arguments{
-\item{data_table}{The input data table}
+\item{dats}{The input data table}
 }
 \value{
 The input data table with missing BWG names filled
