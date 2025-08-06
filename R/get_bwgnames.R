@@ -11,9 +11,7 @@ get_bwgnames <- function(){
                          package = "hellometry")) %>% 
     dplyr::select(bwg_name:species) %>% 
     unique() %>% 
-    dplyr::filter(!is.na(bwg_name)) %>% 
-    dplyr::rename(order = ord,
-                  suborder = subord)
+    dplyr::filter(!is.na(bwg_name))
   
   ## Return data
   return(dats)       

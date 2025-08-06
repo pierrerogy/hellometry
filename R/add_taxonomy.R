@@ -17,13 +17,13 @@ add_taxonomy <- function(data_table){
       "ord", "subord", "family", "subfamily", "tribe", "genus", "species")
   
   # Add taxonomy to data table
-  data_table <- 
+  ret <- 
     data_table %>% 
     dplyr::left_join(get_bwgnames()) %>% 
     dplyr::relocate(all_of(taxa), 
                     .after = bwg_name)
   # Return updated data
-  return(data_table)
+  return(ret)
 }
 
 

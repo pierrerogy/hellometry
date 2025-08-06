@@ -4,17 +4,16 @@
 \alias{get_equations}
 \title{Get equations for allometry}
 \usage{
-get_equations(dats, equation_type, biomass_kind = "both")
+get_equations(dats, equation_type = "lm")
 }
 \arguments{
 \item{dats}{A table with the numerical measurements and biomass used to compute allometric models}
 
-\item{equation_type}{Which package should be used to compute the models. LIST TBD}
-
-\item{biomass_kind}{Should data used in inference be "dry" or "wet", "most_common" or "both"}
+\item{equation_type}{Which package should be used to compute the models. "lm" is default, "ols"
+is for lmodel2 (options used are "interval" for both x and y, and 100 permutations)}
 }
 \value{
-Dataframe wiht computed models at which level
+Dataframe with computed models at which level, \emph{please double check models}
 }
 \description{
 Computes a linear model that will be used as allometric equation

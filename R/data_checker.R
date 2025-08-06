@@ -1,4 +1,4 @@
-#' Set of checks to perform on the data to make sure it can be handled by hello_metry
+#' Set of checks to perform on the data to make sure it can be handled by `hellometry()`
 #'
 #' Will fail if any condition not met
 #'

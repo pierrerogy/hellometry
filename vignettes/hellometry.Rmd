@@ -29,12 +29,12 @@ are as follow: <br>
 - column with biomass of specimens needs to be called 'biomass_mg'
 - for BWG members, column with BWG names needs to be called "bwg_name" <br>
 <br>
-The idea of the package, wrapped in `hello_metry()` is rather simple. First, a `measurement_table` is compiled, with your own measurements, and/or those provided 
+The idea of the package, wrapped in `hellometry()` is rather simple. First, a `measurement_table` is compiled, with your own measurements, and/or those provided 
 by the BWG database, and/or some measurements collected by BWG members but not 
 present in the database. This table is then used to compute every possible size estimations, and allometric model with  `full_estimation_table()`. Models are 
 deleted if p > 0.05 or R2 > 0.95. Finally, the size estimation and model at the 
 lowest possible taxonomic level are joined back to the data, and used to estimate 
-biomass at that particular row. `hello_metry()` returns a list of three elements:
+biomass at that particular row. `hellometry()` returns a list of three elements:
 your data with estimated body sizes and biomasses, and column with information
 on the level at which were performed the estimations, a tibble with all unique
 size estimations that were joined to your data, and a tibble with all unique
@@ -79,7 +79,7 @@ tail(pitilla)
 ```
 
 Now that you have entered the taxonomy you can finally use the main function of
-the package `hello_metry()`. 
+the package `hellometry()`. 
 
 ```{r}
 # Get data with taxonomy
@@ -97,7 +97,7 @@ level_list <-
 
 # Get the estimations
 pitilla_bm <-
-  hello_metry(
+  hellometry(
     dats = pitilla, ## The data to be used
     level_list = level_list, ## The taxonomic levels to be used
     biomass_type = "dry", ## Type of biomass to be estimated, "dry" or "wet" 
@@ -264,7 +264,7 @@ myreptiles <-
 
 # Get the estimations
 myreptiles_estimated <- 
-  hello_metry(dats = myreptiles, ## The data to be used
+  hellometry(dats = myreptiles, ## The data to be used
               level_list = level_list, ## The taxonomic levels to be used
               biomass_type = "dry", ## Type of biomass to be estimated, "dry" or "wet" 
               database = FALSE, ## Do not use database measurements

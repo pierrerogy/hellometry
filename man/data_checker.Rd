@@ -2,7 +2,7 @@
 % Please edit documentation in R/data_checker.R
 \name{data_checker}
 \alias{data_checker}
-\title{Set of checks to perform on the data to make sure it can be handled by hello_metry}
+\title{Set of checks to perform on the data to make sure it can be handled by \code{hellometry()}}
 \usage{
 data_checker(dats, biomass_type, database, nothing)
 }

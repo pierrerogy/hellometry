@@ -4,12 +4,12 @@
 \alias{matcher_of_traits}
 \title{Finds which species have matching traits}
 \usage{
-matcher_of_traits(specname, measurement_table)
+matcher_of_traits(dats, trait_list)
 }
 \arguments{
-\item{measurement_table}{Table containing all measurements}
+\item{dats}{Input data}
 
-\item{species_name}{BWG name of the species}
+\item{trait_list}{List of traits to match}
 }
 \value{
 List of species with matching traits

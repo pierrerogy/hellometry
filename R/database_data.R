@@ -3,7 +3,7 @@
 #' Gets BWG data with or without biomass estimates
 #'
 #' @param estimated Either data without estimation (FALSE) or with estimations (TRUE)
-#' @return The same BWG data, either without or with biomass estimated (i.e. calculated with hello_metry(data_table, print = T, biomass = "both", database = F)) 
+#' @return The same BWG data, either without or with biomass estimated (i.e. calculated with `hellometry`)
 #' @export
 database_data <- function(estimated){
   ## Get data
