@@ -4,7 +4,7 @@
 \alias{append_names}
 \title{Append measurement table with new species names}
 \usage{
-append_names(measurement_table, dats, level_list)
+append_names(measurement_table, dats, level_list, nothing)
 }
 \arguments{
 \item{measurement_table}{Table containing all measurements}

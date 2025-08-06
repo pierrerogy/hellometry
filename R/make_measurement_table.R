@@ -23,8 +23,8 @@ make_measurement_table <- function(dats, level_list, database, nothing){
   suppressWarnings(
     numeric_taxa <- 
       dats %>%
-      dplyr::filter(size_mm %notin% c("small", "medium", "large", "unknown")) %>%
-      dplyr::mutate(size_mm = as.numeric(size_mm)))
+      dplyr::mutate(size_mm = as.numeric(size_mm)) %>% 
+      dplyr::filter(!is.na(size_mm)))
   ## Little catch here if we are using the BWG database
   if("provenance" %in% colnames(numeric_taxa)){
     numeric_taxa <- 
@@ -43,7 +43,8 @@ make_measurement_table <- function(dats, level_list, database, nothing){
   ret <- 
     append_names(measurement_table = ret, 
                  dats = dats, 
-                 level_list = level_list)
+                 level_list = level_list,
+                 nothing = nothing)
   
   # Add all numerical measurements to measurement table
   ## A species can have a name but no measurement so done in two steps 
@@ -61,11 +62,11 @@ make_measurement_table <- function(dats, level_list, database, nothing){
   
   # Limoniidae and Tipulidae essentially the same thing so can be considered together
   # If family exists in column names
-  if("family" %in% colnames(measurement_table)){
+  if("family" %in% colnames(ret)){
     measurement_table <- 
-      tipulimo(measurement_table)}  
+      tipulimo(ret)}  
   
   # Return measurement table
-  return(measurement_table)
+  return(ret)
   
 }

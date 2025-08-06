@@ -292,8 +292,6 @@ hello_metry <- function(dats, level_list, biomass_type = "dry", database = TRUE,
                       .before = "biomass_mg"))
   
   
-  
-  
   # Return a list of three dataframes
   ## The original data with estimations, the used size estimations, and the used models
   return(list(
@@ -305,23 +303,24 @@ hello_metry <- function(dats, level_list, biomass_type = "dry", database = TRUE,
     ## Size estimations
     size_estimations = 
       size_estimations %>% 
-      ### Get unique rows
-      unique() %>% 
       ### Remove NAs
       dplyr::filter(!is.na(size_mm)) %>%
       ### Make longer format 
       dplyr::select(level = size_level, 
                     name = size_taxon_name, 
-                    stage, size_category, size_mm),
+                    stage, size_category, size_mm) %>% 
+      ### Keep unique rows
+      unique(),
     ## Model estimations
-    model_estimations = model_estimations %>% 
-      ### Get unique rows
-      unique() %>% 
+    model_estimations = 
+      model_estimations %>% 
       ### Remove NAs
       dplyr::filter(!is.na(model)) %>%
       ### Make longer format 
       dplyr::select(level = model_level, 
                     name = model_taxon_name, 
-                    stage, model)))
+                    stage, model) %>% 
+      ### Keep unique rows
+      unique()))
   
 }

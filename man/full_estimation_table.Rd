@@ -4,7 +4,7 @@
 \alias{full_estimation_table}
 \title{Returns size and biomass estimations for every taxon in measurement table}
 \usage{
-full_estimation_table(level_list, measurement_table, what)
+full_estimation_table(level_list, measurement_table, what, model = "lm")
 }
 \arguments{
 \item{level_list}{Vector of taxonomic levels over which to iterate estimations}
@@ -16,7 +16,8 @@ used to compute allometric lms}
 estimated?}
 }
 \value{
-Tibble with size estimations or allometric models used in estimations
+Tibble with size estimations or allometric models used in estimations.
+Note that only models with p < 0.05 and R^2 < 0.95 are kept.
 }
 \description{
 Returns size and biomass estimations for every taxon in measurement table

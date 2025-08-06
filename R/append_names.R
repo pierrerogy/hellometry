@@ -9,10 +9,10 @@
 #' @return An updated measurement table that will be used to estimate sizes and 
 #' gather taxonomy
 #' @export
-append_names <- function(measurement_table, dats, level_list){
+append_names <- function(measurement_table, dats, level_list, nothing){
   
   # If there are rows in measurement table, use it
-  if(nrow(measurement_table > 0)){
+  if(!nothing){
   # Make stub of measurement_table 
   measurement_stub <- 
     measurement_table %>% 
@@ -34,19 +34,22 @@ append_names <- function(measurement_table, dats, level_list){
                      by = level_list[level_list %notin% "traits"]) %>% 
     ## Convert all sizes and biomasses to NA
     dplyr::mutate(size_mm = NA,
-                  biomass_mg = NA)
+                  biomass_mg = NA) %>% 
+    ## Just make sure all taxonomic levels are characters
+    dplyr::mutate(dplyr::across(tidyselect::any_of(level_list), 
+                                as.character))
   
   # Bind new species to measurement table
-  measurement_table <-
+  ret <-
     measurement_table %>% 
     dplyr::bind_rows(data_stub)} else
 
   # If not, just use dats as measurement table
-    measurement_table <- 
-      dats
+    ret<- 
+        measurement_table
   
   # Return
-  return(measurement_table)
+  return(ret)
   
 }
 

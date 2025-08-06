@@ -7,10 +7,6 @@
 #' @export
 add_taxonomy <- function(data_table){
   
-  # Function %notin%
-  '%notin%' <- 
-    Negate('%in%')
-  
   # This one column needs to be here
   if("bwg_name" %notin% colnames(data_table))
     stop("Please call column with bwg species names values 'bwg_name'")
