@@ -16,6 +16,4 @@ dry_wet <- function(dats, biomass_type){
   
   # Return data
   return(dats)
-  # return(list(dats, biomass_type))       
-      
 }

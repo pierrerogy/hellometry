@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #' Wrapper function to estimate size (mm) and biomass (mg) from an input dataset
 #'
 #' Wrapper function, input your data and get size and measurement . 
@@ -70,7 +71,6 @@ hello_metry <- function(dats, level_list, biomass_type = "dry", database = TRUE,
                database = database, 
                nothing = nothing)
   
-  
   # Make copy of dataset to then reuse
   ret <- 
     dats %>% 
@@ -92,7 +92,7 @@ hello_metry <- function(dats, level_list, biomass_type = "dry", database = TRUE,
                            level_list = level_list,
                            database = database,
                            nothing = nothing)
-  
+
   # Getting size estimations
   ## Print message
   print("Getting size estimations...")
@@ -153,7 +153,7 @@ hello_metry <- function(dats, level_list, biomass_type = "dry", database = TRUE,
                   size_mm, size_category,
                   size_level, size_taxon_name) 
   
-  
+<<<<<<< HEAD
   # Getting biomass models
   ## Print message
   print("Getting biomass models...")

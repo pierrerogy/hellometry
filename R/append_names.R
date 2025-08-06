@@ -38,7 +38,7 @@ append_names <- function(measurement_table, dats, level_list, nothing){
     ## Just make sure all taxonomic levels are characters
     dplyr::mutate(dplyr::across(tidyselect::any_of(level_list), 
                                 as.character))
-  
+
   # Bind new species to measurement table
   ret <-
     measurement_table %>% 

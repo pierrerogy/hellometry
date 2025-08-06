@@ -77,8 +77,16 @@ name_herder <- function(dats, level_list){
   dats <- 
     dats %>% 
     ## Merge the two together to align columns
+<<<<<<< HEAD
     dplyr::left_join(data_noname, 
                      by = level_list[which(level_list != "bwg_name")]) %>% 
+=======
+    merge(data_noname, 
+          by = c("domain", "kingdom", "phylum", "subphylum", "class", 
+                 "subclass", "order", "suborder", "family", "subfamily", 
+                 "tribe", "genus", "species"),
+          all = T) %>% 
+>>>>>>> main
     ## Replace NAs in original bwg_name columns by the new names
     dplyr::mutate(bwg_name = dplyr::coalesce(bwg_name, bwg_name2)) %>% 
     ## Remove bwg_name2 column

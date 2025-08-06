@@ -6,11 +6,13 @@
 #' equations or size estimates (instead of a taxonomic grouping). Does not proceed if any NA is 
 #' found in the trait values of the species
 #'
-#' @param species_name BWG name of the species
-#' @param measurement_table Table containing all measurements
+#' @param dats Input data
+#' @param trait_list List of traits to match
+
+
 #' @return List of species with matching traits
 #' @export
-matcher_of_traits <- function(specname, measurement_table){
+matcher_of_traits <- function(dats, trait_list){
   # Extract traits of given species
   traits <- 
     measurement_table %>% 
