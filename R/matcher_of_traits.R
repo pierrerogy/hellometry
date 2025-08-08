@@ -1,67 +1,90 @@
 #' Finds which species have matching traits
 #'
-#' Called if grouping in sizest or get_biomass is “traits”, i.e. if threshold of at 
-#' least three distinct measurements or one allometric equation not met at family level. Match 
-#' traits of maximum body size, body shape, locomotion and morphological defense across all species #' in the database. Those species with +/- 1 match are added to a species pool to get allometric 
-#' equations or size estimates (instead of a taxonomic grouping). Does not proceed if any NA is 
-#' found in the trait values of the species
+#' Evaluates all unique trait groupings and returns species that have the same 
+#' traits +/- 1
 #'
-#' @param dats Input data
-#' @param trait_list List of traits to match
+#' @param measurement_table A table with the numerical measurements and biomass 
+#' used to compute allometric lms 
+#' @param trait_columns List of traits to match
 
 
-#' @return List of species with matching traits
+#' @return Tibble of four columns: level = "traits", group_focus_species, stage of focus species, 
+#' bwg_name of matched species
 #' @export
-matcher_of_traits <- function(dats, trait_list){
-  # Extract traits of given species
-  traits <- 
-    measurement_table %>% 
-    dplyr::filter(bwg_name == specname) %>% 
-    dplyr::select(BS1:BF4)
-  
-  # NA and no trait catcher 
-  if(ncol(traits) == ncol(traits[!is.na(colSums(traits))]) & nrow(traits) != 0)
-    proceed <- TRUE else
-      proceed <- FALSE
+#' Define the function
+#' 
+#' 
+  matcher_of_traits <- function(measurement_table, trait_columns) {
     
-  # If no NAS in traits get all species that have the same traits +/- 1 and make it a vector
-  if(proceed)
-    suppressWarnings(spec_list <- 
+    # First filter dataset with unique groupings of traits
+    measurement_table <- 
       measurement_table %>% 
-     ## Kept in that format to make explicit changes and allow flexibility in trait matching
-      dplyr::filter(BS1 %in% c((traits$BS1 - 1):(traits$BS1 + 1)) &
-             BS2 %in% c((traits$BS2 - 1):(traits$BS2 + 1)) &
-             BS3 %in% c((traits$BS3 - 1):(traits$BS3 + 1)) &
-             BS4 %in% c((traits$BS4 - 1):(traits$BS4 + 1)) &
-             LO1 %in% c((traits$LO1 - 1):(traits$LO1 + 1)) &
-             LO2 %in% c((traits$LO2 - 1):(traits$LO2 + 1)) &
-             LO3 %in% c((traits$LO3 - 1):(traits$LO3 + 1)) &
-             LO4 %in% c((traits$LO4 - 1):(traits$LO4 + 1)) &  
-             LO5 %in% c((traits$LO5 - 1):(traits$LO5 + 1)) &
-             LO6 %in% c((traits$LO6 - 1):(traits$LO6 + 1)) &
-             LO7 %in% c((traits$LO7 - 1):(traits$LO7 + 1)) &
-             MD1 %in% c((traits$MD1 - 1):(traits$MD1 + 1)) &
-             MD2 %in% c((traits$MD2 - 1):(traits$MD2 + 1)) &
-             MD3 %in% c((traits$MD3 - 1):(traits$MD3 + 1)) &
-             MD4 %in% c((traits$MD4 - 1):(traits$MD4 + 1)) &  
-             MD5 %in% c((traits$MD5 - 1):(traits$MD5 + 1)) &
-             MD6 %in% c((traits$MD6 - 1):(traits$MD6 + 1)) &
-             MD7 %in% c((traits$MD7 - 1):(traits$MD7 + 1)) &
-             MD8 %in% c((traits$MD8 - 1):(traits$MD8 + 1)) &
-             BF1 %in% c((traits$BF1 - 1):(traits$BF1 + 1)) &
-             BF2 %in% c((traits$BF2 - 1):(traits$BF2 + 1)) &
-             BF3 %in% c((traits$BF3 - 1):(traits$BF3 + 1)) &
-             BF4 %in% c((traits$BF4 - 1):(traits$BF4 + 1))) %>% 
-      dplyr::select(bwg_name) %>% 
-      unique() %>% 
-      dplyr::pull())
-  
-  # If we have NAs 
-  if(!proceed)
-    spec_list <- 
-      c(specname)
+      dplyr::select(bwg_name, dplyr::all_of(trait_columns), stage) %>% 
+      unique()
+    
+    # Print a little message saying that we are grouping species by traits
+    print("Grouping species by trait similarities..")
+    
+    # Set progress bar with number of rows
+    pb <- 
+      progress::progress_bar$new(format = "[:bar] :current/:total (:percent)", 
+                                 total = nrow(dats))
+    ## Initiate it
+    pb$tick(0)
+    
+    # For each row of the filtered dataframe
+    ret <- 
+      purrr::map_dfr(seq_len(nrow(measurement_table)), function(i) {
+      
+      ## Extract name of focus species
+      focus_species <- 
+        measurement_table$bwg_name[i]
+      ## Extract stage of focus species
+      stage <- 
+        measurement_table$stage
+      ## Give a name for the grouping
+      group_name <- 
+        paste0("traitgroup_", focus_species)
+      ## Get traits, make numeric so that it goes a lot faster
+      focus_traits <-
+        as.numeric(measurement_table[i, trait_cols]) 
+      
+      ## Make a small dataframe with species with similar traits
+      similar <- 
+        dats %>%
+        ## Look row by row
+        dplyr::rowwise() %>%
+        ## Check trait similarities based on absolute values
+        dplyr::filter(all(abs(dplyr::c_across(dplyr::all_of(trait_columns)) - focus_traits) <= 1)) %>%
+        ## Ungroup
+        ungroup()
+      
+      ## Add tick to progress bar
+      pb$tick()
+      
+      ## Make a little catch in case we do not find species with similar traits
+        if (nrow(similar) == 0) 
+         { ## Returning an empty tibble
+          return(tibble::tibble(level = character(), 
+                         focus_species = character(), 
+                         focus_species_stage = character(),
+                         bwg_name = character()))} else
+      
+      ## But if we get some species with similar traits
+        {## Make data long format
+          return(similar %>%
+                   dplyr::transmute(level = "traits",
+                                    group = paste0("group_", i),
+                                    focus_species = focus_species,
+                                    focus_species_stage = stage,
+                                    bwg_name = bwg_name))}
+                  
+      })
+    
 
-  # Return list
-  return(spec_list)
+    # Return
+    return(ret)
   
 }
+
+  
