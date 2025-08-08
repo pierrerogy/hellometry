@@ -11,8 +11,6 @@
 #' @return Tibble of four columns: level = "traits", group_focus_species, stage of focus species, 
 #' bwg_name of matched species
 #' @export
-#' Define the function
-#' 
 #' 
   matcher_of_traits <- function(measurement_table, trait_columns) {
     

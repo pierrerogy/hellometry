@@ -4,20 +4,19 @@
 \alias{matcher_of_traits}
 \title{Finds which species have matching traits}
 \usage{
-matcher_of_traits(dats, trait_list)
+matcher_of_traits(measurement_table, trait_columns)
 }
 \arguments{
-\item{dats}{Input data}
+\item{measurement_table}{A table with the numerical measurements and biomass
+used to compute allometric lms}
 
-\item{trait_list}{List of traits to match}
+\item{trait_columns}{List of traits to match}
 }
 \value{
-List of species with matching traits
+Tibble of four columns: level = "traits", group_focus_species, stage of focus species,
+bwg_name of matched species
 }
 \description{
-Called if grouping in sizest or get_biomass is “traits”, i.e. if threshold of at
-least three distinct measurements or one allometric equation not met at family level. Match
-traits of maximum body size, body shape, locomotion and morphological defense across all species #' in the database. Those species with +/- 1 match are added to a species pool to get allometric
-equations or size estimates (instead of a taxonomic grouping). Does not proceed if any NA is
-found in the trait values of the species
+Evaluates all unique trait groupings and returns species that have the same
+traits +/- 1
 }

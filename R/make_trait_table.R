@@ -11,7 +11,6 @@
 #' @return Tibble of four columns: level = "traits", group_focus_species, stage of focus species, 
 #' bwg_name of matched species
 #' @export
-#' Define the function
 #' 
 #' 
 make_trait_table <- function(measurement_table, level_list, 

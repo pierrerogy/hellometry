@@ -4,14 +4,14 @@
 \alias{database_data}
 \title{Get database data}
 \usage{
-database_data(estimated)
+database_data()
 }
 \arguments{
-\item{estimated}{Either data without estimation (FALSE) or with estimations (TRUE)}
+\item{none}{will just read the local copy of the data}
 }
 \value{
-The same BWG data, either without or with biomass estimated (i.e. calculated with \code{hellometry})
+Latest version of BWG data on file
 }
 \description{
-Gets BWG data with or without biomass estimates
+Gets BWG data without biomass estimates
 }

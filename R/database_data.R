@@ -2,7 +2,7 @@
 #'
 #' Gets BWG data without biomass estimates
 #'
-#' @param none
+#' @param none will just read the local copy of the data
 #' @return Latest version of BWG data on file
 #' @export
 database_data <- function(){
