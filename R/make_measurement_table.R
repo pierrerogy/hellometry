@@ -29,7 +29,7 @@ make_measurement_table <- function(dats, level_list, database, nothing){
   if("provenance" %in% colnames(numeric_taxa)){
     numeric_taxa <- 
       numeric_taxa %>% 
-      dplyr::filter(provenance = "length.raw")}
+      dplyr::filter(provenance == "length.raw")}
   
   # Get measurement table
   ## If database is TRUE, get the BWG database measurements
