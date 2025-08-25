@@ -6,13 +6,29 @@
 #' used to compute allometric lms 
 #' @param what Should size (what = "size_mm") or biomass (what = "biomass_mg") be 
 #' estimated? 
+#' @param model What kind of model should be computed, so far only lm
+#' @param traits Should the table be computed by traits or not? Default FALSE
+#' @param trait_columns List of traits to match, should be column names in measurement_table
 #' @return Tibble with size estimations or allometric models used in estimations. 
 #' Note that only models with p < 0.05 and R^2 < 0.95 are kept.
 #' @export
 #' 
 full_estimation_table <- function(level_list, measurement_table,
-                                  what, model = "lm") {
-    # Get all possible combinations of data
+                                  what, model = "lm", traits = FALSE,
+                                  trait_columns = c()){ 
+    
+  # If we want to get estimations with traits
+  if(traits == T) {
+    ## Use trait functions to make groupings of similar trait species
+    ret <- 
+      make_trait_table(measurement_table = measurement_table,
+                       trait_columns = trait_columns)
+    
+  }
+  
+  # If we do not want traits
+  if(traits == F) {
+  # Get all possible combinations of data
     ret <- 
       ## Split into list of tibbles, which each containing level and size_mm
       purrr::map(
@@ -36,11 +52,11 @@ full_estimation_table <- function(level_list, measurement_table,
             ## Filter out those with less than three unique size_mm
             dplyr::filter(dplyr::n_distinct(size_mm) >= 3) %>%
             ## Ungroup to avoid future issues
-            dplyr::ungroup())
+            dplyr::ungroup()) %>% 
+      ## Remove empty levels 
+      purrr::keep(function(x) nrow(x) > 0)}
     
 
-    
-    
   # If size we need the weighted average and size bins
     if(what == "size_mm"){
       ret <- 
@@ -90,7 +106,9 @@ full_estimation_table <- function(level_list, measurement_table,
                      ### Group by level, name and stage
                      dplyr::group_by(level, name, stage) %>%
                      ### Filter out those with less than three unique size_mm
-                     dplyr::filter(dplyr::n_distinct(biomass_mg) >= 3))
+                     dplyr::filter(dplyr::n_distinct(biomass_mg) >= 3)) %>% 
+        ## Remove empty levels 
+        purrr::keep(function(x) nrow(x) > 0)
       
       ## If we want basic lms
       if(model == "lm"){
@@ -104,10 +122,9 @@ full_estimation_table <- function(level_list, measurement_table,
                                     data = dplyr::cur_data())),
                          .groups = "keep") %>% 
                        ### Filter out models with near-perfect fit
-                       dplyr::filter(summary(model[[1]])$r.squared < 0.95) %>% 
-                       ### Filter models based on p value
-                       dplyr::filter(summary(model[[1]])$coefficients[2, 4] < 0.05))}
-        
+                       dplyr::filter(summary(model[[1]])$r.squared < 0.95 &
+                                       ### and based on p value
+                                       summary(model[[1]])$coefficients[2, 4] < 0.05))}
       ## If we want other models
       if(model == "brms"){
         ret <- 

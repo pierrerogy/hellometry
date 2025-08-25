@@ -306,3 +306,64 @@ dplyr::glimpse(model_estimation_table)
 
 ```
 
+## Experimental feature: traits 
+Let's say that you do not have valid models under a taxonomic level that feels satisfying (e.g. order). Here one alternative would be to use traits instead of taxonomy to infer similarities between species. For example, in a bromeliad context, two small, white, undefended worm-like creatures have a high likelihood of having similar body masses if of the same size.<br>
+The package contains some function (currently in development to help you do so). So far, they are not incorporated into the `hellometry()` main function, but can get you as far as `full_estimation_table()`. To use them, you would need to supply in `measurement_table` a set of columns that contain <b>crisp</b> traits. The functions will only work with crisp traits with discrete integer values, and will group species with those that have trait values +/-1 those of the focus species. Here is one example with the BWG database
+```{r}
+# Make vector with BWG crisp trait columns
+trait_columns <- 
+  c(paste0("BS", 1:5),
+    paste0("LO", 1:7),
+    paste0("MD", 1:8),
+    paste0("BF", 1:4))
+
+# This is long so let us shorten measurement table to just the first 500 rows
+## Generate measurement table
+level_list <-
+  c("bwg_name", "genus", "tribe", "subfamily", "family", "subord","ord", 
+    "subclass", "class")
+## Get all data from the bwg
+measurement_table <-
+   get_measurements(level_list = level_list,
+                     database = TRUE, 
+                     nothing = FALSE)
+## Shorten it
+dats <- 
+  measurement_table[1:500,]
+
+## Get long format data of which species have similar traits
+matched_traits <- 
+  matcher_of_traits(measurement_table = dats,
+                    trait_columns = trait_columns)
+### See the output
+head(matched_traits)
+
+## Get clean list for full_estimation_table, includes matcher_of_traits()
+clean_trait_list <-
+  make_trait_table(measurement_table = dats,
+                   trait_columns = trait_columns)
+### See the output
+clean_trait_list[[1]]
+
+# The last two functions are called in full_estimation_table if you add two arguments
+## Size estimation table
+size_estimation_table_traits <- 
+  full_estimation_table(level_list = c(), 
+                        measurement_table = dats, 
+                        traits = T, ## traits = TRUE
+                        trait_columns = trait_columns, ## vector of crisp trait columns
+                        what = "size_mm")
+### See the output
+head(size_estimation_table_traits)
+
+## Model table
+model_estimation_table_traits <- 
+  full_estimation_table(level_list = c(), 
+                        measurement_table = dats, 
+                        traits = T, ## traits = TRUE
+                        trait_columns = trait_columns, ## vector of crip trait columns
+                        what = "biomass_mg")
+### See the output
+head(model_estimation_table_traits)
+```
+

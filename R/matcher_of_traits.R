@@ -5,7 +5,7 @@
 #'
 #' @param measurement_table A table with the numerical measurements and biomass 
 #' used to compute allometric lms 
-#' @param trait_columns List of traits to match
+#' @param trait_columns List of traits to match, should be column names in measurement_table
 
 
 #' @return Tibble of four columns: level = "traits", group_focus_species, stage of focus species, 
@@ -40,12 +40,9 @@
       ## Extract stage of focus species
       stage <- 
         measurement_table$stage
-      ## Give a name for the grouping
-      group_name <- 
-        paste0("traitgroup_", focus_species)
       ## Get traits, make numeric so that it goes a lot faster
       focus_traits <-
-        as.numeric(measurement_table[i, trait_cols]) 
+        as.numeric(measurement_table[i, trait_columns]) 
       
       ## Make a small dataframe with species with similar traits
       similar <- 
@@ -64,17 +61,16 @@
         if (nrow(similar) == 0) 
          { ## Returning an empty tibble
           return(tibble::tibble(level = character(), 
-                         focus_species = character(), 
-                         focus_species_stage = character(),
-                         bwg_name = character()))} else
+                                name = character(), 
+                                stage = character(),
+                                bwg_name = character()))} else
       
       ## But if we get some species with similar traits
         {## Make data long format
           return(similar %>%
                    dplyr::transmute(level = "traits",
-                                    group = paste0("group_", i),
-                                    focus_species = focus_species,
-                                    focus_species_stage = stage,
+                                    name = focus_species,
+                                    stage = stage,
                                     bwg_name = bwg_name))}
                   
       })
