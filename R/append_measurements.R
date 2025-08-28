@@ -5,10 +5,10 @@
 #' 
 #' @param measurement_table Table containing all measurements
 #' @param dats Dataframe to be used for estimations
-#' @param level_list List of taxonomic levels to be used in the measurement table
+#' @param level_vec Vector of taxonomic levels to be used in the measurement table
 #' @return An updated measurement table that will be used to estimate sizes and gather taxonomy
 #' @export
-append_measurements <- function(measurement_table, dats, level_list){
+append_measurements <- function(measurement_table, dats, level_vec){
   # Select columns based on possible range of taxonomy
   # We should not expect to have all of them
   # so use any_of
@@ -19,7 +19,7 @@ append_measurements <- function(measurement_table, dats, level_list){
       ## Suppress warnings too
       dplyr::mutate(size_mm = as.numeric(size_mm)) %>% 
       dplyr::filter(!is.na(size_mm)) %>% 
-      dplyr::select(tidyselect::any_of(c(level_list,
+      dplyr::select(tidyselect::any_of(c(level_vec,
                     "stage", "abundance", "size_mm", 
                     "biomass_mg", "biomass_type"))))
   

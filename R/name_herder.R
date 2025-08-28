@@ -10,17 +10,17 @@
 #' @param dats The input data table
 #' @return The input data table with missing BWG names filled
 #' @export
-name_herder <- function(dats, level_list){
+name_herder <- function(dats, level_vec){
   
-  # Remove traits from level_list
-  level_list <- 
-    level_list[level_list %notin% "traits"]
+  # Remove traits from level_vec
+  level_vec <- 
+    level_vec[level_vec %notin% "traits"]
   
   # First get species without bwg name
   data_noname <- 
     dats %>% 
     dplyr::filter(is.na(bwg_name)) %>% 
-    dplyr::select(dplyr::all_of(level_list)) %>% 
+    dplyr::select(dplyr::all_of(level_vec)) %>% 
     unique()
 
   # Count how many "species" do not have bwg_name
@@ -36,7 +36,7 @@ name_herder <- function(dats, level_list){
   bwgnames_df <- 
     get_bwgnames() %>%
     ## Filter the taxonomic level we want, and make sure they are characters
-    dplyr::mutate(dplyr::across(level_list, 
+    dplyr::mutate(dplyr::across(level_vec, 
                                 as.character))
   
   # Join data with bwg names, and get unique combinations
@@ -44,7 +44,7 @@ name_herder <- function(dats, level_list){
     bwgnames_df %>%
     ## Join
     dplyr::inner_join(data_noname_chr, 
-                      by = level_list) %>%
+                      by = level_vec) %>%
     ## Group by row_id
     dplyr::group_by(row_id) %>%
     ## Count matches and keep first one if more than one
@@ -78,7 +78,7 @@ name_herder <- function(dats, level_list){
     dats %>% 
     ## Merge the two together to align columns
     dplyr::left_join(data_noname, 
-                     by = level_list[which(level_list != "bwg_name")]) %>% 
+                     by = level_vec[which(level_vec != "bwg_name")]) %>% 
 
     ## Replace NAs in original bwg_name columns by the new names
     dplyr::mutate(bwg_name = dplyr::coalesce(bwg_name, bwg_name2)) %>% 

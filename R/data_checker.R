@@ -4,7 +4,7 @@
 #'
 #' @param dats Dataframe to be used for estimations
 #' @export
-data_checker <- function(dats, biomass_type, database, nothing){
+data_checker <- function(dats, biomass_type, use_BWG_db, no_BWG_data){
 
   # Important columns have proper names
   if("abundance" %notin% colnames(dats))
@@ -17,12 +17,12 @@ data_checker <- function(dats, biomass_type, database, nothing){
     stop("Please call column with biomass type (dry/wet) 'biomass_type'")
   
   # Database is actually a true false
-  if(database %notin% c(TRUE, FALSE))
-    stop("Database has to be TRUE/FALSE")
+  if(use_BWG_db %notin% c(TRUE, FALSE))
+    stop("use_BWG_db has to be TRUE/FALSE")
   
-  # Database is actually a true false
-  if(nothing %notin% c(TRUE, FALSE))
-    stop("Database has to be TRUE/FALSE")
+  # no_BWG_data is actually a true false
+  if(no_BWG_data %notin% c(TRUE, FALSE))
+    stop("no_BWG_data has to be TRUE/FALSE")
   
   # Biomass kind needs to be dry or both
   if(biomass_type %notin% c("dry", "wet"))

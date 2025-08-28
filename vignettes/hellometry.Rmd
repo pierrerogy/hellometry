@@ -91,7 +91,7 @@ pitilla <-
   dplyr::mutate(biomass_mg = NA)
 
 # We need to define a suit of levels to be used for estimations
-level_list <-
+level_vec  <-
   c("bwg_name", "genus", "tribe", "subfamily", "family", "subord","ord", 
     "subclass", "class")
 
@@ -99,10 +99,10 @@ level_list <-
 pitilla_bm <-
   hellometry(
     dats = pitilla, ## The data to be used
-    level_list = level_list, ## The taxonomic levels to be used
+    level_vec  = level_vec , ## The taxonomic levels to be used
     biomass_type = "dry", ## Type of biomass to be estimated, "dry" or "wet" 
-    database = TRUE, ## Use database measurements
-    nothing = FALSE) ## Use extra measurement taken by the BWG
+    use_BWG_db = TRUE, ## Use database measurements
+    no_BWG_data = FALSE) ## Use extra measurement taken by the BWG
 
 
 # The result is a list of three elements
@@ -118,12 +118,12 @@ dplyr::glimpse(pitilla_bm$model_estimations)
 ## First compile the measurement table
 measurement_table <- 
   make_measurement_table(dats = pitilla, 
-                         level_list = level_list, 
-                         database = TRUE, 
-                         nothing = FALSE)
+                         level_vec  = level_vec , 
+                         use_BWG_db = TRUE, 
+                         no_BWG_data = FALSE)
 ## Get all possible size estimations
 size_estimation_table <- 
-  full_estimation_table(level_list = level_list, 
+  full_estimation_table(level_vec  = level_vec , 
                         measurement_table = measurement_table, 
                         what = "size_mm")
 ### Have a glimpse at it
@@ -131,7 +131,7 @@ dplyr::glimpse(size_estimation_table)
 
 ## Get all possible models
 model_estimation_table <- 
-  full_estimation_table(level_list = level_list, 
+  full_estimation_table(level_vec  = level_vec , 
                         measurement_table = dry_wet(measurement_table,
                                                         biomass_type = "dry"), ## Filter for dry biomass
                         what = "biomass_mg")
@@ -253,7 +253,7 @@ dplyr::glimpse(myreptiles)
 # Now we can use the package to estimate sizes and biomasses!
 
 # We need to define a suit of levels to be used for estimations, a.k.a. columns in the data
-level_list <-
+level_vec  <-
   c("species", "genus", "family", "order")
 
 # The data also need to include a biomass_type (dry/wet) column, here use dry because it tends to be more precise, and a stage column for organisms with very different life stages, here put adult because it does not really matter
@@ -265,10 +265,10 @@ myreptiles <-
 # Get the estimations
 myreptiles_estimated <- 
   hellometry(dats = myreptiles, ## The data to be used
-              level_list = level_list, ## The taxonomic levels to be used
+              level_vec  = level_vec , ## The taxonomic levels to be used
               biomass_type = "dry", ## Type of biomass to be estimated, "dry" or "wet" 
-              database = FALSE, ## Do not use database measurements
-              nothing = TRUE) ## Do not use extra measurement taken by the BWG
+              use_BWG_db = FALSE, ## Do not use database measurements
+              no_BWG_data = TRUE) ## Do not use extra measurement taken by the BWG
 
 # The result is a list of three elements
 # - `dats` - your data with estimated body sizes and biomasses, and column with information on the level at which were performed the estimations
@@ -283,12 +283,12 @@ dplyr::glimpse(myreptiles_estimated$model_estimations)
 ## First compile the measurement table
 measurement_table <- 
   make_measurement_table(dats = myreptiles, ## The data to be used
-                         level_list = level_list, ## The taxonomic levels to be used
-                         database = FALSE, ## Do not use database measurements
-                         nothing = TRUE) ## Do not use extra measurement taken by the BWG
+                         level_vec  = level_vec , ## The taxonomic levels to be used
+                         use_BWG_db = FALSE, ## Do not use database measurements
+                         no_BWG_data = TRUE) ## Do not use extra measurement taken by the BWG
 ## Get all possible size estimations
 size_estimation_table <- 
-  full_estimation_table(level_list = level_list, 
+  full_estimation_table(level_vec  = level_vec , 
                         measurement_table = measurement_table, 
                         what = "size_mm")
 ### Have a glimpse at it
@@ -297,7 +297,7 @@ dplyr::glimpse(size_estimation_table)
 ## Get all possible models
 ### Note that the package filters out models wiht p >0.05 and R2 > 0.95 to not include overfitted models
 model_estimation_table <- 
-  full_estimation_table(level_list = level_list, 
+  full_estimation_table(level_vec  = level_vec , 
                         measurement_table = dry_wet(measurement_table,
                                                         biomass_type = "dry"), ## Filter for dry biomass
                         what = "biomass_mg")
@@ -319,14 +319,14 @@ trait_columns <-
 
 # This is long so let us shorten measurement table to just the first 500 rows
 ## Generate measurement table
-level_list <-
+level_vec  <-
   c("bwg_name", "genus", "tribe", "subfamily", "family", "subord","ord", 
     "subclass", "class")
 ## Get all data from the bwg
 measurement_table <-
-   get_measurements(level_list = level_list,
-                     database = TRUE, 
-                     nothing = FALSE)
+   get_measurements(level_vec  = level_vec ,
+                     use_BWG_db = TRUE, 
+                     no_BWG_data = FALSE)
 ## Shorten it
 dats <- 
   measurement_table[1:500,]
@@ -348,7 +348,7 @@ clean_trait_list[[1]]
 # The last two functions are called in full_estimation_table if you add two arguments
 ## Size estimation table
 size_estimation_table_traits <- 
-  full_estimation_table(level_list = c(), 
+  full_estimation_table(level_vec  = c(), 
                         measurement_table = dats, 
                         traits = T, ## traits = TRUE
                         trait_columns = trait_columns, ## vector of crisp trait columns
@@ -358,7 +358,7 @@ head(size_estimation_table_traits)
 
 ## Model table
 model_estimation_table_traits <- 
-  full_estimation_table(level_list = c(), 
+  full_estimation_table(level_vec  = c(), 
                         measurement_table = dats, 
                         traits = T, ## traits = TRUE
                         trait_columns = trait_columns, ## vector of crip trait columns

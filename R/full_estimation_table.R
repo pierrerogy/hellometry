@@ -1,7 +1,7 @@
 #' Returns size and biomass estimations for every taxon in measurement table
 #'
 #'
-#' @param level_list Vector of taxonomic levels over which to iterate estimations
+#' @param level_vec Vector of taxonomic levels over which to iterate estimations
 #' @param measurement_table A table with the numerical measurements and biomass 
 #' used to compute allometric lms 
 #' @param what Should size (what = "size_mm") or biomass (what = "biomass_mg") be 
@@ -13,7 +13,7 @@
 #' Note that only models with p < 0.05 and R^2 < 0.95 are kept.
 #' @export
 #' 
-full_estimation_table <- function(level_list, measurement_table,
+full_estimation_table <- function(level_vec, measurement_table,
                                   what, model = "lm", traits = FALSE,
                                   trait_columns = c()){ 
     
@@ -32,7 +32,7 @@ full_estimation_table <- function(level_list, measurement_table,
     ret <- 
       ## Split into list of tibbles, which each containing level and size_mm
       purrr::map(
-        level_list[level_list != "traits"],
+        level_vec[level_vec != "traits"],
         ~ measurement_table %>%
           ## Select only the level and size_mm
           dplyr::select(name = dplyr::all_of(.x), 

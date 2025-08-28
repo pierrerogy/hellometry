@@ -14,25 +14,25 @@
 #' If you are using BWG data, please make sure that the column with BWG names is 
 #' called "bwg_name".
 #' 
-#' Please make sure that the level_list parameter has levels in increasing order 
+#' Please make sure that the level_vec argument has levels in increasing order 
 #' of resolution, e.g. from species to order.
 #' 
 #'
 #' @param dats The input data table, please include columns columns "abundance", 
-#' "size_mm", "biomass_mg", "stage" (larva/pupa/adult, please only put 'adult' for 
-#' adult insects)
-#' @param level_list A character vector indicating the taxonomic levels present 
-#' in your data, in indecreasing order of taxonomic resolution.
+#' "size_mm", "biomass_mg", "stage" (larva/pupa/adult, if you use the BWG database, 
+#' please only put 'adult' for non-insect invertebrates)
+#' @param level_vec A character vector indicating the taxonomic levels present 
+#' in your data, in increasing order of taxonomic resolution.
 #' @param biomass_type "dry"/"wet". Should data used in inference be "dry" for 
 #' just dry biomass (default), or "wet" for just wet biomass. See `dry_wet()`
 #' for more information on how this works.
-#' @param database Logical. Should data from the BWG database be used to supplement 
+#' @param use_BWG_db Logical. Should data from the BWG database be used to supplement 
 #' a set of BWG-specific measurements, not present in the database 
 #' (TRUE(default)/FALSE). This function uses numerical measurements both from the 
 #' BWG database and from the data you provide. Only put FALSE if you are doing 
 #' estimations from data already present in the BWG database (estimation for 
 #' these data available with `database_data(TRUE)`).
-#' @param nothing Logical. If TRUE, no BWG-specific data will be used for estimations, 
+#' @param no_BWG_data Logical. If TRUE, no BWG-specific data will be used for estimations, 
 #' only the data you provide. This is useful if you have your own measurement 
 #' database or work on a different system (default FALSE).
 #' 
@@ -56,19 +56,19 @@
 #' 
 #' 
 #' @export
-hellometry <- function(dats, level_list, biomass_type = "dry", database = TRUE, nothing = FALSE) {
+hellometry <- function(dats, level_vec, biomass_type = "dry", use_BWG_db = TRUE, no_BWG_data = FALSE) {
   
-  # Get new species names, with catch if no bwg_name in level_list
-  if("bwg_name" %in% level_list & any(is.na(dats$bwg_name))) {
+  # Get new species names, with catch if no bwg_name in level_vec
+  if("bwg_name" %in% level_vec & any(is.na(dats$bwg_name))) {
     dats <- 
       name_herder(dats = dats, 
-                  level_list = level_list) }
+                  level_vec = level_vec) }
   
-  # Columns, biomass_type must have specific values, database and nothing must be logical
+  # Columns, biomass_type must have specific values, use_BWG_db and no_BWG_data must be logical
   data_checker(dats = dats, 
                biomass_type = biomass_type,
-               database = database, 
-               nothing = nothing)
+               use_BWG_db = use_BWG_db, 
+               no_BWG_data = no_BWG_data)
   
   # Make copy of dataset to then reuse
   ret <- 
@@ -88,16 +88,16 @@ hellometry <- function(dats, level_list, biomass_type = "dry", database = TRUE, 
   ## Make table
   measurement_table <- 
     make_measurement_table(dats = dats,
-                           level_list = level_list,
-                           database = database,
-                           nothing = nothing)
+                           level_vec = level_vec,
+                           use_BWG_db = use_BWG_db,
+                           no_BWG_data = no_BWG_data)
 
   # Getting size estimations
   ## Print message
   print("Getting size estimations...")
   ## Make table with all estimations
   full_estimation_table_size <- 
-    full_estimation_table(level_list = level_list, 
+    full_estimation_table(level_vec = level_vec, 
                           measurement_table = measurement_table,
                           what = "size_mm") 
   
@@ -108,14 +108,14 @@ hellometry <- function(dats, level_list, biomass_type = "dry", database = TRUE, 
     dplyr::filter(size_mm %in% c("small", "medium", "large", "unknown")) %>% 
     ## Select columns we need
     ## Only keep columns we want
-    dplyr::select(row, rev(dplyr::any_of(level_list)), 
+    dplyr::select(row, rev(dplyr::any_of(level_vec)), 
                   stage, size_mm) %>% 
     ## Rename size category to join to estimation result
     dplyr::rename(size_category = size_mm) %>% 
     ## Loop around taxonomic levels and add to main data
     purrr::reduce(
       ### Levels to loop around
-      level_list[level_list != "traits"],
+      level_vec[level_vec != "traits"],
       ### Data to be used as base (non_numeric_taxa)
       .init = .,
       ### Join data based on series of filter
@@ -134,18 +134,18 @@ hellometry <- function(dats, level_list, biomass_type = "dry", database = TRUE, 
     dplyr::mutate(
       ### Coalesce all size_mm columns to get the first non-NA value
       ### Follows the order of the given vector!
-      size_mm = dplyr::coalesce(!!!syms(paste0(level_list[level_list != "traits"], 
+      size_mm = dplyr::coalesce(!!!syms(paste0(level_vec[level_vec != "traits"], 
                                                "_size_mm"))),
       ### Make a new column that indicates the taxonomic level at which the estimation was kept
       ### case_when chooses the first TRUE condition and assigns its corresponding value (the taxonomic level name)
-      size_level = dplyr::case_when(!!!purrr::imap(paste0(level_list[level_list != "traits"], 
+      size_level = dplyr::case_when(!!!purrr::imap(paste0(level_vec[level_vec != "traits"], 
                                                           "_size_mm"), 
                                                    ### Check which one of the values comes first as non-NA
                                                    ~ expr(!is.na(!!sym(.x)) ~ ### !!sym() because we are pasting character string that needs to be interpreted as column name
-                                                            !!level_list[level_list != "traits"][.y]))),
+                                                            !!level_vec[level_vec != "traits"][.y]))),
       ### Finally, create a new column that contains the taxon name at the level of estimation
       size_taxon_name = dplyr::case_when(
-        !!!imap(level_list[level_list != "traits"], ~ 
+        !!!imap(level_vec[level_vec != "traits"], ~ 
                   expr(size_level == !!.x ~ !!sym(.x))))) %>%
     ## Only keep columns we want
     dplyr::select(row, stage,
@@ -160,7 +160,7 @@ hellometry <- function(dats, level_list, biomass_type = "dry", database = TRUE, 
   ### Wrap in suppressWarnings to avoid cluttering
   suppressWarnings(
     full_estimation_table_biomass <- 
-      full_estimation_table(level_list = level_list, 
+      full_estimation_table(level_vec = level_vec, 
                             measurement_table = dry_wet(measurement_table,
                                                         biomass_type = "dry"),
                             what = "biomass_mg"))
@@ -171,12 +171,12 @@ hellometry <- function(dats, level_list, biomass_type = "dry", database = TRUE, 
     ## Get NA biomasses
     dplyr::filter(is.na(biomass_mg)) %>% 
     ## Select columns we need
-    dplyr::select(row, dplyr::any_of(level_list), 
+    dplyr::select(row, dplyr::any_of(level_vec), 
                   stage, biomass_mg, biomass_type) %>%
     ## Loop around taxonomic levels and add to main data
     purrr::reduce(
       ### Levels to loop around
-      level_list[level_list != "traits"],
+      level_vec[level_vec != "traits"],
       ### Data to be used as base (non_numeric_taxa)
       .init = .,
       ### Join data based on series of filter
@@ -195,7 +195,7 @@ hellometry <- function(dats, level_list, biomass_type = "dry", database = TRUE, 
     dplyr::mutate(
       ## Add a new column that contains the first non-NA model
       model = purrr::pmap(dplyr::select(., 
-                                        dplyr::all_of(paste0(level_list[level_list != "traits"], 
+                                        dplyr::all_of(paste0(level_vec[level_vec != "traits"], 
                                                              "_model"))), 
                           function(...) {
                             ### Convert input to list
@@ -210,7 +210,7 @@ hellometry <- function(dats, level_list, biomass_type = "dry", database = TRUE, 
                               first_non_null[[1]] else NA}),
       ## Get the corresponding level for that model
       model_level = purrr::pmap_chr(dplyr::select(., 
-                                                  dplyr::all_of(paste0(level_list[level_list != "traits"], 
+                                                  dplyr::all_of(paste0(level_vec[level_vec != "traits"], 
                                                                        "_model"))), 
                                     function(...) {
                                       ### Convert input to list
@@ -222,10 +222,10 @@ hellometry <- function(dats, level_list, biomass_type = "dry", database = TRUE, 
                                                              ~ !is.null(.x)))
                                       ### Return the corresponding level or NA if none found
                                       if (length(level_idx) > 0) 
-                                        level_list[level_list != "traits"][[level_idx[1]]] else NA_character_}),
+                                        level_vec[level_vec != "traits"][[level_idx[1]]] else NA_character_}),
       ## Get the corresponding taxon name from which the model came
       model_taxon_name = dplyr::case_when(
-        !!!imap(level_list[level_list != "traits"], 
+        !!!imap(level_vec[level_vec != "traits"], 
                 ~ expr(model_level == !!.x ~ !!sym(.x))))) %>% 
     ## Only keep columns we want
     dplyr::select(row, stage,
