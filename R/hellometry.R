@@ -1,6 +1,6 @@
 #' Wrapper function to estimate size (mm) and biomass (mg) from an input dataset
 #'
-#' Wrapper function, input your data and get size and measurement . 
+#' Wrapper function, input your data and get size and measurement. 
 #' Please name column with number of specimen "abundance", column with measurement 
 #' in mm "size_mm", column with life stage (larva/pupa/adult) "stage", column 
 #' with biomass type (dry/wet) "biomass_type", and the column with biomass in mg 

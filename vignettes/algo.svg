@@ -24,15 +24,15 @@
      inkscape:deskcolor="#505050"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="0.62"
-     inkscape:cx="668.54839"
-     inkscape:cy="498.3871"
+     inkscape:zoom="1.16"
+     inkscape:cx="1769.3966"
+     inkscape:cy="250"
      inkscape:window-width="1920"
      inkscape:window-height="1094"
      inkscape:window-x="-11"
      inkscape:window-y="-11"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer2"
+     inkscape:current-layer="layer1"
      showguides="true">
     <sodipodi:guide
        position="105.07586,296.05052"
@@ -45,7 +45,7 @@
        id="guide2630"
        inkscape:locked="false" />
     <sodipodi:guide
-       position="190.76458,314.46251"
+       position="620.63039,153.30388"
        orientation="0,-1"
        id="guide47107"
        inkscape:locked="false" />
@@ -53,6 +53,16 @@
        position="182.5625,207.30625"
        orientation="1,0"
        id="guide47109"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="460.05568,334.17852"
+       orientation="0,-1"
+       id="guide5065"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="632.49102,159.69037"
+       orientation="0,-1"
+       id="guide12493"
        inkscape:locked="false" />
   </sodipodi:namedview>
   <defs
@@ -171,11 +181,202 @@
          d="M 5.77,0 -2.88,5 V -5 Z"
          id="path135-6-6-8-0" />
     </marker>
+    <marker
+       style="overflow:visible"
+       id="TriangleStart-7"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="5.3244081"
+       markerHeight="6.155385"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-7" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="TriangleStart-7-0"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="5.3244081"
+       markerHeight="6.155385"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-7-6" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="TriangleStart-7-0-9"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="5.3244081"
+       markerHeight="6.155385"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-7-6-4" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="TriangleStart-7-0-3"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="5.3244081"
+       markerHeight="6.155385"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-7-6-8" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="TriangleStart-7-0-9-6"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="5.3244081"
+       markerHeight="6.155385"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-7-6-4-6" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="TriangleStart-6"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="5.3244081"
+       markerHeight="6.155385"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-3" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="TriangleStart-6-1"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="5.3244081"
+       markerHeight="6.155385"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-3-7" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="TriangleStart-6-6"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="5.3244081"
+       markerHeight="6.155385"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-3-2" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="TriangleStart-6-1-5"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="5.3244081"
+       markerHeight="6.155385"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-3-7-7" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="TriangleStart-6-6-1"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="TriangleStart"
+       markerWidth="5.3244081"
+       markerHeight="6.155385"
+       viewBox="0 0 5.3244081 6.1553851"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-3-2-7" />
+    </marker>
   </defs>
   <g
      inkscape:label="fond"
      inkscape:groupmode="layer"
      id="layer1"
+     style="display:inline"
      sodipodi:insensitive="true">
     <rect
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#f4f2f2;stroke-width:0.613;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;paint-order:stroke markers fill"
@@ -185,6 +386,14 @@
        x="0.51430202"
        y="0.51430202"
        ry="0.63469845" />
+    <rect
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#f4f2f2;stroke-width:0.491414;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;paint-order:stroke markers fill"
+       id="rect298-9"
+       width="266.82996"
+       height="150.60132"
+       x="343.30225"
+       y="-17.255667"
+       ry="0.32155123" />
   </g>
   <g
      inkscape:groupmode="layer"
@@ -226,6 +435,14 @@
        x="59.938293"
        y="257.60559"
        ry="0.20347209" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.352089;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       id="rect1743-1-9-8"
+       width="20.608891"
+       height="9.8106804"
+       x="344.4585"
+       y="-15.724771"
+       ry="0.20874701" />
     <text
        xml:space="preserve"
        style="font-size:4.03623px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';fill:#040404;fill-opacity:1;stroke:#000000;stroke-width:0.17602;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
@@ -326,71 +543,71 @@
          id="tspan27166" /></text>
     <text
        xml:space="preserve"
-       style="font-size:4.5861px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;inline-size:167.474;fill:#040404;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       style="font-size:4.5861px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;inline-size:167.474;display:inline;fill:#040404;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
        x="62.106499"
        y="52.948597"
        id="text1955-5-2"
        transform="matrix(0.88010035,0,0,0.88010035,-17.610516,5.6999931)"><tspan
          x="62.106499"
          y="52.948597"
-         id="tspan47439"><tspan
+         id="tspan16292"><tspan
    style="font-weight:bold"
-   id="tspan47435">add_taxonomy()</tspan>:<tspan
+   id="tspan16288">add_taxonomy()</tspan>:<tspan
    style="font-weight:bold"
-   id="tspan47437"> </tspan>add taxonomy columns from BWG database
+   id="tspan16290"> </tspan>add taxonomy columns from BWG database
 </tspan><tspan
          x="62.106499"
          y="58.700864"
-         id="tspan47443"><tspan
+         id="tspan16296"><tspan
    style="font-weight:bold"
-   id="tspan47441">database_data()</tspan>: check BWG database data
+   id="tspan16294">database_data()</tspan>: check BWG database data
 </tspan><tspan
          x="62.106499"
          y="64.45313"
-         id="tspan47447"><tspan
+         id="tspan16300"><tspan
    style="font-weight:bold"
-   id="tspan47445">get_bwg_names()</tspan>: check list of unique bwg_name in BWG database
+   id="tspan16298">get_bwg_names()</tspan>: check list of unique bwg_name in BWG database
 </tspan><tspan
          x="62.106499"
          y="70.2054"
-         id="tspan47449">
+         id="tspan16302">
 </tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:4.5861px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;inline-size:141.285;fill:#040404;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       style="font-size:4.5861px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;inline-size:141.285;display:inline;fill:#040404;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
        x="34.974403"
        y="186.5625"
        id="text1955-3"
        transform="matrix(0.88010035,0,0,0.88010035,-1.454843,0.6861631)"><tspan
          x="34.974403"
          y="186.5625"
-         id="tspan47453"><tspan
+         id="tspan16306"><tspan
    style="font-weight:bold"
-   id="tspan47451">get_measurements()</tspan>: get BWG measurements (BWG data users only)
+   id="tspan16304">get_measurements()</tspan>: get BWG measurements (BWG data users only)
 </tspan><tspan
          x="34.974403"
          y="192.31477"
-         id="tspan47457"><tspan
+         id="tspan16310"><tspan
    style="font-weight:bold"
-   id="tspan47455">append_names()</tspan>: add all species names to measurement_table
+   id="tspan16308">append_names()</tspan>: add all species names to measurement_table
 </tspan><tspan
          x="34.974403"
          y="198.06704"
-         id="tspan47461"><tspan
+         id="tspan16314"><tspan
    style="font-weight:bold"
-   id="tspan47459">append_measurement()</tspan>: add ll numeric measurements to </tspan><tspan
+   id="tspan16312">append_measurement()</tspan>: add ll numeric measurements to </tspan><tspan
          x="34.974403"
          y="203.81931"
-         id="tspan47463">measurement_table
+         id="tspan16316">measurement_table
 </tspan><tspan
          x="34.974403"
          y="209.55193"
-         id="tspan47467">t<tspan
+         id="tspan16320">t<tspan
    style="font-weight:bold"
-   id="tspan47465">ipulimo():</tspan> Tipulidae and Limoniidae are so similar they can be grouped in </tspan><tspan
+   id="tspan16318">ipulimo():</tspan> Tipulidae and Limoniidae are so similar they can be grouped in </tspan><tspan
          x="34.974403"
          y="215.30421"
-         id="tspan47469">one family</tspan></text>
+         id="tspan16322">one family</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:9.87777px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';opacity:1;fill:#040404;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
@@ -469,7 +686,7 @@
        id="text31731"><tspan
          sodipodi:role="line"
          id="tspan31729"
-         style="stroke-width:1"></tspan></text>
+         style="stroke-width:1" /></text>
     <rect
        style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
        id="rect1743-1-6"
@@ -503,35 +720,35 @@
          y="103.44038">Data checking</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:4.5861px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;inline-size:135.191;fill:#040404;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       style="font-size:4.5861px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;inline-size:135.191;display:inline;fill:#040404;fill-opacity:1;stroke:#000000;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
        x="62.106499"
        y="52.948597"
        id="text1955-5-2-0"
        transform="matrix(0.88010035,0,0,0.88010035,-20.749515,61.646098)"><tspan
          x="62.106499"
          y="52.948597"
-         id="tspan47473"><tspan
+         id="tspan16326"><tspan
    style="font-weight:bold"
-   id="tspan47471">name_herder()</tspan>: assign BWG names if none (BWG data users only)
+   id="tspan16324">name_herder()</tspan>: assign BWG names if none (BWG data users only)
 </tspan><tspan
          x="62.106499"
          y="58.700864"
-         id="tspan47477"><tspan
+         id="tspan16330"><tspan
    style="font-weight:bold"
-   id="tspan47475">data_checker()</tspan>: check data formatting
+   id="tspan16328">data_checker()</tspan>: check data formatting
 </tspan><tspan
          x="62.106499"
          y="64.45313"
-         id="tspan47481">t<tspan
+         id="tspan16334">t<tspan
    style="font-weight:bold"
-   id="tspan47479">ipulimo()</tspan>: Tipulidae and Limoniidae are so similar they can be grouped </tspan><tspan
+   id="tspan16332">ipulimo()</tspan>: Tipulidae and Limoniidae are so similar they can be grouped </tspan><tspan
          x="62.106499"
          y="70.2054"
-         id="tspan47483">in one family
+         id="tspan16336">in one family
 </tspan><tspan
          x="62.106499"
          y="75.938028"
-         id="tspan47485">
+         id="tspan16338">
 </tspan></text>
     <path
        style="fill:#040404;fill-opacity:1;stroke:#000000;stroke-width:0.8801;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#TriangleStart-9-8-9-0);paint-order:stroke markers fill"
@@ -687,5 +904,547 @@
          x="170.11412"
          y="266.45483"
          id="tspan47313">return data </tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4.03623px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';fill:#040404;fill-opacity:1;stroke:#000000;stroke-width:0.17602;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       x="346.71811"
+       y="-9.5480356"
+       id="text2195-1-5"><tspan
+         sodipodi:role="line"
+         id="tspan2193-8-7"
+         style="stroke-width:0.17602"
+         x="346.71811"
+         y="-9.5480356">Your data</tspan></text>
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.435403;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       id="rect1743-1-9-8-3"
+       width="31.786016"
+       height="9.7273664"
+       x="384.85471"
+       y="-15.683109"
+       ry="0.20697431" />
+    <text
+       xml:space="preserve"
+       style="font-size:4.03623px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';fill:#040404;fill-opacity:1;stroke:#000000;stroke-width:0.17602;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       x="385.56387"
+       y="-11.888412"
+       id="text2195-1-5-6"><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="385.56387"
+         y="-11.888412"
+         id="tspan5961">Your data in BWG </tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="385.56387"
+         y="-6.8431244"
+         id="tspan3956">database format</tspan></text>
+    <path
+       style="fill:#ffa24c;stroke-width:0.600001;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;marker-end:url(#TriangleStart);paint-order:stroke markers fill"
+       d="m 365.32439,-10.819426 h 17.50183"
+       id="path2159"
+       sodipodi:nodetypes="cc" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.352089;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       id="rect1743-1-9-8-0"
+       width="20.608891"
+       height="9.8106804"
+       x="344.56873"
+       y="3.3058646"
+       ry="0.20874701" />
+    <text
+       xml:space="preserve"
+       style="font-size:4.03623px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';fill:#040404;fill-opacity:1;stroke:#000000;stroke-width:0.17602;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       x="346.82834"
+       y="9.4825974"
+       id="text2195-1-5-5"><tspan
+         sodipodi:role="line"
+         id="tspan2193-8-7-0"
+         style="stroke-width:0.17602"
+         x="346.82834"
+         y="9.4825974">Your data</tspan></text>
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.435403;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       id="rect1743-1-9-8-3-8"
+       width="31.786016"
+       height="9.7273664"
+       x="384.96494"
+       y="3.3475268"
+       ry="0.20697431" />
+    <text
+       xml:space="preserve"
+       style="font-size:4.03623px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';fill:#040404;fill-opacity:1;stroke:#000000;stroke-width:0.17602;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       x="385.6741"
+       y="7.1422234"
+       id="text2195-1-5-6-7"><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="385.6741"
+         y="7.1422234"
+         id="tspan3956-8">Your data in </tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="385.6741"
+         y="12.187511"
+         id="tspan7209">hellometry format</tspan></text>
+    <path
+       style="fill:#ffa24c;stroke:#131010;stroke-width:0.600001;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#TriangleStart-7);paint-order:stroke markers fill"
+       d="m 365.43464,8.2112087 h 17.50183"
+       id="path2159-0"
+       sodipodi:nodetypes="cc" />
+    <text
+       xml:space="preserve"
+       style="font-size:4.5861px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';fill:#ffa24c;stroke-width:0.600001;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke markers fill"
+       x="409.87607"
+       y="31.248203"
+       id="text7205"><tspan
+         sodipodi:role="line"
+         id="tspan7203"
+         style="stroke-width:0.6"
+         x="409.87607"
+         y="31.248203"></tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.6"
+         id="tspan7207"
+         x="409.87607"
+         y="36.980827" /></text>
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.352089;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       id="rect1743-1-9-8-0-5"
+       width="20.608891"
+       height="9.8106804"
+       x="344.79684"
+       y="49.151768"
+       ry="0.20874701" />
+    <text
+       xml:space="preserve"
+       style="font-size:4.03623px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';fill:#040404;fill-opacity:1;stroke:#000000;stroke-width:0.17602;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       x="347.05646"
+       y="55.328503"
+       id="text2195-1-5-5-6"><tspan
+         sodipodi:role="line"
+         id="tspan2193-8-7-0-4"
+         style="stroke-width:0.17602"
+         x="347.05646"
+         y="55.328503">Your data</tspan></text>
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.394909;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       id="rect1743-1-9-8-0-5-6"
+       width="26.040209"
+       height="9.7678604"
+       x="392.75037"
+       y="16.784534"
+       ry="0.2078359" />
+    <text
+       xml:space="preserve"
+       style="font-size:4.03623px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';fill:#040404;fill-opacity:1;stroke:#000000;stroke-width:0.17602;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       x="393.39194"
+       y="20.430878"
+       id="text2195-1-5-5-6-8"><tspan
+         sodipodi:role="line"
+         id="tspan2193-8-7-0-4-9"
+         style="stroke-width:0.17602"
+         x="393.39194"
+         y="20.430878">BWG database</tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="393.39194"
+         y="25.476166"
+         id="tspan9192">(if chosen)</tspan></text>
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.619189;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       id="rect1743-1-9-8-3-8-5"
+       width="41.638149"
+       height="15.017718"
+       x="385.74112"
+       y="46.320171"
+       ry="0.31953993" />
+    <text
+       xml:space="preserve"
+       style="font-size:4.03623px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';fill:#040404;fill-opacity:1;stroke:#000000;stroke-width:0.17602;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       x="386.58649"
+       y="50.022968"
+       id="text2195-1-5-6-7-7"><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="386.58649"
+         y="50.022968"
+         id="tspan7209-9">measurement_table</tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="386.58649"
+         y="55.068256"
+         id="tspan10036">(only contains numerical </tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="386.58649"
+         y="60.113544"
+         id="tspan10038">measurements)</tspan></text>
+    <path
+       style="fill:#ffa24c;stroke:#131010;stroke-width:0.600001;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#TriangleStart-7-0);paint-order:stroke markers fill"
+       d="m 365.66275,54.057114 h 17.50183"
+       id="path2159-0-9"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:#ffa24c;stroke:#131010;stroke-width:0.600001;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#TriangleStart-7-0-9);paint-order:stroke markers fill"
+       d="m 405.99559,26.830982 v 17.50183"
+       id="path2159-0-9-4"
+       sodipodi:nodetypes="cc" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.619189;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       id="rect1743-1-9-8-3-8-5-9"
+       width="41.638149"
+       height="15.017718"
+       x="438.65778"
+       y="-5.3419971"
+       ry="0.31953993" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.510542;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       id="rect1743-1-9-8-3-8-5-9-0"
+       width="50.186096"
+       height="32.004959"
+       x="500.53824"
+       y="-13.949677"
+       ry="0.21677056" />
+    <text
+       xml:space="preserve"
+       style="font-size:4.03623px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';fill:#040404;fill-opacity:1;stroke:#000000;stroke-width:0.17602;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       x="439.50314"
+       y="-1.6392078"
+       id="text2195-1-5-6-7-7-3"><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="439.50314"
+         y="-1.6392078"
+         id="tspan7209-9-0">measurement_table</tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="439.50314"
+         y="3.4060798"
+         id="tspan10036-9">(only contains numerical </tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="439.50314"
+         y="8.4513674"
+         id="tspan10038-2">measurements)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4.03623px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';fill:#040404;fill-opacity:1;stroke:#000000;stroke-width:0.17602;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       x="502.64429"
+       y="-9.07022"
+       id="text2195-1-5-6-7-7-3-8-8"><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="502.64429"
+         y="-9.07022"
+         id="tspan10038-2-7-9">full_estimation_table_size</tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="502.64429"
+         y="-4.0249324"
+         id="tspan13421">(contains average body size,</tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="502.64429"
+         y="1.0203552"
+         id="tspan13423">and size binned in small, </tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="502.64429"
+         y="6.0656428"
+         id="tspan13425">medium, large categories</tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="502.64429"
+         y="11.11093"
+         id="tspan14277">for all taxonomic groups </tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="502.64429"
+         y="16.156218"
+         id="tspan14281">supplied) </tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="502.64429"
+         y="21.201506"
+         id="tspan12537-9" /></text>
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.510542;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       id="rect1743-1-9-8-3-8-5-9-0-3"
+       width="50.186096"
+       height="32.004959"
+       x="357.64044"
+       y="67.478119"
+       ry="0.21677056" />
+    <text
+       xml:space="preserve"
+       style="font-size:4.03623px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';fill:#040404;fill-opacity:1;stroke:#000000;stroke-width:0.17602;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       x="359.74652"
+       y="72.357582"
+       id="text2195-1-5-6-7-7-3-8-8-1"><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="359.74652"
+         y="72.357582"
+         id="tspan10038-2-7-9-29">full_estimation_table_size</tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="359.74652"
+         y="77.40287"
+         id="tspan13421-6">(contains average body size,</tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="359.74652"
+         y="82.448158"
+         id="tspan13423-1">and size binned in small, </tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="359.74652"
+         y="87.493446"
+         id="tspan13425-1">medium, large categories</tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="359.74652"
+         y="92.538734"
+         id="tspan14277-6">for all taxonomic groups </tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="359.74652"
+         y="97.584023"
+         id="tspan14281-8">supplied) </tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="359.74652"
+         y="102.62931"
+         id="tspan12537-9-0" /></text>
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.47519;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       id="rect1743-1-9-8-3-8-5-9-0-1"
+       width="50.221447"
+       height="27.706619"
+       x="434.26068"
+       y="30.281929"
+       ry="0.18765777" />
+    <text
+       xml:space="preserve"
+       style="font-size:4.03623px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';fill:#040404;fill-opacity:1;stroke:#000000;stroke-width:0.17602;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       x="436.38443"
+       y="35.179062"
+       id="text2195-1-5-6-7-7-3-8-8-9"><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="436.38443"
+         y="35.179062"
+         id="tspan10038-2-7-9-2">full_estimation_table_model</tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="436.38443"
+         y="40.22435"
+         id="tspan14281-3">(contains allometric models</tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="436.38443"
+         y="45.269638"
+         id="tspan14521">log10(body mass) ~ log10(</tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="436.38443"
+         y="50.314926"
+         id="tspan14523">body size) for all </tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="436.38443"
+         y="55.360214"
+         id="tspan14525">taxonomic groups supplied)</tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="436.38443"
+         y="60.405499"
+         id="tspan12537-9-4" /></text>
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.430624;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       id="rect1743-1-9-8-3-8-5-9-0-1-9"
+       width="50.266014"
+       height="22.733225"
+       x="549.4234"
+       y="102.44984"
+       ry="0.15397282" />
+    <text
+       xml:space="preserve"
+       style="font-size:4.03623px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';fill:#040404;fill-opacity:1;stroke:#000000;stroke-width:0.17602;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       x="550.20093"
+       y="107.36926"
+       id="text2195-1-5-6-7-7-3-8-8-9-5"><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="550.20093"
+         y="107.36926"
+         id="tspan14525-4">1. your data with doucmented</tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="550.20093"
+         y="112.41454"
+         id="tspan15684">    estimations</tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="550.20093"
+         y="117.45983"
+         id="tspan15686">2. all used size estimations</tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="550.20093"
+         y="122.50512"
+         id="tspan15690">3. all used allometric models</tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="550.20093"
+         y="127.55041"
+         id="tspan12537-9-4-0" /></text>
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.47519;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       id="rect1743-1-9-8-3-8-5-9-0-1-2"
+       width="50.221447"
+       height="27.706619"
+       x="431.75171"
+       y="71.223915"
+       ry="0.18765777" />
+    <text
+       xml:space="preserve"
+       style="font-size:4.03623px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';fill:#040404;fill-opacity:1;stroke:#000000;stroke-width:0.17602;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       x="433.87546"
+       y="76.121048"
+       id="text2195-1-5-6-7-7-3-8-8-9-1"><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="433.87546"
+         y="76.121048"
+         id="tspan10038-2-7-9-2-1">full_estimation_table_model</tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="433.87546"
+         y="81.166336"
+         id="tspan14281-3-5">(contains allometric models</tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="433.87546"
+         y="86.211624"
+         id="tspan14521-5">log10(body mass) ~ log10(</tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="433.87546"
+         y="91.256912"
+         id="tspan14523-0">body size) for all </tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="433.87546"
+         y="96.3022"
+         id="tspan14525-7">taxonomic groups supplied)</tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="433.87546"
+         y="101.34749"
+         id="tspan12537-9-4-7" /></text>
+    <path
+       style="fill:#ffa24c;stroke:#131010;stroke-width:0.600001;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#TriangleStart-7-0-3);paint-order:stroke markers fill"
+       d="m 480.72529,1.824713 h 17.50183"
+       id="path2159-0-9-2"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:#ffa24c;stroke:#131010;stroke-width:0.600001;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#TriangleStart-7-0-9-6);paint-order:stroke markers fill"
+       d="M 459.37141,10.4056 V 27.90743"
+       id="path2159-0-9-4-9"
+       sodipodi:nodetypes="cc" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.352089;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       id="rect1743-1-9-8-6"
+       width="20.608891"
+       height="9.8106804"
+       x="346.39343"
+       y="108.91111"
+       ry="0.20874701" />
+    <text
+       xml:space="preserve"
+       style="font-size:4.03623px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';fill:#040404;fill-opacity:1;stroke:#000000;stroke-width:0.17602;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       x="348.65305"
+       y="115.08786"
+       id="text2195-1-5-51"><tspan
+         sodipodi:role="line"
+         id="tspan2193-8-7-2"
+         style="stroke-width:0.17602"
+         x="348.65305"
+         y="115.08786">Your data</tspan></text>
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.494824;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       id="rect1743-1-9-8-3-4"
+       width="41.306335"
+       height="9.6679449"
+       x="400.50473"
+       y="109.66676"
+       ry="0.20570996" />
+    <text
+       xml:space="preserve"
+       style="font-size:4.03623px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';fill:#040404;fill-opacity:1;stroke:#000000;stroke-width:0.17602;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       x="401.18417"
+       y="113.43174"
+       id="text2195-1-5-6-6"><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="401.18417"
+         y="113.43174"
+         id="tspan3956-2">Your data with size </tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="401.18417"
+         y="118.47703"
+         id="tspan15006">documented estimations</tspan></text>
+    <path
+       style="fill:#ffa24c;stroke:#131010;stroke-width:0.600001;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#TriangleStart-6);paint-order:stroke markers fill"
+       d="m 367.48745,114.9569 h 30.73099"
+       id="path2159-2"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:#ffa24c;stroke:#131010;stroke-width:0.600001;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#TriangleStart-6-1);paint-order:stroke markers fill"
+       d="m 382.64697,99.674923 0.16706,13.457257"
+       id="path2159-2-2"
+       sodipodi:nodetypes="cc" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.494824;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       id="rect1743-1-9-8-3-4-5"
+       width="41.306335"
+       height="9.6679449"
+       x="475.20822"
+       y="109.09655"
+       ry="0.20570996" />
+    <text
+       xml:space="preserve"
+       style="font-size:4.03623px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';fill:#040404;fill-opacity:1;stroke:#000000;stroke-width:0.17602;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       x="475.88766"
+       y="112.8615"
+       id="text2195-1-5-6-6-4"><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="475.88766"
+         y="112.8615"
+         id="tspan3956-2-6">Your data with biomass </tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.17602"
+         x="475.88766"
+         y="117.90679"
+         id="tspan15006-9">documented estimations</tspan></text>
+    <path
+       style="fill:#ffa24c;stroke:#131010;stroke-width:0.600001;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#TriangleStart-6-6);paint-order:stroke markers fill"
+       d="m 442.19092,114.38667 h 30.73099"
+       id="path2159-2-8"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:#ffa24c;stroke:#131010;stroke-width:0.600001;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#TriangleStart-6-6-1);paint-order:stroke markers fill"
+       d="m 516.53527,114.50072 h 30.73099"
+       id="path2159-2-8-1"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:#ffa24c;stroke:#131010;stroke-width:0.600001;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#TriangleStart-6-1-5);paint-order:stroke markers fill"
+       d="m 457.35044,99.104694 0.16706,13.457256"
+       id="path2159-2-2-6"
+       sodipodi:nodetypes="cc" />
   </g>
 </svg>

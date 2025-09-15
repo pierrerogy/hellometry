@@ -19,27 +19,16 @@ knitr::opts_chunk$set(
 </p>
 
 Welcome to hellometry! This simple, lightweight package allows you to quickly
-estimate body size and biomass from any kind of data. Although originally 
-developped for the Bromeliad Working Group (BWG) database, it is compatible with
-any kind of data, provided you follow a few simple rules of column naming. These 
-are as follow: <br>
+impute missing body size and body mass measurements in the supplied data frame (or tibble). The package uses existing measurements in your data frame (tibble) to estimate the missing ones, so, essentially, the better the data supplied the better will be the estimations. Although originally developed for the Bromeliad Working Group (BWG) database, it is compatible with any kind of data, provided you follow a few simple rules of column naming. These are as follow: <br>
 - column with measurements needs to be called "size_mm", and only accepts numerical measurements or "unknown", "small", "medium" or "large" as categorical values <br>
-- column with development stage of specimens (larva/pupa/adult) needs to be called "abundance" <br>
+- column with development stage of specimens (larva/pupa/adult) needs to be called "stage" <br>
 - column with abundance of specimens needs to be called "abundance" <br>
 - column with biomass of specimens needs to be called 'biomass_mg'
 - for BWG members, column with BWG names needs to be called "bwg_name" <br>
 <br>
 The idea of the package, wrapped in `hellometry()` is rather simple. First, a `measurement_table` is compiled, with your own measurements, and/or those provided 
 by the BWG database, and/or some measurements collected by BWG members but not 
-present in the database. This table is then used to compute every possible size estimations, and allometric model with  `full_estimation_table()`. Models are 
-deleted if p > 0.05 or R2 > 0.95. Finally, the size estimation and model at the 
-lowest possible taxonomic level are joined back to the data, and used to estimate 
-biomass at that particular row. `hellometry()` returns a list of three elements:
-your data with estimated body sizes and biomasses, and column with information
-on the level at which were performed the estimations, a tibble with all unique
-size estimations that were joined to your data, and a tibble with all unique
-allometric models that were joined to your data.
-<br>
+present in the database. This table is then used to compute every possible size estimations, and allometric linear models with  `full_estimation_table()`. Models are  deleted if p > 0.05 or R2 > 0.95. Finally, the size estimation and model at the  lowest possible taxonomic level are joined back to the data, and used to estimate  biomass at that particular row. `hellometry()` returns a list of three elements: your data with estimated body sizes and biomasses, and column with information on the level at which were performed the estimations, a tibble with all unique size estimations that were joined to your data, and a tibble with all unique allometric models that were joined to your data. <br>
 
 
 
@@ -295,7 +284,7 @@ size_estimation_table <-
 dplyr::glimpse(size_estimation_table)
 
 ## Get all possible models
-### Note that the package filters out models wiht p >0.05 and R2 > 0.95 to not include overfitted models
+### Note that the package filters out models with p >0.05 and R2 < 0.95 to not include overfitted models
 model_estimation_table <- 
   full_estimation_table(level_vec  = level_vec , 
                         measurement_table = dry_wet(measurement_table,
@@ -308,7 +297,7 @@ dplyr::glimpse(model_estimation_table)
 
 ## Experimental feature: traits 
 Let's say that you do not have valid models under a taxonomic level that feels satisfying (e.g. order). Here one alternative would be to use traits instead of taxonomy to infer similarities between species. For example, in a bromeliad context, two small, white, undefended worm-like creatures have a high likelihood of having similar body masses if of the same size.<br>
-The package contains some function (currently in development to help you do so). So far, they are not incorporated into the `hellometry()` main function, but can get you as far as `full_estimation_table()`. To use them, you would need to supply in `measurement_table` a set of columns that contain <b>crisp</b> traits. The functions will only work with crisp traits with discrete integer values, and will group species with those that have trait values +/-1 those of the focus species. Here is one example with the BWG database
+The package contains some function (currently in development to help you do so). So far, they are not incorporated into the `hellometry()` main function, but can get you as far as `full_estimation_table()`. To use them, you would need to supply in `measurement_table` a set of columns that contain <b>[fuzzy]( https://doi.org/10.1111/j.1365-2427.1994.tb01742.x)</b> traits. The functions will only work with crisp traits with discrete integer values, and will group species with those that have trait values +/-1 those of the focus species. Here is one example with the BWG database
 ```{r}
 # Make vector with BWG crisp trait columns
 trait_columns <- 
