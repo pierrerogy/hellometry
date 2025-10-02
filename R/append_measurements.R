@@ -17,11 +17,11 @@ append_measurements <- function(measurement_table, dats, level_vec){
       dats %>% 
       ## Only keep numerical measurements
       ## Suppress warnings too
-      dplyr::mutate(size_mm = as.numeric(size_mm)) %>% 
-      dplyr::filter(!is.na(size_mm)) %>% 
+      dplyr::mutate(size_col = as.numeric(size_col)) %>% 
+      dplyr::filter(!is.na(size_col)) %>% 
       dplyr::select(tidyselect::any_of(c(level_vec,
-                    "stage", "abundance", "size_mm", 
-                    "biomass_mg", "biomass_type"))))
+                    "stage", "abundance", "size_col", 
+                    "biomass_col", "biomass_type"))))
   
   # Bind new species to measurement table
   measurement_table <-

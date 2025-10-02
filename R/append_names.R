@@ -17,24 +17,24 @@ append_names <- function(measurement_table, dats, level_vec, no_BWG_data){
   measurement_stub <- 
     measurement_table %>% 
     dplyr::select(tidyselect::any_of(c(level_vec,
-                                       "stage", "abundance", "size_mm", 
-                                       "biomass_mg", "biomass_type"))) %>% 
+                                       "stage", "abundance", "size_col", 
+                                       "biomass_col", "biomass_type"))) %>% 
     unique()
   
   # Check if any species not present in the database
   data_stub <- 
     dats %>% 
     dplyr::select(tidyselect::any_of(c(level_vec,
-                                       "stage", "abundance", "size_mm", 
-                                       "biomass_mg", "biomass_type"))) %>% 
+                                       "stage", "abundance", "size_col", 
+                                       "biomass_col", "biomass_type"))) %>% 
     unique() %>% 
     ## Remove all species present in the database already 
     ## Of course remove traits if in level_vec
     dplyr::anti_join(measurement_stub,
                      by = level_vec[level_vec %notin% "traits"]) %>% 
     ## Convert all sizes and biomasses to NA
-    dplyr::mutate(size_mm = NA,
-                  biomass_mg = NA) %>% 
+    dplyr::mutate(size_col = NA,
+                  biomass_col = NA) %>% 
     ## Just make sure all taxonomic levels are characters
     dplyr::mutate(dplyr::across(tidyselect::any_of(level_vec), 
                                 as.character))

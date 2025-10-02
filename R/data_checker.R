@@ -9,8 +9,8 @@ data_checker <- function(dats, biomass_type, use_BWG_db, no_BWG_data){
   # Important columns have proper names
   if("abundance" %notin% colnames(dats))
     stop("Please call column with abundance values 'abundance'")
-  if("size_mm" %notin% colnames(dats))
-    stop("Please call column with specimen measurement values 'size_mm'")
+  if("size_col" %notin% colnames(dats))
+    stop("Please call column with specimen measurement values 'size_col'")
   if("stage" %notin% colnames(dats))
     stop("Please call column with life stage (larva/pupa/adult) 'stage'")
   if("biomass_type" %notin% colnames(dats))

@@ -4,18 +4,23 @@
 #' @param level_vec Vector of taxonomic levels over which to iterate estimations
 #' @param measurement_table A table with the numerical measurements and biomass 
 #' used to compute allometric lms 
-#' @param what Should size (what = "size_mm") or biomass (what = "biomass_mg") be 
+#' @param what Should size (what = "size_col") or biomass (what = "biomass_col") be 
 #' estimated? 
 #' @param model What kind of model should be computed, so far only lm
 #' @param traits Should the table be computed by traits or not? Default FALSE
 #' @param trait_columns List of traits to match, should be column names in measurement_table
+#' @param r_square_cutoff_upper Upper cutoff for R2 in allometric models, models with values above it will not be used un estimations. Default is 0.95 to avoid overfit models
+#' @param r_square_cutoff_lower Lower cutoff for R2 in allometric models, models with values below it will not be used un estimations. Default is 0.
+#' @param p_val_cutoff Upper cutoff for p-value of allometric models, models with p_value above it will not be used in estimations. Default is 0.05.
 #' @return Tibble with size estimations or allometric models used in estimations. 
-#' Note that only models with p < 0.05 and R^2 < 0.95 are kept.
 #' @export
 #' 
 full_estimation_table <- function(level_vec, measurement_table,
                                   what, model = "lm", traits = FALSE,
-                                  trait_columns = c()){ 
+                                  trait_columns = c(),
+                                  r_square_cutoff_upper = 0.95,
+                                  r_square_cutoff_lower = 0,
+                                  p_val_cutoff = 0.05){ 
     
   # If we want to get estimations with traits
   if(traits == T) {
@@ -30,15 +35,15 @@ full_estimation_table <- function(level_vec, measurement_table,
   if(traits == F) {
   # Get all possible combinations of data
     ret <- 
-      ## Split into list of tibbles, which each containing level and size_mm
+      ## Split into list of tibbles, which each containing level and size_col
       purrr::map(
         level_vec[level_vec != "traits"],
         ~ measurement_table %>%
-          ## Select only the level and size_mm
+          ## Select only the level and size_col
           dplyr::select(name = dplyr::all_of(.x), 
-                        stage, size_mm, biomass_mg) %>%
+                        stage, size_col, biomass_col) %>%
           ## Remove NAs, name being the taxonomic level
-          dplyr::filter(!is.na(name) & !is.na(size_mm)) %>% 
+          dplyr::filter(!is.na(name) & !is.na(size_col)) %>% 
           ## Add column with level name
           dplyr::mutate(level = .x)) %>% 
       ## Remove empty levels 
@@ -49,8 +54,8 @@ full_estimation_table <- function(level_vec, measurement_table,
         ~ .x %>%
             ## Group by level, name and stage
             dplyr::group_by(level, name, stage) %>%
-            ## Filter out those with less than three unique size_mm
-            dplyr::filter(dplyr::n_distinct(size_mm) >= 3) %>%
+            ## Filter out those with less than three unique size_col
+            dplyr::filter(dplyr::n_distinct(size_col) >= 3) %>%
             ## Ungroup to avoid future issues
             dplyr::ungroup()) %>% 
       ## Remove empty levels 
@@ -58,7 +63,7 @@ full_estimation_table <- function(level_vec, measurement_table,
     
 
   # If size we need the weighted average and size bins
-    if(what == "size_mm"){
+    if(what == "size_col"){
       ret <- 
         ret %>% 
         purrr::map(.,
@@ -66,11 +71,11 @@ full_estimation_table <- function(level_vec, measurement_table,
                      ## Group by name
                      dplyr::group_by(level, name, stage) %>%
                      ## Make a column with terciles of sizes
-                     dplyr::mutate(size_group = ntile(size_mm, 3)) %>%
+                     dplyr::mutate(size_group = ntile(size_col, 3)) %>%
                      ## Group by size group and get mean of each
                      dplyr::group_by(level, name, stage, size_group) %>%
                      dplyr::summarise(
-                       size_mm = mean(size_mm),
+                       size_col = mean(size_col),
                        .groups = "drop") %>%
                      ## Create a new column with size category
                      dplyr::mutate(size_category = dplyr::case_when(
@@ -78,13 +83,13 @@ full_estimation_table <- function(level_vec, measurement_table,
                        size_group == 2 ~ "medium",
                        size_group == 3 ~ "large")) %>%
                      ## Keep relevant columns
-                     dplyr::select(level, name, stage, size_category, size_mm) %>% 
+                     dplyr::select(level, name, stage, size_category, size_col) %>% 
                      ## Add overall mean
                      dplyr::bind_rows(
                        .x %>%
                          # Get average grouping by level and name
                          group_by(level, name, stage) %>%
-                         summarise(size_mm = mean(size_mm), 
+                         summarise(size_col = mean(size_col), 
                                    .groups = "drop") %>%
                          ### Make size category column (to fit this average with unknown)
                          dplyr::mutate(size_category = "unknown"))) %>% 
@@ -93,7 +98,7 @@ full_estimation_table <- function(level_vec, measurement_table,
                    
                    
     # If biomass we need allometric equations               
-    if(what == "biomass_mg") {
+    if(what == "biomass_col") {
       ## Prepare data in common for models
       ret <- 
         ret %>% 
@@ -102,11 +107,11 @@ full_estimation_table <- function(level_vec, measurement_table,
         purrr::map(.,
                    ~ .x %>%
                      ### First remove all NAs in biomass
-                     dplyr::filter(!is.na(biomass_mg)) %>% 
+                     dplyr::filter(!is.na(biomass_col)) %>% 
                      ### Group by level, name and stage
                      dplyr::group_by(level, name, stage) %>%
-                     ### Filter out those with less than three unique size_mm
-                     dplyr::filter(dplyr::n_distinct(biomass_mg) >= 3)) %>% 
+                     ### Filter out those with less than three unique size_col
+                     dplyr::filter(dplyr::n_distinct(biomass_col) >= 3)) %>% 
         ## Remove empty levels 
         purrr::keep(function(x) nrow(x) > 0)
       
@@ -118,13 +123,14 @@ full_estimation_table <- function(level_vec, measurement_table,
                      ### Make a model column
                      ~ .x %>% 
                        dplyr::summarise(
-                         model = list(lm(log10(biomass_mg) ~ log10(size_mm), 
+                         model = list(lm(log10(biomass_col) ~ log10(size_col), 
                                     data = dplyr::cur_data())),
                          .groups = "keep") %>% 
-                       ### Filter out models with near-perfect fit
-                       dplyr::filter(summary(model[[1]])$r.squared < 0.95 &
+                       ### Filter out models based on R2 cutoff
+                       dplyr::filter(summary(model[[1]])$r.squared < r_square_cutoff_upper &
+                                       summary(model[[1]])$r.squared > r_square_cutoff_lower &
                                        ### and based on p value
-                                       summary(model[[1]])$coefficients[2, 4] < 0.05))}
+                                       summary(model[[1]])$coefficients[2, 4] < p_val_cutoff))}
       ## If we want other models
       if(model == "brms"){
         ret <- 

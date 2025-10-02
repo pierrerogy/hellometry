@@ -1,4 +1,4 @@
-dataset_id,dataset_name,species.key,bwg_name,stage,size_mm,bromeliad,abundance
+dataset_id,dataset_name,species.key,bwg_name,stage,size_col,bromeliad,abundance
 6,Cardoso2008,4676,Diptera.10,larva,unknown,211,0
 6,Cardoso2008,4676,Diptera.10,larva,unknown,216,0
 6,Cardoso2008,4676,Diptera.10,larva,unknown,221,0

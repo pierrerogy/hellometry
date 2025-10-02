@@ -40,7 +40,7 @@ make_trait_table <- function(measurement_table,
                  ## Add measurements
                  dplyr::left_join(measurement_table %>% 
                                     ## Keep important columns only
-                                    dplyr::select(bwg_name, size_mm, biomass_mg),
+                                    dplyr::select(bwg_name, size_mm, biomass_col),
                                   by = "bwg_name",
                                   ## Just because one species can have several measurements
                                   relationship = "many-to-many") %>% 

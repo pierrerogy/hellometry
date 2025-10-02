@@ -2,9 +2,9 @@
 #'
 #' Wrapper function, input your data and get size and measurement. 
 #' Please name column with number of specimen "abundance", column with measurement 
-#' in mm "size_mm", column with life stage (larva/pupa/adult) "stage", column 
+#' in mm "size_col", column with life stage (larva/pupa/adult) "stage", column 
 #' with biomass type (dry/wet) "biomass_type", and the column with biomass in mg 
-#' "biomass_mg".
+#' "biomass_col".
 #' If you do not have a numerical measurement for a given specimen, the function 
 #' can do size estimations if you input "small", "medium", "large" or "unknown". 
 #' In this case, the algorithm will use existing size measurements for the species, 
@@ -19,7 +19,7 @@
 #' 
 #'
 #' @param dats The input data table, please include columns columns "abundance", 
-#' "size_mm", "biomass_mg", "stage" (larva/pupa/adult, if you use the BWG database, 
+#' "size_col", "biomass_col", "stage" (larva/pupa/adult, if you use the BWG database, 
 #' please only put 'adult' for non-insect invertebrates)
 #' @param level_vec A character vector indicating the taxonomic levels present 
 #' in your data, in increasing order of taxonomic resolution.
@@ -35,7 +35,9 @@
 #' @param no_BWG_data Logical. If TRUE, no BWG-specific data will be used for estimations, 
 #' only the data you provide. This is useful if you have your own measurement 
 #' database or work on a different system (default FALSE).
-#' 
+#' @param r_square_cutoff_upper Upper cutoff for R2 in allometric models, models with values above it will not be used un estimations. Default is 0.95 to avoid overfit models
+#' @param r_square_cutoff_lower Lower cutoff for R2 in allometric models, models with values below it will not be used un estimations. Default is 0.
+#' @param p_val_cutoff Upper cutoff for p-value of allometric models, models with p_value above it will not be used in estimations. Default is 0.05.
 #' @return A list with three dataframes:
 #' - data: the input data with added size and biomass estimations, and new columns 
 #'         with the taxonomic level and name of the taxon at which the estimation 
@@ -47,16 +49,15 @@
 #'                      for taxonomic level and name.
 #' See `full_estimation_table()` to get all possible size estimations and models
 #' for your data
-#' 
-#' 
-#' 
-#' 
-#' 
-#' 
-#' 
-#' 
 #' @export
-hellometry <- function(dats, level_vec, biomass_type = "dry", use_BWG_db = TRUE, no_BWG_data = FALSE) {
+hellometry <- function(dats, 
+                       level_vec, 
+                       biomass_type = "dry", 
+                       use_BWG_db = TRUE, 
+                       no_BWG_data = FALSE,
+                       r_square_cutoff_upper = 0.95,
+                       r_square_cutoff_lower = 0,
+                       p_val_cutoff = 0.05) {
   
   # Get new species names, with catch if no bwg_name in level_vec
   if("bwg_name" %in% level_vec & any(is.na(dats$bwg_name))) {
@@ -99,19 +100,19 @@ hellometry <- function(dats, level_vec, biomass_type = "dry", use_BWG_db = TRUE,
   full_estimation_table_size <- 
     full_estimation_table(level_vec = level_vec, 
                           measurement_table = measurement_table,
-                          what = "size_mm") 
+                          what = "size_col") 
   
   # Join size estimations to the original data
   size_estimations <- 
     ret %>% 
     ## Filter numerical measurements
-    dplyr::filter(size_mm %in% c("small", "medium", "large", "unknown")) %>% 
+    dplyr::filter(size_col %in% c("small", "medium", "large", "unknown")) %>% 
     ## Select columns we need
     ## Only keep columns we want
     dplyr::select(row, rev(dplyr::any_of(level_vec)), 
-                  stage, size_mm) %>% 
+                  stage, size_col) %>% 
     ## Rename size category to join to estimation result
-    dplyr::rename(size_category = size_mm) %>% 
+    dplyr::rename(size_category = size_col) %>% 
     ## Loop around taxonomic levels and add to main data
     purrr::reduce(
       ### Levels to loop around
@@ -126,20 +127,20 @@ hellometry <- function(dats, level_vec, biomass_type = "dry", use_BWG_db = TRUE,
                            ### Rename taxon_name to match the corresponding level column (e.g., "genus")
                            ### Rename size to a level-specific name (e.g., "genus_size") to avoid overwriting
                            dplyr::select(!!sym(.y) := name, ### !!sym() because we are pasting character string that needs to be interpreted as column name 
-                                         !!paste0(.y, "_size_mm") := size_mm, 
+                                         !!paste0(.y, "_size_col") := size_col, 
                                          stage, size_category),
                          ### Join by column name, stage and size category to get a new column for that trophic level
                          by = c(.y, "stage", "size_category"))) %>%
     ## Now that all estimations at all levels have been joined, pick the one at the smallest taxonomic level
     dplyr::mutate(
-      ### Coalesce all size_mm columns to get the first non-NA value
+      ### Coalesce all size_col columns to get the first non-NA value
       ### Follows the order of the given vector!
-      size_mm = dplyr::coalesce(!!!syms(paste0(level_vec[level_vec != "traits"], 
-                                               "_size_mm"))),
+      size_col = dplyr::coalesce(!!!syms(paste0(level_vec[level_vec != "traits"], 
+                                               "_size_col"))),
       ### Make a new column that indicates the taxonomic level at which the estimation was kept
       ### case_when chooses the first TRUE condition and assigns its corresponding value (the taxonomic level name)
       size_level = dplyr::case_when(!!!purrr::imap(paste0(level_vec[level_vec != "traits"], 
-                                                          "_size_mm"), 
+                                                          "_size_col"), 
                                                    ### Check which one of the values comes first as non-NA
                                                    ~ expr(!is.na(!!sym(.x)) ~ ### !!sym() because we are pasting character string that needs to be interpreted as column name
                                                             !!level_vec[level_vec != "traits"][.y]))),
@@ -149,7 +150,7 @@ hellometry <- function(dats, level_vec, biomass_type = "dry", use_BWG_db = TRUE,
                   expr(size_level == !!.x ~ !!sym(.x))))) %>%
     ## Only keep columns we want
     dplyr::select(row, stage,
-                  size_mm, size_category,
+                  size_col, size_category,
                   size_level, size_taxon_name) 
   
   # Getting biomass models
@@ -163,16 +164,16 @@ hellometry <- function(dats, level_vec, biomass_type = "dry", use_BWG_db = TRUE,
       full_estimation_table(level_vec = level_vec, 
                             measurement_table = dry_wet(measurement_table,
                                                         biomass_type = "dry"),
-                            what = "biomass_mg"))
+                            what = "biomass_col"))
   
   # Join models to the original data
   model_estimations <- 
     ret %>% 
     ## Get NA biomasses
-    dplyr::filter(is.na(biomass_mg)) %>% 
+    dplyr::filter(is.na(biomass_col)) %>% 
     ## Select columns we need
     dplyr::select(row, dplyr::any_of(level_vec), 
-                  stage, biomass_mg, biomass_type) %>%
+                  stage, biomass_col, biomass_type) %>%
     ## Loop around taxonomic levels and add to main data
     purrr::reduce(
       ### Levels to loop around
@@ -245,18 +246,18 @@ hellometry <- function(dats, level_vec, biomass_type = "dry", use_BWG_db = TRUE,
                          dplyr::select(-stage),
                        by = "row") %>% 
       ## Combine by new and old sizes
-      dplyr::mutate(size_mm.x = as.numeric(size_mm.x),
-                    size_mm = dplyr::coalesce(size_mm.x, size_mm.y)) %>%
+      dplyr::mutate(size_col.x = as.numeric(size_col.x),
+                    size_col = dplyr::coalesce(size_col.x, size_col.y)) %>%
       ## Join models by row number
-      dplyr::select(-size_mm.x, -size_mm.y) %>% 
+      dplyr::select(-size_col.x, -size_col.y) %>% 
       dplyr::left_join(model_estimations %>% 
                          dplyr::select(-stage),
                        by = "row") %>%
       ## Now get estimations of biomass for a single individual
       dplyr::mutate(
         ### Iterate over the list column
-        biomass = purrr::map2_dbl(
-          model, size_mm, ~ {
+        biomass = purrr::map2(
+          model, size_col, ~ {
             ### If the cell is NULL (biomass was inputted),make NA
             if (is.null(.x)) {
               NA_real_}
@@ -266,28 +267,47 @@ hellometry <- function(dats, level_vec, biomass_type = "dry", use_BWG_db = TRUE,
             else {
               ### if we have all the data we need, use predict to get estimation
               predict(.x, 
-                      newdata = data.frame(size_mm = .y))}})) %>% 
-      ## Convert back to normal unit (model uses log10) and multiply by abundance
-      dplyr::mutate(biomass = (10^biomass)*abundance) %>% 
+                      newdata = data.frame(size_col = .y),
+                      interval = "prediction")}})) %>% 
+      ## Do rowwise operations
+      dplyr::rowwise() %>% 
+      ## Convert to normal units
+      dplyr::mutate(biomass_lower = 10^biomass[2],
+                    biomass_upper = 10^biomass[3],
+                    biomass = 10^biomass[1]*abundance) %>% 
+      ## Get new prediction error interval related to abundace
+      ## First get individual SE, EM = 1.96 * SEindividual
+      ## Multiply by squareroot of abundance to get SEtotal
+      ## Multiply by 1.96 to get back to total EM  dplyr::mutate(prediction_interval = (((biomass_upper - biomass_lower)/2)/1.96)*sqrt(abundance)*1.96) %>% 
+      dplyr::mutate(prediction_interval = (((biomass_upper - biomass_lower)/2)/1.96)*sqrt(abundance)*1.96) %>% 
+      dplyr::mutate(biomass_lower = biomass - prediction_interval,
+                    biomass_upper = biomass + prediction_interval) %>% 
+      ## Remove predicioon interval
+      dplyr::select(-prediction_interval) %>% 
+      ## Ungroup
+      dplyr::ungroup() %>% 
       ## Coalesce the two biomass columns
-      dplyr::mutate(biomass_mg = dplyr::coalesce(biomass, biomass_mg)) %>%
+      dplyr::mutate(biomass_col = dplyr::coalesce(biomass, biomass_col)) %>%
       ## Remove biomass column
       dplyr::select(-biomass) %>%
-      ## If we have a value in size_mm but no size estimation, make it "raw_data"
+      ## If we have a value in size_col but no size estimation, make it "raw_data"
       dplyr::mutate(dplyr::across(c(size_category, size_level, size_taxon_name),
                                   ~ ifelse(is.na(.),
                                            "raw_data", .))) %>% 
       ## If we have no biomass estimation say that estimation failed
       dplyr::mutate(dplyr::across(c(model_level, model_taxon_name),
-                                  ~ ifelse(is.na(biomass_mg),
+                                  ~ ifelse(is.na(biomass_col),
                                            "estimation_failed", .))) %>% 
       ## Finally if we have NAs left in model_level and model_taxon_name, make them "raw_data"
       dplyr::mutate(dplyr::across(c(model_level, model_taxon_name),
                                   ~ ifelse(is.na(.),
                                            "raw_data", .))) %>% 
-      ## I am a bit of a maniac so have size_mm before biomass_mg
-      dplyr::relocate(size_mm, 
-                      .before = "biomass_mg"))
+      ## I am a bit of a maniac so have size_col before biomass_col, and intevals after
+      dplyr::relocate(size_col, 
+                      .before = "biomass_col") %>% 
+    dplyr::relocate(biomass_lower, biomass_upper, 
+                    .after = "biomass_col"))
+  
   
   
   # Return a list of three dataframes
@@ -302,11 +322,11 @@ hellometry <- function(dats, level_vec, biomass_type = "dry", use_BWG_db = TRUE,
     size_estimations = 
       size_estimations %>% 
       ### Remove NAs
-      dplyr::filter(!is.na(size_mm)) %>%
+      dplyr::filter(!is.na(size_col)) %>%
       ### Make longer format 
       dplyr::select(level = size_level, 
                     name = size_taxon_name, 
-                    stage, size_category, size_mm) %>% 
+                    stage, size_category, size_col) %>% 
       ### Keep unique rows
       unique(),
     ## Model estimations

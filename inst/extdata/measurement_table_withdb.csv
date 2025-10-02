@@ -1,7 +1,7 @@
-species_id,bwg_name,domain,kingdom,phylum,subphylum,class,subclass,ord,subord,family,subfamily,tribe,genus,species,functional_group,BS1,BS2,BS3,BS4,BS5,LO1,LO2,LO3,LO4,LO5,LO6,LO7,MD1,MD2,MD3,MD4,MD5,MD6,MD7,MD8,BF1,BF2,BF3,BF4,stage,size_mm,biomass_type,biomass_mg,provenance,abundance
+species_id,bwg_name,domain,kingdom,phylum,subphylum,class,subclass,ord,subord,family,subfamily,tribe,genus,species,functional_group,BS1,BS2,BS3,BS4,BS5,LO1,LO2,LO3,LO4,LO5,LO6,LO7,MD1,MD2,MD3,MD4,MD5,MD6,MD7,MD8,BF1,BF2,BF3,BF4,stage,size_col,biomass_type,biomass_col,provenance,abundance
 3361,Copepoda.1,Eukarya,Animalia,Arthropoda,Crustacea,Maxillopoda,Copepoda,Harpacticoida,NA,Canthocamptidae,NA,NA,Bryocamptus,NA,filter.feeder,3,0,0,0,0,0,1,0,2,3,3,0,0,0,3,1,0,0,0,0,0,0,0,3,adult,NA,NA,NA,NA,0
 3366,Branchiopoda.2,Eukarya,Animalia,Arthropoda,Crustacea,Branchiopoda,Phyllopoda,Diplostraca,Cladocera,Daphniidae,NA,NA,NA,NA,filter.feeder,3,0,0,0,0,0,1,3,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,3,adult,NA,NA,NA,NA,0
-3371,Diptera.222,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,NA,NA,NA,NA,NA,NA,NA,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,3,1,larva,4.5,dry,0.06703333333333333,length.raw,1
+3371,Diptera.222,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,NA,NA,NA,NA,NA,NA,NA,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,3,1,larva,4.5,dry,0.067033333,length.raw,1
 3371,Diptera.222,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,NA,NA,NA,NA,NA,NA,NA,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,3,1,larva,5.5,dry,0.1475,length.raw,1
 3376,Diptera.223,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,NA,NA,NA,NA,NA,NA,NA,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,3,1,larva,NA,NA,NA,NA,0
 3381,Diptera.224,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,NA,NA,NA,NA,NA,NA,NA,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,3,1,larva,NA,NA,NA,NA,0
@@ -40,7 +40,7 @@ species_id,bwg_name,domain,kingdom,phylum,subphylum,class,subclass,ord,subord,fa
 3531,Diptera.425,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Ceratopogonidae,Forcipomyiinae,NA,Forcipomyia,NA,gatherer,0,3,0,0,0,0,0,0,3,1,0,0,0,2,2,0,0,0,0,0,0,0,3,0,larva,NA,NA,NA,NA,0
 3536,Diptera.498,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Ceratopogonidae,Ceratopogoninae,NA,Stilobezzia,NA,piercer,0,0,3,0,0,0,0,3,2,3,0,0,3,0,0,0,0,0,0,0,0,0,3,0,larva,NA,NA,NA,NA,0
 3541,Diptera.44,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Ceratopogonidae,NA,NA,NA,NA,gatherer,1,2,2,0,0,0,0,3,2,1,0,0,2,2,2,0,0,0,0,0,0,0,3,0,larva,NA,NA,NA,NA,0
-3546,Diptera.115,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Ceratopogonidae,Forcipomyiinae,NA,Forcipomyia,NA,gatherer,0,3,0,0,0,0,0,0,3,1,0,0,0,2,2,0,0,0,0,0,0,0,3,0,larva,5,dry,0.0637591235729322,length.raw,1
+3546,Diptera.115,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Ceratopogonidae,Forcipomyiinae,NA,Forcipomyia,NA,gatherer,0,3,0,0,0,0,0,0,3,1,0,0,0,2,2,0,0,0,0,0,0,0,3,0,larva,5,dry,0.063759124,length.raw,1
 3546,Diptera.115,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Ceratopogonidae,Forcipomyiinae,NA,Forcipomyia,NA,gatherer,0,3,0,0,0,0,0,0,3,1,0,0,0,2,2,0,0,0,0,0,0,0,3,0,larva,4,dry,0.06375,length.raw,1
 3546,Diptera.115,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Ceratopogonidae,Forcipomyiinae,NA,Forcipomyia,NA,gatherer,0,3,0,0,0,0,0,0,3,1,0,0,0,2,2,0,0,0,0,0,0,0,3,0,larva,2,dry,0.0098,length.raw,1
 3546,Diptera.115,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Ceratopogonidae,Forcipomyiinae,NA,Forcipomyia,NA,gatherer,0,3,0,0,0,0,0,0,3,1,0,0,0,2,2,0,0,0,0,0,0,0,3,0,larva,3,dry,0.025558246286892433,length.raw,1
@@ -145,13 +145,13 @@ species_id,bwg_name,domain,kingdom,phylum,subphylum,class,subclass,ord,subord,fa
 3756,Diptera.151,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Ceratopogonidae,Forcipomyiinae,NA,NA,NA,gatherer,0,3,2,0,0,0,0,2,2,1,0,0,0,2,2,0,0,0,0,0,0,0,3,0,larva,2,dry,0.0116,length.raw,1
 3756,Diptera.151,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Ceratopogonidae,Forcipomyiinae,NA,NA,NA,gatherer,0,3,2,0,0,0,0,2,2,1,0,0,0,2,2,0,0,0,0,0,0,0,3,0,larva,3,dry,0.0246,length.raw,1
 3761,Diptera.384,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Ceratopogonidae,Leptoconopinae,NA,NA,NA,gatherer,0,3,0,0,0,0,0,2,2,1,0,0,3,0,0,0,0,0,0,0,0,0,3,0,larva,6,dry,NA,length.interpolate,1
-3761,Diptera.384,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Ceratopogonidae,Leptoconopinae,NA,NA,NA,gatherer,0,3,0,0,0,0,0,2,2,1,0,0,3,0,0,0,0,0,0,0,0,0,3,0,larva,5,dry,0.0637591235729322,length.raw,1
+3761,Diptera.384,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Ceratopogonidae,Leptoconopinae,NA,NA,NA,gatherer,0,3,0,0,0,0,0,2,2,1,0,0,3,0,0,0,0,0,0,0,0,0,3,0,larva,5,dry,0.063759124,length.raw,1
 3771,Diptera.153,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Ceratopogonidae,Forcipomyiinae,NA,NA,NA,gatherer,0,3,2,0,0,0,0,2,2,1,0,0,0,2,2,0,0,0,0,0,0,0,3,0,larva,4,dry,0.06375,length.raw,1
 3771,Diptera.153,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Ceratopogonidae,Forcipomyiinae,NA,NA,NA,gatherer,0,3,2,0,0,0,0,2,2,1,0,0,0,2,2,0,0,0,0,0,0,0,3,0,larva,4,dry,0.06375,length.raw,1
 3771,Diptera.153,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Ceratopogonidae,Forcipomyiinae,NA,NA,NA,gatherer,0,3,2,0,0,0,0,2,2,1,0,0,0,2,2,0,0,0,0,0,0,0,3,0,larva,2,dry,0.0116,length.raw,1
 3771,Diptera.153,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Ceratopogonidae,Forcipomyiinae,NA,NA,NA,gatherer,0,3,2,0,0,0,0,2,2,1,0,0,0,2,2,0,0,0,0,0,0,0,3,0,pupa,2,dry,0.0116,length.raw,1
 3771,Diptera.153,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Ceratopogonidae,Forcipomyiinae,NA,NA,NA,gatherer,0,3,2,0,0,0,0,2,2,1,0,0,0,2,2,0,0,0,0,0,0,0,3,0,larva,3,dry,0.0246,length.raw,1
-3771,Diptera.153,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Ceratopogonidae,Forcipomyiinae,NA,NA,NA,gatherer,0,3,2,0,0,0,0,2,2,1,0,0,0,2,2,0,0,0,0,0,0,0,3,0,larva,5,dry,0.0637591235729322,length.raw,1
+3771,Diptera.153,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Ceratopogonidae,Forcipomyiinae,NA,NA,NA,gatherer,0,3,2,0,0,0,0,2,2,1,0,0,0,2,2,0,0,0,0,0,0,0,3,0,larva,5,dry,0.063759124,length.raw,1
 3771,Diptera.153,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Ceratopogonidae,Forcipomyiinae,NA,NA,NA,gatherer,0,3,2,0,0,0,0,2,2,1,0,0,0,2,2,0,0,0,0,0,0,0,3,0,larva,1,dry,0.0139,length.raw,1
 3776,Diptera.154,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Ceratopogonidae,Forcipomyiinae,NA,NA,NA,gatherer,0,3,2,0,0,0,0,2,2,1,0,0,0,2,2,0,0,0,0,0,0,0,3,0,larva,3,dry,0.0246,length.raw,1
 3776,Diptera.154,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Ceratopogonidae,Forcipomyiinae,NA,NA,NA,gatherer,0,3,2,0,0,0,0,2,2,1,0,0,0,2,2,0,0,0,0,0,0,0,3,0,larva,2,dry,0.0116,length.raw,1
@@ -439,7 +439,7 @@ species_id,bwg_name,domain,kingdom,phylum,subphylum,class,subclass,ord,subord,fa
 4381,Diptera.85,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Corethrellidae,Corethrellinae,NA,Corethrella,NA,engulfer,0,3,0,0,0,0,1,3,0,0,0,0,0,0,3,0,0,0,0,0,0,0,3,0,larva,4,dry,NA,length.interpolate,1
 4386,Diptera.84,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Corethrellidae,Corethrellinae,NA,Corethrella,NA,engulfer,0,3,0,0,0,0,1,3,0,0,0,0,0,0,3,0,0,0,0,0,0,0,3,0,larva,2,dry,0.0089,length.raw,1
 4386,Diptera.84,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Corethrellidae,Corethrellinae,NA,Corethrella,NA,engulfer,0,3,0,0,0,0,1,3,0,0,0,0,0,0,3,0,0,0,0,0,0,0,3,0,larva,4,dry,NA,length.interpolate,1
-4386,Diptera.84,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Corethrellidae,Corethrellinae,NA,Corethrella,NA,engulfer,0,3,0,0,0,0,1,3,0,0,0,0,0,0,3,0,0,0,0,0,0,0,3,0,larva,1,dry,0.005266666666666667,length.raw,1
+4386,Diptera.84,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Corethrellidae,Corethrellinae,NA,Corethrella,NA,engulfer,0,3,0,0,0,0,1,3,0,0,0,0,0,0,3,0,0,0,0,0,0,0,3,0,larva,1,dry,0.005266667,length.raw,1
 4386,Diptera.84,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Corethrellidae,Corethrellinae,NA,Corethrella,NA,engulfer,0,3,0,0,0,0,1,3,0,0,0,0,0,0,3,0,0,0,0,0,0,0,3,0,larva,3,dry,0.04135,length.raw,1
 4386,Diptera.84,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Corethrellidae,Corethrellinae,NA,Corethrella,NA,engulfer,0,3,0,0,0,0,1,3,0,0,0,0,0,0,3,0,0,0,0,0,0,0,3,0,pupa,2,dry,0.0089,length.raw,1
 4391,Diptera.87,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Corethrellidae,Corethrellinae,NA,Corethrella,NA,engulfer,0,3,0,0,0,0,1,3,0,0,0,0,0,0,3,0,0,0,0,0,0,0,3,0,larva,NA,NA,NA,NA,0
@@ -605,7 +605,7 @@ species_id,bwg_name,domain,kingdom,phylum,subphylum,class,subclass,ord,subord,fa
 4761,Diptera.192,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Culicidae,Culicinae,NA,Orthopodomyia,NA,filter.feeder,0,0,3,0,0,0,2,3,0,0,0,0,0,0,3,0,0,0,0,0,0,0,3,0,larva,1,dry,0.0049,length.raw,1
 4761,Diptera.192,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Culicidae,Culicinae,NA,Orthopodomyia,NA,filter.feeder,0,0,3,0,0,0,2,3,0,0,0,0,0,0,3,0,0,0,0,0,0,0,3,0,larva,4,dry,0.0812,length.raw,1
 4761,Diptera.192,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Culicidae,Culicinae,NA,Orthopodomyia,NA,filter.feeder,0,0,3,0,0,0,2,3,0,0,0,0,0,0,3,0,0,0,0,0,0,0,3,0,larva,6,dry,0.1802,length.raw,1
-4761,Diptera.192,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Culicidae,Culicinae,NA,Orthopodomyia,NA,filter.feeder,0,0,3,0,0,0,2,3,0,0,0,0,0,0,3,0,0,0,0,0,0,0,3,0,larva,2,dry,0.0117196287626826,length.raw,1
+4761,Diptera.192,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Culicidae,Culicinae,NA,Orthopodomyia,NA,filter.feeder,0,0,3,0,0,0,2,3,0,0,0,0,0,0,3,0,0,0,0,0,0,0,3,0,larva,2,dry,0.011719629,length.raw,1
 4761,Diptera.192,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Culicidae,Culicinae,NA,Orthopodomyia,NA,filter.feeder,0,0,3,0,0,0,2,3,0,0,0,0,0,0,3,0,0,0,0,0,0,0,3,0,larva,1.5,dry,0.01075,length.raw,1
 4766,Diptera.282,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Culicidae,Culicinae,NA,Toxorhynchites,NA,engulfer,0,0,0,3,0,0,3,1,0,0,0,0,0,0,3,0,0,0,0,0,0,0,3,0,larva,NA,NA,NA,NA,0
 4771,Diptera.296,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Culicidae,Culicinae,NA,Wyeomyia,abebela,filter.feeder,0,3,0,0,0,0,1,3,0,0,0,0,0,0,3,0,0,0,0,0,0,0,3,0,larva,4,dry,NA,length.interpolate,1
@@ -795,7 +795,7 @@ species_id,bwg_name,domain,kingdom,phylum,subphylum,class,subclass,ord,subord,fa
 5151,Diptera.494,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,NA,NA,NA,NA,NA,NA,NA,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,3,1,larva,NA,NA,NA,NA,0
 5156,Diptera.136,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Cecidomyiidae,NA,NA,NA,NA,piercer,0,3,0,0,0,0,0,0,3,2,0,0,3,0,0,0,0,0,0,0,0,0,0,3,larva,3,dry,0.025558246286892433,length.raw,1
 5156,Diptera.136,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Cecidomyiidae,NA,NA,NA,NA,piercer,0,3,0,0,0,0,0,0,3,2,0,0,3,0,0,0,0,0,0,0,0,0,0,3,larva,2,dry,0.010766666666666667,length.raw,1
-5156,Diptera.136,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Cecidomyiidae,NA,NA,NA,NA,piercer,0,3,0,0,0,0,0,0,3,2,0,0,3,0,0,0,0,0,0,0,0,0,0,3,larva,1,dry,0.005266666666666667,length.raw,1
+5156,Diptera.136,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Cecidomyiidae,NA,NA,NA,NA,piercer,0,3,0,0,0,0,0,0,3,2,0,0,3,0,0,0,0,0,0,0,0,0,0,3,larva,1,dry,0.005266667,length.raw,1
 5161,Diptera.416,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Brachycera,Ephydridae,NA,NA,NA,NA,gatherer,0,3,0,0,0,0,0,0,1,3,0,0,0,2,2,1,0,0,0,0,0,0,3,0,larva,NA,NA,NA,NA,0
 5166,Diptera.418,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Brachycera,Ephydridae,NA,NA,NA,NA,gatherer,0,3,0,0,0,0,0,0,1,3,0,0,0,2,2,1,0,0,0,0,0,0,3,0,larva,NA,NA,NA,NA,0
 5171,Diptera.420,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Brachycera,Ephydridae,NA,NA,NA,NA,gatherer,0,3,0,0,0,0,0,0,1,3,0,0,0,2,2,1,0,0,0,0,0,0,3,0,larva,NA,NA,NA,NA,0
@@ -1043,7 +1043,7 @@ species_id,bwg_name,domain,kingdom,phylum,subphylum,class,subclass,ord,subord,fa
 5766,Coleoptera.22,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Coleoptera,Polyphaga,Ptilodactylidae,NA,NA,NA,NA,shredder,3,0,0,0,0,0,0,0,3,0,0,0,0,0,1,0,0,3,0,0,0,0,3,0,larva,8,dry,NA,length.interpolate,1
 5766,Coleoptera.22,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Coleoptera,Polyphaga,Ptilodactylidae,NA,NA,NA,NA,shredder,3,0,0,0,0,0,0,0,3,0,0,0,0,0,1,0,0,3,0,0,0,0,3,0,larva,8,dry,NA,length.interpolate,1
 5771,Diptera.277,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Tipulidae,NA,NA,NA,NA,shredder,0,0,0,3,1,0,0,0,1,3,0,0,3,0,0,0,0,0,0,0,0,0,3,0,larva,NA,NA,NA,NA,0
-5776,Diptera.278,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Tipulidae,NA,NA,NA,NA,shredder,0,0,0,3,1,0,0,0,1,3,0,0,3,0,0,0,0,0,0,0,0,0,3,0,larva,2,dry,0.05756666666666666,length.raw,1
+5776,Diptera.278,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Tipulidae,NA,NA,NA,NA,shredder,0,0,0,3,1,0,0,0,1,3,0,0,3,0,0,0,0,0,0,0,0,0,3,0,larva,2,dry,0.057566667,length.raw,1
 5776,Diptera.278,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Tipulidae,NA,NA,NA,NA,shredder,0,0,0,3,1,0,0,0,1,3,0,0,3,0,0,0,0,0,0,0,0,0,3,0,larva,3,dry,0.028,length.raw,1
 5776,Diptera.278,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Tipulidae,NA,NA,NA,NA,shredder,0,0,0,3,1,0,0,0,1,3,0,0,3,0,0,0,0,0,0,0,0,0,3,0,larva,5,dry,0.0497,length.raw,1
 5776,Diptera.278,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Tipulidae,NA,NA,NA,NA,shredder,0,0,0,3,1,0,0,0,1,3,0,0,3,0,0,0,0,0,0,0,0,0,3,0,larva,6,dry,0.1611,length.raw,1
@@ -1483,7 +1483,7 @@ species_id,bwg_name,domain,kingdom,phylum,subphylum,class,subclass,ord,subord,fa
 6426,Platyhelminthes.12,Eukarya,Animalia,Platyhelminthes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,engulfer,3,0,0,1,0,0,0,1,3,1,0,0,3,0,0,0,0,0,0,0,2,2,0,0,NA,NA,NA,NA,NA,0
 6431,Platyhelminthes.1,Eukarya,Animalia,Platyhelminthes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,engulfer,3,0,0,1,0,0,0,1,3,1,0,0,3,0,0,0,0,0,0,0,2,2,0,0,NA,1,dry,0.0056,length.raw,1
 6431,Platyhelminthes.1,Eukarya,Animalia,Platyhelminthes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,engulfer,3,0,0,1,0,0,0,1,3,1,0,0,3,0,0,0,0,0,0,0,2,2,0,0,NA,3,dry,0.0283,length.raw,1
-6431,Platyhelminthes.1,Eukarya,Animalia,Platyhelminthes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,engulfer,3,0,0,1,0,0,0,1,3,1,0,0,3,0,0,0,0,0,0,0,2,2,0,0,NA,2,dry,0.0117196287626826,length.raw,1
+6431,Platyhelminthes.1,Eukarya,Animalia,Platyhelminthes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,engulfer,3,0,0,1,0,0,0,1,3,1,0,0,3,0,0,0,0,0,0,0,2,2,0,0,NA,2,dry,0.011719629,length.raw,1
 6436,Platyhelminthes.2,Eukarya,Animalia,Platyhelminthes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,engulfer,3,0,0,1,0,0,0,1,3,1,0,0,3,0,0,0,0,0,0,0,2,2,0,0,NA,12,dry,15,length.raw,1
 6436,Platyhelminthes.2,Eukarya,Animalia,Platyhelminthes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,engulfer,3,0,0,1,0,0,0,1,3,1,0,0,3,0,0,0,0,0,0,0,2,2,0,0,NA,11,dry,0.3161,length.raw,1
 6436,Platyhelminthes.2,Eukarya,Animalia,Platyhelminthes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,engulfer,3,0,0,1,0,0,0,1,3,1,0,0,3,0,0,0,0,0,0,0,2,2,0,0,NA,4,dry,0.0812,length.raw,1
@@ -1501,10 +1501,10 @@ species_id,bwg_name,domain,kingdom,phylum,subphylum,class,subclass,ord,subord,fa
 6456,Platyhelminthes.7,Eukarya,Animalia,Platyhelminthes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,engulfer,3,0,0,1,0,0,0,1,3,1,0,0,3,0,0,0,0,0,0,0,2,2,0,0,NA,1,dry,0.0056,length.raw,1
 6456,Platyhelminthes.7,Eukarya,Animalia,Platyhelminthes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,engulfer,3,0,0,1,0,0,0,1,3,1,0,0,3,0,0,0,0,0,0,0,2,2,0,0,NA,1,dry,0.0056,length.raw,1
 6456,Platyhelminthes.7,Eukarya,Animalia,Platyhelminthes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,engulfer,3,0,0,1,0,0,0,1,3,1,0,0,3,0,0,0,0,0,0,0,2,2,0,0,NA,1.5,dry,0.00685,length.raw,1
-6456,Platyhelminthes.7,Eukarya,Animalia,Platyhelminthes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,engulfer,3,0,0,1,0,0,0,1,3,1,0,0,3,0,0,0,0,0,0,0,2,2,0,0,NA,2,dry,0.0117196287626826,length.raw,1
-6456,Platyhelminthes.7,Eukarya,Animalia,Platyhelminthes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,engulfer,3,0,0,1,0,0,0,1,3,1,0,0,3,0,0,0,0,0,0,0,2,2,0,0,NA,2,dry,0.0117196287626826,length.raw,1
+6456,Platyhelminthes.7,Eukarya,Animalia,Platyhelminthes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,engulfer,3,0,0,1,0,0,0,1,3,1,0,0,3,0,0,0,0,0,0,0,2,2,0,0,NA,2,dry,0.011719629,length.raw,1
+6456,Platyhelminthes.7,Eukarya,Animalia,Platyhelminthes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,engulfer,3,0,0,1,0,0,0,1,3,1,0,0,3,0,0,0,0,0,0,0,2,2,0,0,NA,2,dry,0.011719629,length.raw,1
 6461,Platyhelminthes.6,Eukarya,Animalia,Platyhelminthes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,engulfer,3,0,0,1,0,0,0,1,3,1,0,0,3,0,0,0,0,0,0,0,2,2,0,0,NA,1,dry,0.0056,length.raw,1
-6461,Platyhelminthes.6,Eukarya,Animalia,Platyhelminthes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,engulfer,3,0,0,1,0,0,0,1,3,1,0,0,3,0,0,0,0,0,0,0,2,2,0,0,NA,2,dry,0.0117196287626826,length.raw,1
+6461,Platyhelminthes.6,Eukarya,Animalia,Platyhelminthes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,engulfer,3,0,0,1,0,0,0,1,3,1,0,0,3,0,0,0,0,0,0,0,2,2,0,0,NA,2,dry,0.011719629,length.raw,1
 6461,Platyhelminthes.6,Eukarya,Animalia,Platyhelminthes,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,engulfer,3,0,0,1,0,0,0,1,3,1,0,0,3,0,0,0,0,0,0,0,2,2,0,0,NA,1.5,dry,0.00685,length.raw,1
 6466,Coleoptera.23,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Coleoptera,Polyphaga,Scirtidae,NA,NA,NA,NA,scraper,0,0,2,3,0,1,0,0,3,0,1,0,0,0,3,0,0,3,0,0,0,3,0,0,larva,NA,NA,NA,NA,0
 6471,Platyhelminthes.8,Eukarya,Animalia,Platyhelminthes,NA,Turbellaria,NA,NA,NA,NA,NA,NA,NA,NA,engulfer,3,0,0,1,0,0,0,1,3,1,0,0,3,0,0,0,0,0,0,0,2,2,0,0,adult,NA,NA,NA,NA,0
@@ -1578,7 +1578,7 @@ species_id,bwg_name,domain,kingdom,phylum,subphylum,class,subclass,ord,subord,fa
 6661,Diptera.119,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,NA,NA,NA,NA,NA,NA,NA,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,3,1,larva,3,dry,0.028,length.raw,1
 6666,Branchiopoda.1,Eukarya,Animalia,Arthropoda,Crustacea,Branchiopoda,Phyllopoda,Diplostraca,Cladocera,Daphniidae,NA,NA,Ceriodaphnia,NA,filter.feeder,3,0,0,0,0,0,1,3,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,3,adult,NA,NA,NA,NA,0
 6671,Diptera.120,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,NA,NA,NA,NA,NA,NA,NA,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,3,1,larva,NA,NA,NA,NA,0
-6676,Diptera.121,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,NA,NA,NA,NA,NA,NA,NA,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,3,1,larva,4.5,dry,0.06703333333333333,length.raw,1
+6676,Diptera.121,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,NA,NA,NA,NA,NA,NA,NA,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,3,1,larva,4.5,dry,0.067033333,length.raw,1
 6681,Diptera.122,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,NA,NA,NA,NA,NA,NA,NA,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,3,1,larva,NA,NA,NA,NA,0
 6686,Diptera.311,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,NA,NA,NA,NA,NA,NA,NA,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,3,1,larva,NA,NA,NA,NA,0
 6691,Diptera.312,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Ceratopogonidae,NA,NA,NA,NA,NA,1,2,2,0,0,0,0,3,2,1,0,0,2,2,2,0,0,0,0,0,0,0,3,0,larva,NA,NA,NA,NA,0
@@ -1597,7 +1597,7 @@ species_id,bwg_name,domain,kingdom,phylum,subphylum,class,subclass,ord,subord,fa
 6726,Odonata.11,Eukarya,Animalia,Arthropoda,Hexapoda,Insecta,NA,Odonata,Zygoptera,Coenagrionidae,NA,NA,Leptagrion,bocainense_or_macrurum,NA,0,0,0,0,3,0,0,1,3,0,0,0,3,0,0,0,0,0,0,0,0,0,3,0,larva,14,dry,28,length.raw,1
 6726,Odonata.11,Eukarya,Animalia,Arthropoda,Hexapoda,Insecta,NA,Odonata,Zygoptera,Coenagrionidae,NA,NA,Leptagrion,bocainense_or_macrurum,NA,0,0,0,0,3,0,0,1,3,0,0,0,3,0,0,0,0,0,0,0,0,0,3,0,larva,13,dry,22,length.raw,1
 6726,Odonata.11,Eukarya,Animalia,Arthropoda,Hexapoda,Insecta,NA,Odonata,Zygoptera,Coenagrionidae,NA,NA,Leptagrion,bocainense_or_macrurum,NA,0,0,0,0,3,0,0,1,3,0,0,0,3,0,0,0,0,0,0,0,0,0,3,0,larva,7,dry,0.8672,length.raw,1
-6726,Odonata.11,Eukarya,Animalia,Arthropoda,Hexapoda,Insecta,NA,Odonata,Zygoptera,Coenagrionidae,NA,NA,Leptagrion,bocainense_or_macrurum,NA,0,0,0,0,3,0,0,1,3,0,0,0,3,0,0,0,0,0,0,0,0,0,3,0,larva,2,dry,0.0117196287626826,length.raw,1
+6726,Odonata.11,Eukarya,Animalia,Arthropoda,Hexapoda,Insecta,NA,Odonata,Zygoptera,Coenagrionidae,NA,NA,Leptagrion,bocainense_or_macrurum,NA,0,0,0,0,3,0,0,1,3,0,0,0,3,0,0,0,0,0,0,0,0,0,3,0,larva,2,dry,0.011719629,length.raw,1
 6726,Odonata.11,Eukarya,Animalia,Arthropoda,Hexapoda,Insecta,NA,Odonata,Zygoptera,Coenagrionidae,NA,NA,Leptagrion,bocainense_or_macrurum,NA,0,0,0,0,3,0,0,1,3,0,0,0,3,0,0,0,0,0,0,0,0,0,3,0,larva,4,dry,0.0812,length.raw,1
 6726,Odonata.11,Eukarya,Animalia,Arthropoda,Hexapoda,Insecta,NA,Odonata,Zygoptera,Coenagrionidae,NA,NA,Leptagrion,bocainense_or_macrurum,NA,0,0,0,0,3,0,0,1,3,0,0,0,3,0,0,0,0,0,0,0,0,0,3,0,larva,3,dry,0.0283,length.raw,1
 6726,Odonata.11,Eukarya,Animalia,Arthropoda,Hexapoda,Insecta,NA,Odonata,Zygoptera,Coenagrionidae,NA,NA,Leptagrion,bocainense_or_macrurum,NA,0,0,0,0,3,0,0,1,3,0,0,0,3,0,0,0,0,0,0,0,0,0,3,0,larva,8,dry,7,length.raw,1
@@ -1661,7 +1661,7 @@ species_id,bwg_name,domain,kingdom,phylum,subphylum,class,subclass,ord,subord,fa
 6911,Diptera.562,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Brachycera,NA,NA,NA,NA,NA,NA,1,1,1,1,1,0,1,0,2,1,0,0,3,1,1,1,1,0,0,0,0,0,2,1,larva,NA,NA,NA,NA,0
 6916,Hemiptera.14,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Hemiptera,Heteroptera,Scutelleridae,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,0,0,1,1,0,3,0,0,0,0,0,3,larva,NA,NA,NA,NA,0
 6921,Lepidoptera.9,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Lepidoptera,Glossata,Tineidae,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,0,1,2,0,1,0,0,0,0,0,3,0,larva,NA,NA,NA,NA,0
-6926,Nematoda.2,Eukarya,Animalia,Nematoda,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3,0,0,0,0,0,0,0,NA,NA,NA,NA,NA,2,dry,0.0117196287626826,length.raw,1
+6926,Nematoda.2,Eukarya,Animalia,Nematoda,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3,0,0,0,0,0,0,0,NA,NA,NA,NA,NA,2,dry,0.011719629,length.raw,1
 6931,Oligochaeta.24,Eukarya,Animalia,Annelida,NA,Clitellata,Oligochaeta,Haplotaxida,Tubificina,Enchytraeoidae,NA,NA,NA,NA,gatherer,0,0,0,0,3,0,0,1,3,3,0,NA,3,0,0,0,0,0,0,0,0,0,3,0,adult,NA,NA,NA,NA,0
 6936,Oligochaeta.25,Eukarya,Animalia,Annelida,NA,Clitellata,Oligochaeta,Haplotaxida,Lumbricina,Lumbricidae,NA,NA,NA,NA,gatherer,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3,0,0,0,0,0,0,0,0,0,3,0,adult,NA,NA,NA,NA,0
 6941,Oligochaeta.26,Eukarya,Animalia,Annelida,NA,Clitellata,Oligochaeta,Haplotaxida,Lumbricina,Lumbricidae,NA,NA,NA,NA,gatherer,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3,0,0,0,0,0,0,0,0,0,3,0,adult,NA,NA,NA,NA,0

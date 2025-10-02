@@ -1,4 +1,4 @@
-species_id,bwg_name,domain,kingdom,phylum,subphylum,class,subclass,ord,subord,family,subfamily,tribe,genus,species,stage,size_mm,abundance
+species_id,bwg_name,domain,kingdom,phylum,subphylum,class,subclass,ord,subord,family,subfamily,tribe,genus,species,stage,size_col,abundance
 Diptera.11,Diptera.11,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Culicidae,Anophelinae,NA,Anopheles,kompii,larva,4,1
 Diptera.11,Diptera.11,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Culicidae,Anophelinae,NA,Anopheles,kompii,larva,3.4,1
 Diptera.11,Diptera.11,Eukarya,Animalia,Arthropoda,NA,Insecta,Neoptera,Diptera,Nematocera,Culicidae,Anophelinae,NA,Anopheles,kompii,larva,3,1
