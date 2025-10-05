@@ -20,10 +20,10 @@ knitr::opts_chunk$set(
 
 Welcome to hellometry! This simple, lightweight package allows you to quickly
 impute missing body size and body mass measurements in the supplied data frame (or tibble). The package uses existing measurements in your data frame (tibble) to estimate the missing ones, so, essentially, the better the data supplied the better will be the estimations. Although originally developed for the Bromeliad Working Group (BWG) database, it is compatible with any kind of data, provided you follow a few simple rules of column naming. These are as follow: <br>
-- column with measurements needs to be called "size_mm", and only accepts numerical measurements or "unknown", "small", "medium" or "large" as categorical values <br>
+- column with measurements needs to be called "size_col", and only accepts numerical measurements or "unknown", "small", "medium" or "large" as categorical values <br>
 - column with development stage of specimens (larva/pupa/adult) needs to be called "stage" <br>
 - column with abundance of specimens needs to be called "abundance" <br>
-- column with biomass of specimens needs to be called 'biomass_mg'
+- column with biomass of specimens needs to be called 'biomass_col'
 - for BWG members, column with BWG names needs to be called "bwg_name" <br>
 <br>
 The idea of the package, wrapped in `hellometry()` is rather simple. First, a `measurement_table` is compiled, with your own measurements, and/or those provided 
@@ -76,8 +76,8 @@ pitilla <-
   pitilla_data() %>% 
   ## We need to specify whether we want data for the estimations to be "dry" or "wet", use "dry" as it tends to be more precise
   dplyr::mutate(biomass_type = "dry") %>% 
-  ## We also need a column specifying biomass_mg, here just NAs
-  dplyr::mutate(biomass_mg = NA)
+  ## We also need a column specifying biomass_col, here just NAs
+  dplyr::mutate(biomass_col = NA)
 
 # We need to define a suit of levels to be used for estimations
 level_vec  <-
@@ -114,7 +114,7 @@ measurement_table <-
 size_estimation_table <- 
   full_estimation_table(level_vec  = level_vec , 
                         measurement_table = measurement_table, 
-                        what = "size_mm")
+                        what = "size_col")
 ### Have a glimpse at it
 dplyr::glimpse(size_estimation_table)
 
@@ -123,7 +123,7 @@ model_estimation_table <-
   full_estimation_table(level_vec  = level_vec , 
                         measurement_table = dry_wet(measurement_table,
                                                         biomass_type = "dry"), ## Filter for dry biomass
-                        what = "biomass_mg")
+                        what = "biomass_col")
 ### Have a glimpse at it
 dplyr::glimpse(model_estimation_table)
 ```
@@ -190,8 +190,8 @@ myreptiles <-
              family = character(), 
              genus = character(), 
              species = character(), 
-             size_mm = numeric(), 
-             biomass_mg = numeric(), 
+             size_col = numeric(), 
+             biomass_col = numeric(), 
              abundance = integer())
 
 
@@ -211,8 +211,8 @@ for (order in orders) {
           genus = genus,
           species = spec,
           # Generate random size and biomass values
-          size_mm = round(rnorm(n_rows, mean = runif(1, 50, 500), sd = 30), 1),
-          biomass_mg = round(rnorm(n_rows, mean = runif(1, 100, 5000), sd = 100), 1),
+          size_col = round(rnorm(n_rows, mean = runif(1, 50, 500), sd = 30), 1),
+          biomass_col = round(rnorm(n_rows, mean = runif(1, 100, 5000), sd = 100), 1),
           # Generate random abundance values
            abundance = sample(1:10, n_rows, replace = TRUE))
         ## Add the temporary data to the main dataset
@@ -227,13 +227,13 @@ dplyr::glimpse(myreptiles)
 ## Determine the number of rows to turn into NA
 num_na <- 
   floor(nrow(myreptiles) / 2)
-# Randomly select rows to have modified values in size_mm and biomass_mg
+# Randomly select rows to have modified values in size_col and biomass_col
 na_rows <- 
   sample(1:nrow(myreptiles), num_na)
 ## Assign new values to the selected rows in the specified columns
-myreptiles$size_mm[na_rows] <- 
+myreptiles$size_col[na_rows] <- 
   "unknown"
-myreptiles$biomass_mg[na_rows] <- 
+myreptiles$biomass_col[na_rows] <- 
   NA
 ## Now we should see altered values
 dplyr::glimpse(myreptiles)
@@ -279,7 +279,7 @@ measurement_table <-
 size_estimation_table <- 
   full_estimation_table(level_vec  = level_vec , 
                         measurement_table = measurement_table, 
-                        what = "size_mm")
+                        what = "size_col")
 ### Have a glimpse at it
 dplyr::glimpse(size_estimation_table)
 
@@ -289,7 +289,7 @@ model_estimation_table <-
   full_estimation_table(level_vec  = level_vec , 
                         measurement_table = dry_wet(measurement_table,
                                                         biomass_type = "dry"), ## Filter for dry biomass
-                        what = "biomass_mg")
+                        what = "biomass_col")
 ### Have a glimpse at it
 dplyr::glimpse(model_estimation_table)
 
@@ -341,7 +341,7 @@ size_estimation_table_traits <-
                         measurement_table = dats, 
                         traits = T, ## traits = TRUE
                         trait_columns = trait_columns, ## vector of crisp trait columns
-                        what = "size_mm")
+                        what = "size_col")
 ### See the output
 head(size_estimation_table_traits)
 
@@ -351,7 +351,7 @@ model_estimation_table_traits <-
                         measurement_table = dats, 
                         traits = T, ## traits = TRUE
                         trait_columns = trait_columns, ## vector of crip trait columns
-                        what = "biomass_mg")
+                        what = "biomass_col")
 ### See the output
 head(model_estimation_table_traits)
 ```
