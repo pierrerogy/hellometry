@@ -15,7 +15,7 @@ pitilla_data <- function(taxonomy = TRUE){
   if(!(taxonomy))  
     pitilla <-
       pitilla %>% 
-      dplyr::select(bwg_name, size_mm, stage, abundance)
+      dplyr::select(bwg_name, size_col, stage, abundance)
   
   ## Return data
   return(pitilla)       

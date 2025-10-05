@@ -40,19 +40,19 @@ make_trait_table <- function(measurement_table,
                  ## Add measurements
                  dplyr::left_join(measurement_table %>% 
                                     ## Keep important columns only
-                                    dplyr::select(bwg_name, size_mm, biomass_col),
+                                    dplyr::select(bwg_name, size_col, biomass_col),
                                   by = "bwg_name",
                                   ## Just because one species can have several measurements
                                   relationship = "many-to-many") %>% 
                  ## Remove all NAs in sizes
-                 dplyr::filter(!is.na(size_mm))) %>% 
+                 dplyr::filter(!is.na(size_col))) %>% 
     ## Filter out those groups with less than three unique measurements
     purrr::map(.,
                ~ .x %>%
                  ## Group by level, name and stage
                  dplyr::group_by(level, name, stage) %>%
-                 ## Filter out those with less than three unique size_mm
-                 dplyr::filter(dplyr::n_distinct(size_mm) >= 3) %>%
+                 ## Filter out those with less than three unique size_col
+                 dplyr::filter(dplyr::n_distinct(size_col) >= 3) %>%
                  ## Ungroup to avoid future issues
                  dplyr::ungroup()) %>% 
     ## Remove empty levels 

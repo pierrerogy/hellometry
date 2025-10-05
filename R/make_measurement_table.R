@@ -23,8 +23,8 @@ make_measurement_table <- function(dats, level_vec, use_BWG_db, no_BWG_data){
   suppressWarnings(
     numeric_taxa <- 
       dats %>%
-      dplyr::mutate(size_mm = as.numeric(size_mm)) %>% 
-      dplyr::filter(!is.na(size_mm)))
+      dplyr::mutate(size_col = as.numeric(size_col)) %>% 
+      dplyr::filter(!is.na(size_col)))
   ## Little catch here if we are using the BWG database
   if("provenance" %in% colnames(numeric_taxa)){
     numeric_taxa <- 
