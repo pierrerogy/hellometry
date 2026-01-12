@@ -14,7 +14,8 @@ add_taxonomy <- function(data_table){
   # Taxon list
   taxa <- 
     c("domain", "kingdom", "phylum", "subphylum", "class", "subclass", 
-      "ord", "subord", "family", "subfamily", "tribe", "genus", "species")
+      "ord", "subord", "family", "subfamily", "tribe", "genus", "species",
+      "stage")
   
   # Add taxonomy to data table
   ret <- 

@@ -79,7 +79,7 @@ pitilla <-
   ## We also need a column specifying biomass_col, here just NAs
   dplyr::mutate(biomass_col = NA)
 
-# We need to define a suit of levels to be used for estimations
+# We need to define a suite of levels to be used for estimations
 level_vec  <-
   c("bwg_name", "genus", "tribe", "subfamily", "family", "subord","ord", 
     "subclass", "class")
@@ -241,7 +241,7 @@ dplyr::glimpse(myreptiles)
 
 # Now we can use the package to estimate sizes and biomasses!
 
-# We need to define a suit of levels to be used for estimations, a.k.a. columns in the data
+# We need to define a suite of levels to be used for estimations, a.k.a. columns in the data
 level_vec  <-
   c("species", "genus", "family", "order")
 
