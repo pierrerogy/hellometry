@@ -4,19 +4,19 @@
 \alias{get_measurements}
 \title{Get measurement table}
 \usage{
-get_measurements(level_list, database, nothing = FALSE)
+get_measurements(level_vec, use_BWG_db, no_BWG_data = FALSE)
 }
 \arguments{
-\item{level_list}{List of taxonomic levels to be used in the measurement table}
+\item{level_vec}{Vector of taxonomic levels to be used in the measurement table}
 
-\item{database}{Logical. Should data from the BWG database be used to supplement
+\item{use_BWG_db}{Logical. Should data from the BWG database be used to supplement
 a set of BWG-specific measurements, not present in the database
 (TRUE(default)/FALSE). This function uses numerical measurements both from the
 BWG database and from the data you provide. Only put FALSE if you are doing
 estimations from data already present in the BWG database (estimation for
 these data available with \code{database_data(TRUE)}).}
 
-\item{nothing}{Logical. If TRUE, no BWG-specific data will be used for estimations,
+\item{no_BWG_data}{Logical. If TRUE, no BWG-specific data will be used for estimations,
 only the data you provide. This is useful if you have your own measurement
 database or work on a different system (default FALSE).}
 }

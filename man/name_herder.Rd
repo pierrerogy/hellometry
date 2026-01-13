@@ -5,7 +5,7 @@
 \title{Assign species name if BWG name is missing
 Gets or generates missing BWG names}
 \usage{
-name_herder(dats, level_list)
+name_herder(dats, level_vec)
 }
 \arguments{
 \item{dats}{The input data table}

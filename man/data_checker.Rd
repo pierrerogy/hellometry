@@ -4,7 +4,7 @@
 \alias{data_checker}
 \title{Set of checks to perform on the data to make sure it can be handled by \code{hellometry()}}
 \usage{
-data_checker(dats, biomass_type, database, nothing)
+data_checker(dats, biomass_type, use_BWG_db, no_BWG_data)
 }
 \arguments{
 \item{dats}{Dataframe to be used for estimations}

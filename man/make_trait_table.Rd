@@ -2,17 +2,15 @@
 % Please edit documentation in R/make_trait_table.R
 \name{make_trait_table}
 \alias{make_trait_table}
-\title{Modify measurement table so that estimations are done with traits}
+\title{Prepare data to do estimations with traits in \code{full_estimation_table}}
 \usage{
-make_trait_table(measurement_table, level_list, trait_columns)
+make_trait_table(measurement_table, trait_columns)
 }
 \arguments{
-\item{level_list}{list of taxonomic levels in measurement_table}
-
-\item{trait_columns}{List of traits to match}
-
-\item{mmeasurement_table}{A table with the numerical measurements and biomass
+\item{measurement_table}{A table with the numerical measurements and biomass
 used to compute allometric lms}
+
+\item{trait_columns}{List of traits to match, should be column names in measurement_table}
 }
 \value{
 Tibble of four columns: level = "traits", group_focus_species, stage of focus species,

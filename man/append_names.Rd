@@ -4,14 +4,14 @@
 \alias{append_names}
 \title{Append measurement table with new species names}
 \usage{
-append_names(measurement_table, dats, level_list, nothing)
+append_names(measurement_table, dats, level_vec, no_BWG_data)
 }
 \arguments{
 \item{measurement_table}{Table containing all measurements}
 
 \item{dats}{Dataframe to be used for estimations}
 
-\item{level_list}{List of taxonomic levels to be used in the measurement table}
+\item{level_vec}{Vector of taxonomic levels to be used in the measurement table}
 }
 \value{
 An updated measurement table that will be used to estimate sizes and

@@ -10,7 +10,7 @@ matcher_of_traits(measurement_table, trait_columns)
 \item{measurement_table}{A table with the numerical measurements and biomass
 used to compute allometric lms}
 
-\item{trait_columns}{List of traits to match}
+\item{trait_columns}{List of traits to match, should be column names in measurement_table}
 }
 \value{
 Tibble of four columns: level = "traits", group_focus_species, stage of focus species,

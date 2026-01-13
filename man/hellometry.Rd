@@ -6,34 +6,43 @@
 \usage{
 hellometry(
   dats,
-  level_list,
+  level_vec,
   biomass_type = "dry",
-  database = TRUE,
-  nothing = FALSE
+  use_BWG_db = TRUE,
+  no_BWG_data = FALSE,
+  r_square_cutoff_upper = 0.95,
+  r_square_cutoff_lower = 0,
+  p_val_cutoff = 0.05
 )
 }
 \arguments{
 \item{dats}{The input data table, please include columns columns "abundance",
-"size_mm", "biomass_mg", "stage" (larva/pupa/adult, please only put 'adult' for
-adult insects)}
+"size_col", "biomass_col", "stage" (larva/pupa/adult, if you use the BWG database,
+please only put 'adult' for non-insect invertebrates)}
 
-\item{level_list}{A character vector indicating the taxonomic levels present
-in your data, in indecreasing order of taxonomic resolution.}
+\item{level_vec}{A character vector indicating the taxonomic levels present
+in your data, in increasing order of taxonomic resolution.}
 
 \item{biomass_type}{"dry"/"wet". Should data used in inference be "dry" for
 just dry biomass (default), or "wet" for just wet biomass. See \code{dry_wet()}
 for more information on how this works.}
 
-\item{database}{Logical. Should data from the BWG database be used to supplement
+\item{use_BWG_db}{Logical. Should data from the BWG database be used to supplement
 a set of BWG-specific measurements, not present in the database
 (TRUE(default)/FALSE). This function uses numerical measurements both from the
 BWG database and from the data you provide. Only put FALSE if you are doing
 estimations from data already present in the BWG database (estimation for
 these data available with \code{database_data(TRUE)}).}
 
-\item{nothing}{Logical. If TRUE, no BWG-specific data will be used for estimations,
+\item{no_BWG_data}{Logical. If TRUE, no BWG-specific data will be used for estimations,
 only the data you provide. This is useful if you have your own measurement
 database or work on a different system (default FALSE).}
+
+\item{r_square_cutoff_upper}{Upper cutoff for R2 in allometric models, models with values above it will not be used un estimations. Default is 0.95 to avoid overfit models}
+
+\item{r_square_cutoff_lower}{Lower cutoff for R2 in allometric models, models with values below it will not be used un estimations. Default is 0.}
+
+\item{p_val_cutoff}{Upper cutoff for p-value of allometric models, models with p_value above it will not be used in estimations. Default is 0.05.}
 }
 \value{
 A list with three dataframes:
@@ -51,11 +60,11 @@ for your data
 }
 }
 \description{
-Wrapper function, input your data and get size and measurement .
+Wrapper function, input your data and get size and measurement.
 Please name column with number of specimen "abundance", column with measurement
-in mm "size_mm", column with life stage (larva/pupa/adult) "stage", column
+in mm "size_col", column with life stage (larva/pupa/adult) "stage", column
 with biomass type (dry/wet) "biomass_type", and the column with biomass in mg
-"biomass_mg".
+"biomass_col".
 If you do not have a numerical measurement for a given specimen, the function
 can do size estimations if you input "small", "medium", "large" or "unknown".
 In this case, the algorithm will use existing size measurements for the species,
@@ -66,6 +75,6 @@ If you are using BWG data, please make sure that the column with BWG names is
 called "bwg_name".
 }
 \details{
-Please make sure that the level_list parameter has levels in increasing order
+Please make sure that the level_vec argument has levels in increasing order
 of resolution, e.g. from species to order.
 }

@@ -4,20 +4,41 @@
 \alias{full_estimation_table}
 \title{Returns size and biomass estimations for every taxon in measurement table}
 \usage{
-full_estimation_table(level_list, measurement_table, what, model = "lm")
+full_estimation_table(
+  level_vec,
+  measurement_table,
+  what,
+  model = "lm",
+  traits = FALSE,
+  trait_columns = c(),
+  r_square_cutoff_upper = 0.95,
+  r_square_cutoff_lower = 0,
+  p_val_cutoff = 0.05
+)
 }
 \arguments{
-\item{level_list}{Vector of taxonomic levels over which to iterate estimations}
+\item{level_vec}{Vector of taxonomic levels over which to iterate estimations}
 
 \item{measurement_table}{A table with the numerical measurements and biomass
 used to compute allometric lms}
 
-\item{what}{Should size (what = "size_mm") or biomass (what = "biomass_mg") be
+\item{what}{Should size (what = "size_col") or biomass (what = "biomass_col") be
 estimated?}
+
+\item{model}{What kind of model should be computed, so far only lm}
+
+\item{traits}{Should the table be computed by traits or not? Default FALSE}
+
+\item{trait_columns}{List of traits to match, should be column names in measurement_table}
+
+\item{r_square_cutoff_upper}{Upper cutoff for R2 in allometric models, models with values above it will not be used un estimations. Default is 0.95 to avoid overfit models}
+
+\item{r_square_cutoff_lower}{Lower cutoff for R2 in allometric models, models with values below it will not be used un estimations. Default is 0.}
+
+\item{p_val_cutoff}{Upper cutoff for p-value of allometric models, models with p_value above it will not be used in estimations. Default is 0.05.}
 }
 \value{
 Tibble with size estimations or allometric models used in estimations.
-Note that only models with p < 0.05 and R^2 < 0.95 are kept.
 }
 \description{
 Returns size and biomass estimations for every taxon in measurement table

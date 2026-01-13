@@ -100,7 +100,10 @@ hellometry <- function(dats,
   full_estimation_table_size <- 
     full_estimation_table(level_vec = level_vec, 
                           measurement_table = measurement_table,
-                          what = "size_col") 
+                          what = "size_col",
+                          r_square_cutoff_upper = r_square_cutoff_upper,
+                          r_square_cutoff_lower = r_square_cutoff_lower,
+                          p_val_cutoff = p_val_cutoff) 
   
   # Join size estimations to the original data
   size_estimations <- 
@@ -164,7 +167,10 @@ hellometry <- function(dats,
       full_estimation_table(level_vec = level_vec, 
                             measurement_table = dry_wet(measurement_table,
                                                         biomass_type = "dry"),
-                            what = "biomass_col"))
+                            what = "biomass_col",
+                            r_square_cutoff_upper = r_square_cutoff_upper,
+                            r_square_cutoff_lower = r_square_cutoff_lower,
+                            p_val_cutoff = p_val_cutoff))
   
   # Join models to the original data
   model_estimations <- 
