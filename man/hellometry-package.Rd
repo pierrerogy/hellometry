@@ -3,9 +3,9 @@
 \docType{package}
 \name{hellometry-package}
 \alias{hellometry-package}
-\title{hellometry: Biomass estimations for the BWG database and beyond}
+\title{hellometry: Biomass estimations from allometric relationships}
 \description{
-Estimates body size (mm) and biomass (mg) of bromeliad invertebrates from allometric relationships. Although developed for the Bromeliad Working Group (BWG) database, it works with any data that follow a few column-naming conventions.
+Estimates body size (mm) and biomass (mg) of invertebrates from allometric relationships. It works with any data that follow a few column-naming conventions, using the measurements you supply to impute the ones that are missing.
 }
 \author{
 \strong{Maintainer}: Pierre Rogy \email{pierre.rogy@gmail.com} (\href{https://orcid.org/0000-0002-3002-0059}{ORCID})

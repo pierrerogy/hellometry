@@ -11,6 +11,7 @@ full_estimation_table(
   model = "lm",
   traits = FALSE,
   trait_columns = c(),
+  id_col = "species",
   r_square_cutoff_upper = 0.95,
   r_square_cutoff_lower = 0,
   p_val_cutoff = 0.05
@@ -30,6 +31,9 @@ estimated?}
 \item{traits}{Should the table be computed by traits or not? Default FALSE}
 
 \item{trait_columns}{List of traits to match, should be column names in measurement_table}
+
+\item{id_col}{Name of the column holding a unique identifier per species/taxon,
+used only when \code{traits = TRUE}. Default "species".}
 
 \item{r_square_cutoff_upper}{Upper cutoff for R2 in allometric models, models with values above it will not be used un estimations. Default is 0.95 to avoid overfit models}
 

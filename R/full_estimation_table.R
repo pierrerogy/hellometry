@@ -9,6 +9,8 @@
 #' @param model What kind of model should be computed, so far only lm
 #' @param traits Should the table be computed by traits or not? Default FALSE
 #' @param trait_columns List of traits to match, should be column names in measurement_table
+#' @param id_col Name of the column holding a unique identifier per species/taxon,
+#' used only when `traits = TRUE`. Default "species".
 #' @param r_square_cutoff_upper Upper cutoff for R2 in allometric models, models with values above it will not be used un estimations. Default is 0.95 to avoid overfit models
 #' @param r_square_cutoff_lower Lower cutoff for R2 in allometric models, models with values below it will not be used un estimations. Default is 0.
 #' @param p_val_cutoff Upper cutoff for p-value of allometric models, models with p_value above it will not be used in estimations. Default is 0.05.
@@ -17,17 +19,18 @@
 #' 
 full_estimation_table <- function(level_vec, measurement_table,
                                   what, model = "lm", traits = FALSE,
-                                  trait_columns = c(),
+                                  trait_columns = c(), id_col = "species",
                                   r_square_cutoff_upper = 0.95,
                                   r_square_cutoff_lower = 0,
-                                  p_val_cutoff = 0.05){ 
-    
+                                  p_val_cutoff = 0.05){
+
   # If we want to get estimations with traits
   if (traits) {
     ## Use trait functions to make groupings of similar trait species
     ret <-
       make_trait_table(measurement_table = measurement_table,
-                       trait_columns = trait_columns)
+                       trait_columns = trait_columns,
+                       id_col = id_col)
 
   } else {
   # If we do not want traits

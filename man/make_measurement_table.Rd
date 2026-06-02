@@ -4,28 +4,20 @@
 \alias{make_measurement_table}
 \title{Build measurement table to be used for biomass estimations}
 \usage{
-make_measurement_table(dats, level_vec, use_BWG_db, no_BWG_data)
+make_measurement_table(dats, level_vec)
 }
 \arguments{
-\item{dats}{Dataframe to be used for estimations}
+\item{dats}{Dataframe to be used for estimations.}
 
-\item{level_vec}{Vector of taxonomic levels to be used in the measurement table}
-
-\item{use_BWG_db}{Logical. Should data from the BWG database be used to supplement
-a set of BWG-specific measurements, not present in the database
-(TRUE(default)/FALSE). This function uses numerical measurements both from the
-BWG database and from the data you provide. Only put FALSE if you are doing
-estimations from data already present in the BWG database (estimation for
-these data available with \code{database_data(TRUE)}).}
-
-\item{no_BWG_data}{Logical. If TRUE, no BWG-specific data will be used for estimations,
-only the data you provide. This is useful if you have your own measurement
-database or work on a different system (default FALSE).}
+\item{level_vec}{Vector of taxonomic levels to be used in the measurement table.}
 }
 \value{
-A table with measurements and species names, ready to be used for
-size and biomass estimations
+A table with measurements and taxonomy, ready to be used for
+size and biomass estimations.
 }
 \description{
-Gets dataframe with equation used in estimations
+Compiles the table of numerical measurements used to estimate sizes and fit
+allometric models. The table is built entirely from the data you supply:
+every row with a numerical \code{size_col} is kept (expanded by \code{abundance} so
+each row represents one individual), carrying its taxonomy along.
 }

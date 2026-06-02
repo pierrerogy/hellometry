@@ -4,17 +4,20 @@
 \alias{make_trait_table}
 \title{Prepare data to do estimations with traits in \code{full_estimation_table}}
 \usage{
-make_trait_table(measurement_table, trait_columns)
+make_trait_table(measurement_table, trait_columns, id_col = "species")
 }
 \arguments{
 \item{measurement_table}{A table with the numerical measurements and biomass
 used to compute allometric lms}
 
 \item{trait_columns}{List of traits to match, should be column names in measurement_table}
+
+\item{id_col}{Name of the column holding a unique identifier per species/taxon.
+Default "species".}
 }
 \value{
-Tibble of four columns: level = "traits", group_focus_species, stage of focus species,
-bwg_name of matched species
+List of tibbles, one per trait grouping, each carrying the
+measurements of the species sharing that grouping's traits
 }
 \description{
 Remove columns with taxonomy, and replace them with trait-based groupings

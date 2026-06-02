@@ -5,36 +5,24 @@
 #' in mm "size_col", column with life stage (larva/pupa/adult) "stage", column 
 #' with biomass type (dry/wet) "biomass_type", and the column with biomass in mg 
 #' "biomass_col".
-#' If you do not have a numerical measurement for a given specimen, the function 
-#' can do size estimations if you input "small", "medium", "large" or "unknown". 
-#' In this case, the algorithm will use existing size measurements for the species, 
-#' and use the size distribution to estimate "small", "medium" and "large" inputs, 
-#' or a weighted average of all measurements if the input is "unknown". For biomass 
+#' If you do not have a numerical measurement for a given specimen, the function
+#' can do size estimations if you input "small", "medium", "large" or "unknown".
+#' In this case, the algorithm will use existing size measurements for the species,
+#' and use the size distribution to estimate "small", "medium" and "large" inputs,
+#' or a weighted average of all measurements if the input is "unknown". For biomass
 #' measurements, just leave NA for those cells you want estimations in.
-#' If you are using BWG data, please make sure that the column with BWG names is 
-#' called "bwg_name".
-#' 
-#' Please make sure that the level_vec argument has levels in increasing order 
-#' of resolution, e.g. from species to order.
-#' 
 #'
-#' @param dats The input data table, please include columns columns "abundance", 
-#' "size_col", "biomass_col", "stage" (larva/pupa/adult, if you use the BWG database, 
-#' please only put 'adult' for non-insect invertebrates)
-#' @param level_vec A character vector indicating the taxonomic levels present 
+#' Please make sure that the level_vec argument has levels in increasing order
+#' of resolution, e.g. from species to order.
+#'
+#'
+#' @param dats The input data table, please include columns "abundance",
+#' "size_col", "biomass_col", "stage" (larva/pupa/adult).
+#' @param level_vec A character vector indicating the taxonomic levels present
 #' in your data, in increasing order of taxonomic resolution.
-#' @param biomass_type "dry"/"wet". Should data used in inference be "dry" for 
+#' @param biomass_type "dry"/"wet". Should data used in inference be "dry" for
 #' just dry biomass (default), or "wet" for just wet biomass. See `dry_wet()`
 #' for more information on how this works.
-#' @param use_BWG_db Logical. Should data from the BWG database be used to supplement 
-#' a set of BWG-specific measurements, not present in the database 
-#' (TRUE(default)/FALSE). This function uses numerical measurements both from the 
-#' BWG database and from the data you provide. Only put FALSE if you are doing 
-#' estimations from data already present in the BWG database (estimation for 
-#' these data available with `database_data(TRUE)`).
-#' @param no_BWG_data Logical. If TRUE, no BWG-specific data will be used for estimations, 
-#' only the data you provide. This is useful if you have your own measurement 
-#' database or work on a different system (default FALSE).
 #' @param r_square_cutoff_upper Upper cutoff for R2 in allometric models, models with values above it will not be used un estimations. Default is 0.95 to avoid overfit models
 #' @param r_square_cutoff_lower Lower cutoff for R2 in allometric models, models with values below it will not be used un estimations. Default is 0.
 #' @param p_val_cutoff Upper cutoff for p-value of allometric models, models with p_value above it will not be used in estimations. Default is 0.05.
@@ -50,48 +38,30 @@
 #' See `full_estimation_table()` to get all possible size estimations and models
 #' for your data
 #' @export
-hellometry <- function(dats, 
-                       level_vec, 
-                       biomass_type = "dry", 
-                       use_BWG_db = TRUE, 
-                       no_BWG_data = FALSE,
+hellometry <- function(dats,
+                       level_vec,
+                       biomass_type = "dry",
                        r_square_cutoff_upper = 0.95,
                        r_square_cutoff_lower = 0,
                        p_val_cutoff = 0.05) {
-  
-  # Get new species names, with catch if no bwg_name in level_vec
-  if("bwg_name" %in% level_vec & any(is.na(dats$bwg_name))) {
-    dats <- 
-      name_herder(dats = dats, 
-                  level_vec = level_vec) }
-  
-  # Columns, biomass_type must have specific values, use_BWG_db and no_BWG_data must be logical
-  data_checker(dats = dats, 
-               biomass_type = biomass_type,
-               use_BWG_db = use_BWG_db, 
-               no_BWG_data = no_BWG_data)
-  
+
+  # Columns must be properly named, biomass_type must have a valid value
+  data_checker(dats = dats,
+               biomass_type = biomass_type)
+
   # Make copy of dataset to then reuse
-  ret <- 
-    dats %>% 
+  ret <-
+    dats %>%
     ## Add row numbers, to join back to original data at the end
     dplyr::mutate(row = row_number())
-  
-  # Limoniidae and Tipulidae essentially the same thing so can be considered together
-  # If family exists in column names
-  if("family" %in% colnames(ret)){
-    ret <- 
-      tipulimo(ret)}  
-  
+
   # Make measurement table
   ## Print message
   print("Making measurement table...")
   ## Make table
-  measurement_table <- 
+  measurement_table <-
     make_measurement_table(dats = dats,
-                           level_vec = level_vec,
-                           use_BWG_db = use_BWG_db,
-                           no_BWG_data = no_BWG_data)
+                           level_vec = level_vec)
 
   # Getting size estimations
   ## Print message

@@ -4,17 +4,20 @@
 \alias{matcher_of_traits}
 \title{Finds which species have matching traits}
 \usage{
-matcher_of_traits(measurement_table, trait_columns)
+matcher_of_traits(measurement_table, trait_columns, id_col = "species")
 }
 \arguments{
 \item{measurement_table}{A table with the numerical measurements and biomass
 used to compute allometric lms}
 
 \item{trait_columns}{List of traits to match, should be column names in measurement_table}
+
+\item{id_col}{Name of the column holding a unique identifier per species/taxon.
+Default "species".}
 }
 \value{
-Tibble of four columns: level = "traits", group_focus_species, stage of focus species,
-bwg_name of matched species
+Tibble of four columns: level = "traits", name = focus species,
+stage of focus species, id = matched species
 }
 \description{
 Evaluates all unique trait groupings and returns species that have the same

@@ -8,17 +8,14 @@ hellometry(
   dats,
   level_vec,
   biomass_type = "dry",
-  use_BWG_db = TRUE,
-  no_BWG_data = FALSE,
   r_square_cutoff_upper = 0.95,
   r_square_cutoff_lower = 0,
   p_val_cutoff = 0.05
 )
 }
 \arguments{
-\item{dats}{The input data table, please include columns columns "abundance",
-"size_col", "biomass_col", "stage" (larva/pupa/adult, if you use the BWG database,
-please only put 'adult' for non-insect invertebrates)}
+\item{dats}{The input data table, please include columns "abundance",
+"size_col", "biomass_col", "stage" (larva/pupa/adult).}
 
 \item{level_vec}{A character vector indicating the taxonomic levels present
 in your data, in increasing order of taxonomic resolution.}
@@ -26,17 +23,6 @@ in your data, in increasing order of taxonomic resolution.}
 \item{biomass_type}{"dry"/"wet". Should data used in inference be "dry" for
 just dry biomass (default), or "wet" for just wet biomass. See \code{dry_wet()}
 for more information on how this works.}
-
-\item{use_BWG_db}{Logical. Should data from the BWG database be used to supplement
-a set of BWG-specific measurements, not present in the database
-(TRUE(default)/FALSE). This function uses numerical measurements both from the
-BWG database and from the data you provide. Only put FALSE if you are doing
-estimations from data already present in the BWG database (estimation for
-these data available with \code{database_data(TRUE)}).}
-
-\item{no_BWG_data}{Logical. If TRUE, no BWG-specific data will be used for estimations,
-only the data you provide. This is useful if you have your own measurement
-database or work on a different system (default FALSE).}
 
 \item{r_square_cutoff_upper}{Upper cutoff for R2 in allometric models, models with values above it will not be used un estimations. Default is 0.95 to avoid overfit models}
 
@@ -71,8 +57,6 @@ In this case, the algorithm will use existing size measurements for the species,
 and use the size distribution to estimate "small", "medium" and "large" inputs,
 or a weighted average of all measurements if the input is "unknown". For biomass
 measurements, just leave NA for those cells you want estimations in.
-If you are using BWG data, please make sure that the column with BWG names is
-called "bwg_name".
 }
 \details{
 Please make sure that the level_vec argument has levels in increasing order
