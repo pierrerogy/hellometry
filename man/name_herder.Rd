@@ -9,6 +9,8 @@ name_herder(dats, level_vec)
 }
 \arguments{
 \item{dats}{The input data table}
+
+\item{level_vec}{Vector of taxonomic levels to be used in the measurement table}
 }
 \value{
 The input data table with missing BWG names filled

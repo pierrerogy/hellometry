@@ -2,7 +2,7 @@
 #'
 #' Gets dataframe with equation used in estimations
 #'
-#' @param data Dataframe with families as separate entries
+#' @param dats Dataframe with families as separate entries
 #' @return Dataframe with families put together
 #' @export
 tipulimo <- function(dats){

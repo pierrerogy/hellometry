@@ -7,17 +7,27 @@ Authors@R:
            role = c("aut", "cre"),
            email = "pierre.rogy@gmail.com",
            comment = c(ORCID = "0000-0002-3002-0059"))
-Description: Get biomass and size estimates of bromeliad invertebrates
+Description: Estimates body size (mm) and biomass (mg) of bromeliad
+    invertebrates from allometric relationships. Although developed for the
+    Bromeliad Working Group (BWG) database, it works with any data that
+    follow a few column-naming conventions.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
-Depends: 
+Imports:
+    dplyr,
     magrittr,
-    tidyverse,
-    progress
-Suggests: 
+    progress,
+    purrr,
+    rlang,
+    stats,
+    tibble,
+    tidyr,
+    tidyselect,
+    utils
+Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr

@@ -8,6 +8,15 @@ data_checker(dats, biomass_type, use_BWG_db, no_BWG_data)
 }
 \arguments{
 \item{dats}{Dataframe to be used for estimations}
+
+\item{biomass_type}{"dry"/"wet". Whether the biomass used in inference should
+be dry (default) or wet. See \code{dry_wet()} for details.}
+
+\item{use_BWG_db}{Logical. Should data from the BWG database be used to
+supplement BWG-specific measurements (default TRUE).}
+
+\item{no_BWG_data}{Logical. If TRUE, no BWG-specific data will be used for
+estimations, only the data you provide (default FALSE).}
 }
 \description{
 Will fail if any condition not met

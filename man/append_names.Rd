@@ -12,6 +12,9 @@ append_names(measurement_table, dats, level_vec, no_BWG_data)
 \item{dats}{Dataframe to be used for estimations}
 
 \item{level_vec}{Vector of taxonomic levels to be used in the measurement table}
+
+\item{no_BWG_data}{Logical. If TRUE, no BWG-specific data will be used for
+estimations, only the data you provide (default FALSE).}
 }
 \value{
 An updated measurement table that will be used to estimate sizes and

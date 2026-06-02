@@ -55,17 +55,12 @@ make_trait_table <- function(measurement_table,
                  dplyr::filter(dplyr::n_distinct(size_col) >= 3) %>%
                  ## Ungroup to avoid future issues
                  dplyr::ungroup()) %>% 
-    ## Remove empty levels 
-    purrr::keep(function(x) nrow(x) > 0) 
-  
-  ## Return 
-  return(ret)
-  
+    ## Remove empty levels
+    purrr::keep(function(x) nrow(x) > 0)
 
-  
   # Return
   return(ret)
-  
+
 }
 
 

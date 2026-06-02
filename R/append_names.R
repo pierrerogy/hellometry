@@ -6,7 +6,9 @@
 #' @param measurement_table Table containing all measurements
 #' @param dats Dataframe to be used for estimations
 #' @param level_vec Vector of taxonomic levels to be used in the measurement table
-#' @return An updated measurement table that will be used to estimate sizes and 
+#' @param no_BWG_data Logical. If TRUE, no BWG-specific data will be used for
+#' estimations, only the data you provide (default FALSE).
+#' @return An updated measurement table that will be used to estimate sizes and
 #' gather taxonomy
 #' @export
 append_names <- function(measurement_table, dats, level_vec, no_BWG_data){

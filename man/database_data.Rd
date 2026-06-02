@@ -6,9 +6,6 @@
 \usage{
 database_data()
 }
-\arguments{
-\item{none}{will just read the local copy of the data}
-}
 \value{
 Latest version of BWG data on file
 }

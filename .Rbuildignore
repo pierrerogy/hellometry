@@ -1,5 +1,11 @@
 ^LICENSE\.md$
+^LICENSE$
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^doc$
 ^Meta$
+^\.positai$
+^\.claude$
+^\.vscode$
+^raw_data$
+\.ipynb_checkpoints$

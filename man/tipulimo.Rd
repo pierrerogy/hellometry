@@ -7,7 +7,7 @@
 tipulimo(dats)
 }
 \arguments{
-\item{data}{Dataframe with families as separate entries}
+\item{dats}{Dataframe with families as separate entries}
 }
 \value{
 Dataframe with families put together

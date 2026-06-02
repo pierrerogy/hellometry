@@ -3,6 +3,12 @@
 #' Will fail if any condition not met
 #'
 #' @param dats Dataframe to be used for estimations
+#' @param biomass_type "dry"/"wet". Whether the biomass used in inference should
+#' be dry (default) or wet. See `dry_wet()` for details.
+#' @param use_BWG_db Logical. Should data from the BWG database be used to
+#' supplement BWG-specific measurements (default TRUE).
+#' @param no_BWG_data Logical. If TRUE, no BWG-specific data will be used for
+#' estimations, only the data you provide (default FALSE).
 #' @export
 data_checker <- function(dats, biomass_type, use_BWG_db, no_BWG_data){
 

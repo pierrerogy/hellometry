@@ -13,72 +13,67 @@
 #' @export
 #' 
   matcher_of_traits <- function(measurement_table, trait_columns) {
-    
+
     # First filter dataset with unique groupings of traits
-    measurement_table <- 
-      measurement_table %>% 
-      dplyr::select(bwg_name, dplyr::all_of(trait_columns), stage) %>% 
+    measurement_table <-
+      measurement_table %>%
+      dplyr::select(bwg_name, dplyr::all_of(trait_columns), stage) %>%
       unique()
-    
+
     # Print a little message saying that we are grouping species by traits
     print("Grouping species by trait similarities..")
-    
-    # Set progress bar with number of rows
-    pb <- 
-      progress::progress_bar$new(format = "[:bar] :current/:total (:percent)", 
-                                 total = nrow(dats))
+
+    # Build a numeric trait matrix once (rows = trait groupings, cols = traits)
+    ## Suppress warnings in case of non-numeric coercion, as in the original
+    suppressWarnings(
+      trait_mat <-
+        vapply(measurement_table[trait_columns],
+               as.numeric,
+               numeric(nrow(measurement_table))))
+
+    # Set progress bar with number of trait groupings
+    pb <-
+      progress::progress_bar$new(format = "[:bar] :current/:total (:percent)",
+                                 total = nrow(measurement_table))
     ## Initiate it
     pb$tick(0)
-    
-    # For each row of the filtered dataframe
-    ret <- 
+
+    # For each row (unique trait grouping) of the filtered dataframe
+    ret <-
       purrr::map_dfr(seq_len(nrow(measurement_table)), function(i) {
-      
-      ## Extract name of focus species
-      focus_species <- 
-        measurement_table$bwg_name[i]
-      ## Extract stage of focus species
-      stage <- 
-        measurement_table$stage
-      ## Get traits, make numeric so that it goes a lot faster
-      focus_traits <-
-        as.numeric(measurement_table[i, trait_columns]) 
-      
-      ## Make a small dataframe with species with similar traits
-      similar <- 
-        dats %>%
-        ## Look row by row
-        dplyr::rowwise() %>%
-        ## Check trait similarities based on absolute values
-        dplyr::filter(all(abs(dplyr::c_across(dplyr::all_of(trait_columns)) - focus_traits) <= 1)) %>%
-        ## Ungroup
-        ungroup()
-      
+
+      ## Traits of the focus species for this row
+      focus_traits <- trait_mat[i, ]
+
+      ## Vectorised trait comparison against every grouping at once:
+      ## a row matches if every trait differs from the focus by <= 1.
+      ## NA differences (missing traits) never match, as before.
+      diffs <- abs(sweep(trait_mat, 2, focus_traits, "-"))
+      similar <- rowSums(diffs > 1 | is.na(diffs)) == 0
+
       ## Add tick to progress bar
       pb$tick()
-      
+
       ## Make a little catch in case we do not find species with similar traits
-        if (nrow(similar) == 0) 
-         { ## Returning an empty tibble
-          return(tibble::tibble(level = character(), 
-                                name = character(), 
-                                stage = character(),
-                                bwg_name = character()))} else
-      
-      ## But if we get some species with similar traits
-        {## Make data long format
-          return(similar %>%
-                   dplyr::transmute(level = "traits",
-                                    name = focus_species,
-                                    stage = stage,
-                                    bwg_name = bwg_name))}
-                  
+      if (!any(similar)) {
+        ## Returning an empty tibble
+        return(tibble::tibble(level = character(),
+                              name = character(),
+                              stage = character(),
+                              bwg_name = character()))
+      }
+
+      ## But if we get some species with similar traits, return them long format
+      tibble::tibble(level = "traits",
+                     name = measurement_table$bwg_name[i],
+                     stage = measurement_table$stage[i],
+                     bwg_name = measurement_table$bwg_name[similar])
       })
-    
+
 
     # Return
     return(ret)
-  
+
 }
 
   

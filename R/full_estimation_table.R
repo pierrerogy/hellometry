@@ -23,18 +23,16 @@ full_estimation_table <- function(level_vec, measurement_table,
                                   p_val_cutoff = 0.05){ 
     
   # If we want to get estimations with traits
-  if(traits == T) {
+  if (traits) {
     ## Use trait functions to make groupings of similar trait species
-    ret <- 
+    ret <-
       make_trait_table(measurement_table = measurement_table,
                        trait_columns = trait_columns)
-    
-  }
-  
+
+  } else {
   # If we do not want traits
-  if(traits == F) {
   # Get all possible combinations of data
-    ret <- 
+    ret <-
       ## Split into list of tibbles, which each containing level and size_col
       purrr::map(
         level_vec[level_vec != "traits"],
@@ -121,16 +119,22 @@ full_estimation_table <- function(level_vec, measurement_table,
           ret %>%
           purrr::map(.,
                      ### Make a model column
-                     ~ .x %>% 
+                     ~ .x %>%
                        dplyr::summarise(
-                         model = list(lm(log10(biomass_col) ~ log10(size_col), 
-                                    data = dplyr::cur_data())),
-                         .groups = "keep") %>% 
-                       ### Filter out models based on R2 cutoff
-                       dplyr::filter(summary(model[[1]])$r.squared < r_square_cutoff_upper &
-                                       summary(model[[1]])$r.squared > r_square_cutoff_lower &
-                                       ### and based on p value
-                                       summary(model[[1]])$coefficients[2, 4] < p_val_cutoff))}
+                         model = list(lm(log10(biomass_col) ~ log10(size_col),
+                                    data = dplyr::pick(size_col, biomass_col))),
+                         .groups = "drop") %>%
+                       ### Summarise each model once, then derive R2 and p-value
+                       dplyr::mutate(
+                         .smry = purrr::map(model, summary),
+                         .r2   = purrr::map_dbl(.smry, "r.squared"),
+                         .pval = purrr::map_dbl(.smry, ~ .x$coefficients[2, 4])) %>%
+                       ### Filter out models based on R2 cutoffs and p value
+                       dplyr::filter(.r2 < r_square_cutoff_upper,
+                                     .r2 > r_square_cutoff_lower,
+                                     .pval < p_val_cutoff) %>%
+                       ### Drop helper columns
+                       dplyr::select(-.smry, -.r2, -.pval))}
       ## If we want other models
       if(model == "brms"){
         ret <- 

@@ -6,9 +6,6 @@
 \usage{
 get_bwgnames()
 }
-\arguments{
-\item{none}{Directly loads BWG data to get list of BWG names}
-}
 \value{
 Dataframe with BWG names and corresponding taxonomy
 }

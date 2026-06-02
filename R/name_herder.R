@@ -8,6 +8,7 @@
 #' any arbitrary string in the 'species' column to contrast between the two)
 #'
 #' @param dats The input data table
+#' @param level_vec Vector of taxonomic levels to be used in the measurement table
 #' @return The input data table with missing BWG names filled
 #' @export
 name_herder <- function(dats, level_vec){

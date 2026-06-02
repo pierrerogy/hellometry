@@ -63,8 +63,8 @@ make_measurement_table <- function(dats, level_vec, use_BWG_db, no_BWG_data){
   # Limoniidae and Tipulidae essentially the same thing so can be considered together
   # If family exists in column names
   if("family" %in% colnames(ret)){
-    measurement_table <- 
-      tipulimo(ret)}  
+    ret <-
+      tipulimo(ret)}
   
   # Return measurement table
   return(ret)
