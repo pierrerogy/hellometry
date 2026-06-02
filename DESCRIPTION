@@ -1,6 +1,6 @@
 Package: hellometry
 Title: Biomass estimations for the BWG database and beyond
-Version: 0.5.1
+Version: 0.9.1
 Authors@R: 
     person(given = "Pierre",
            family = "Rogy",

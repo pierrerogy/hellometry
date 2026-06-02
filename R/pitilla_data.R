@@ -7,9 +7,8 @@
 #' @return The Pitilla data 
 #' @export
 pitilla_data <- function(taxonomy = TRUE){
-  pitilla <- 
-    read.csv(system.file("extdata", "pitilla.csv", 
-                         package = "hellometry"))
+  pitilla <-
+    read_extdata("pitilla.csv")
   
   ## If the taxonomy is not wanted  
   if(!(taxonomy))  

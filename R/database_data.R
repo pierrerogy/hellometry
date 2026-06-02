@@ -6,9 +6,8 @@
 #' @export
 database_data <- function(){
   ## Get data
-  ret <- 
-    read.csv(system.file("extdata", "bwg_database.csv", 
-                         package = "hellometry"))
+  ret <-
+    read_extdata("bwg_database.csv")
    
   ## Return data
   return(ret)       

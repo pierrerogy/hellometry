@@ -14,21 +14,128 @@ knitr::opts_chunk$set(
   message = FALSE) 
 ```
 ## Introduction to package use
-<p align="center">
-<img src="algo.JPG" width ="500" height = "700">
-</p>
-
 Welcome to hellometry! This simple, lightweight package allows you to quickly
-impute missing body size and body mass measurements in the supplied data frame (or tibble). The package uses existing measurements in your data frame (tibble) to estimate the missing ones, so, essentially, the better the data supplied the better will be the estimations. Although originally developed for the Bromeliad Working Group (BWG) database, it is compatible with any kind of data, provided you follow a few simple rules of column naming. These are as follow: <br>
+impute missing body size and body mass measurements in the supplied data frame (or tibble). The package uses existing measurements in your data to estimate the missing ones, so, essentially, the better the data supplied the better the estimations will be. Although originally developed for the Bromeliad Working Group (BWG) database, it is compatible with any kind of data, provided you follow a few simple rules of column naming. These are as follow: <br>
 - column with measurements needs to be called "size_col", and only accepts numerical measurements or "unknown", "small", "medium" or "large" as categorical values <br>
-- column with development stage of specimens (larva/pupa/adult) needs to be called "stage" <br>
+- column with development stage of specimens (larva/pupa/adult for instance) needs to be called "stage" <br>
 - column with abundance of specimens needs to be called "abundance" <br>
 - column with biomass of specimens needs to be called 'biomass_col'
-- for BWG members, column with BWG names needs to be called "bwg_name" <br>
-<br>
+
 The idea of the package, wrapped in `hellometry()` is rather simple. First, a `measurement_table` is compiled, with your own measurements, and/or those provided 
 by the BWG database, and/or some measurements collected by BWG members but not 
 present in the database. This table is then used to compute every possible size estimations, and allometric linear models with  `full_estimation_table()`. Models are  deleted if p > 0.05 or R2 > 0.95, unless you specify other values. Note that size and models are not necessarily computed at the same scale, it all depends on model fit filtered by these p and R2 values! Finally, the size estimation and model at the lowest possible taxonomic level are joined back to the data, and used to estimate biomass at that particular row. The estimations are given with a prediction interval, which differs from a confidence interval in that it represents uncertainty around a single value as opposed to mean predicted values. `hellometry()` returns a list of three elements: your data with estimated body sizes and biomasses, and column with information on the level at which were performed the estimations, a tibble with all unique size estimations that were joined to your data, and a tibble with all unique allometric models that were joined to your data. <br>
+
+The diagram below traces one example row (a *Diptera.4* larva at Site A) through every stage of the pipeline, from raw input to the final estimated table.
+
+```
+                          hellometry() PIPELINE
+                          =====================
+
+  [1] RAW INPUT                                 NA = missing measurement
+  ┌──────┬──────────┬────────────┬──────────┐
+  │ Site │ Species  │ Length(cm) │ Mass(mg) │
+  ├──────┼──────────┼────────────┼──────────┤
+  │  A   │ A. lumer │    3.8     │   12.1   │
+  │  A   │ A. lumer │    5.9     │   15.2   │
+  │  A   │ A. lumer │    12      │   24.3   │
+  │  A   │ A. lumer │    NA      │   NA     │
+  │  A   │ A. lumer │    8.1     │   17.2   │
+  │  A   │ A. lumer │    8.2     │   NA     │
+  │ ...  │   ...    │    ...     │   ...    │
+  └──────┴──────────┴────────────┴──────────┘
+        │
+        │  add_taxonomy()  ->  match species to BWG name
+        v
+  [2] BWG-NAMED
+  ┌──────┬─────────────┬────────────┬──────────┐
+  │ Site │ BWG db cols │ Length(cm) │ Mass(mg) │
+  ├──────┼─────────────┼────────────┼──────────┤
+  │  A   │ Diptera.4   │    3.8     │   12.1   │
+  │  A   │ Diptera.4   │    5.9     │   15.2   │
+  │  A   │ Diptera.4   │    12      │   24.3   │
+  │  A   │ Diptera.4   │    NA      │   NA     │
+  │  A   │ Diptera.4   │    8.1     │   17.2   │
+  │  A   │ Diptera.4   │    8.2     │   NA     │
+  │ ...  │     ...     │    ...     │   ...    │
+  └──────┴─────────────┴────────────┴──────────┘
+        │
+        │  rename to package columns, add `stage`, blank size -> "unknown"
+        v
+  [3] STANDARDISED INPUT
+  ┌──────┬───────────┬───────┬──────────────┬──────────────┐
+  │ Site │ Species   │ stage │ body_size_mm │ body_mass_mg │
+  ├──────┼───────────┼───────┼──────────────┼──────────────┤
+  │  A   │ Diptera.4 │ larva │     3.8      │    12.1      │
+  │  A   │ Diptera.4 │ larva │     5.9      │    15.2      │
+  │  A   │ Diptera.4 │ larva │     12       │    24.3      │
+  │  A   │ Diptera.4 │ larva │   unknown    │    NA        │  <- to estimate
+  │  A   │ Diptera.4 │ larva │     8.1      │    17.2      │
+  │  A   │ Diptera.4 │ larva │     8.2      │    NA        │
+  │ ...  │    ...    │  ...  │     ...      │    ...       │
+  └──────┴───────────┴───────┴──────────────┴──────────────┘
+        │
+        │  make_measurement_table()  ->  keep numeric measurements only
+        v                                  (+ pooled BWG / extra data)
+  [4] MEASUREMENT TABLE
+  ┌───────────┬───────┬──────────────┬──────────────┐
+  │ Species   │ stage │ body_size_mm │ body_mass_mg │
+  ├───────────┼───────┼──────────────┼──────────────┤
+  │ Diptera.4 │ larva │     3.8      │    12.1      │
+  │ Diptera.4 │ larva │     5.9      │    15.2      │
+  │ Diptera.4 │ larva │     12       │    24.3      │
+  │ Diptera.4 │ larva │     8.1      │    17.2      │
+  │ Diptera.4 │ larva │     8.2      │    NA        │
+  │    ...    │  ...  │     ...      │    ...       │
+  └───────────┴───────┴──────────────┴──────────────┘
+        │
+        │   full_estimation_table()  --  computed at every taxonomic level
+        ├───────────────────────────────┬───────────────────────────────┐
+        v what = "size_col"             v what = "biomass_col"
+  [5] SIZE ESTIMATIONS                  [6] BIOMASS MODELS
+  ┌─────────┬───────────┬───────┬───────────────┬──────┐   ┌─────────┬───────────┬───────┬───────┐
+  │ level   │ name      │ stage │ size_category │ size │   │ level   │ name      │ stage │ model │
+  ├─────────┼───────────┼───────┼───────────────┼──────┤   ├─────────┼───────────┼───────┼───────┤
+  │ species │ Diptera.4 │ larva │ unknown       │ 7.6  │   │ species │ Diptera.4 │ larva │  lm   │
+  │ species │ Diptera.4 │ larva │ small         │ 4.85 │   │ genus   │ Asperitus │ larva │  lm   │
+  │ species │ Diptera.4 │ larva │ medium        │ 8.15 │   │ family  │ Gomphidae │ larva │  lm   │
+  │ species │ Diptera.4 │ larva │ large         │ 12   │   │ species │ Odonata.1 │ larva │  lm   │
+  │ genus   │ Asperitus │ larva │ unknown       │ 6.9  │   │   ...   │    ...    │  ...  │  ...  │
+  │  ...    │   ...     │  ...  │   ...         │ ...  │   └─────────┴───────────┴───────┴───────┘
+  └─────────┴───────────┴───────┴───────────────┴──────┘         │
+        │                                                        │
+        │  join finest-level size back to data                   │
+        v                                                        │
+  [7] SIZES FILLED                                                │
+  ┌──────┬───────────┬───────┬──────────────┬──────────────┬───────────────┐
+  │ Site │ Species   │ stage │ body_size_mm │ body_mass_mg │ size_estimate │
+  ├──────┼───────────┼───────┼──────────────┼──────────────┼───────────────┤
+  │  A   │ Diptera.4 │ larva │     3.8      │    12.1      │ raw           │
+  │  A   │ Diptera.4 │ larva │     5.9      │    15.2      │ raw           │
+  │  A   │ Diptera.4 │ larva │     12       │    24.3      │ raw           │
+  │  A   │ Diptera.4 │ larva │     7.6      │    NA        │ species       │ <- "unknown" -> 7.6
+  │  A   │ Diptera.4 │ larva │     8.1      │    17.2      │ raw           │
+  │  A   │ Diptera.4 │ larva │     8.2      │    NA        │ raw           │
+  │ ...  │    ...    │  ...  │     ...      │    ...       │     ...       │
+  └──────┴───────────┴───────┴──────────────┴──────────────┴───────────────┘
+        │                                                        │
+        │  apply finest-level model: mass = predict(lm, size) <--┘
+        v
+  [8] FINAL OUTPUT  ($data)
+  ┌──────┬───────────┬───────┬──────────────┬──────────────┬───────────────┬────────────────┐
+  │ Site │ Species   │ stage │ body_size_mm │ body_mass_mg │ size_estimate │ model_estimate │
+  ├──────┼───────────┼───────┼──────────────┼──────────────┼───────────────┼────────────────┤
+  │  A   │ Diptera.4 │ larva │     3.8      │    12.1      │ raw           │ raw            │
+  │  A   │ Diptera.4 │ larva │     5.9      │    15.2      │ raw           │ raw            │
+  │  A   │ Diptera.4 │ larva │     12       │    24.3      │ raw           │ raw            │
+  │  A   │ Diptera.4 │ larva │     7.6      │    16.4      │ species       │ genus          │ <- both estimated
+  │  A   │ Diptera.4 │ larva │     8.1      │    17.2      │ raw           │ raw            │
+  │  A   │ Diptera.4 │ larva │     8.2      │    17.5      │ raw           │ genus          │ <- mass estimated
+  │ ...  │    ...    │  ...  │     ...      │    ...       │     ...       │      ...       │
+  └──────┴───────────┴───────┴──────────────┴──────────────┴───────────────┴────────────────┘
+
+  Legend: raw = measured value kept as-is | species/genus/family = taxonomic
+          level at which the estimate was made (finest available wins)
+```
 
 
 
@@ -340,7 +447,7 @@ size_estimation_table_traits <-
   full_estimation_table(level_vec  = c(), 
                         measurement_table = dats, 
                         traits = T, ## traits = TRUE
-                        trait_columns = trait_columns, ## vector of crisp trait columns
+                        trait_columns = trait_columns, ## vector of fuzzy trait columns
                         what = "size_col")
 ### See the output
 head(size_estimation_table_traits)
@@ -350,7 +457,7 @@ model_estimation_table_traits <-
   full_estimation_table(level_vec  = c(), 
                         measurement_table = dats, 
                         traits = T, ## traits = TRUE
-                        trait_columns = trait_columns, ## vector of crip trait columns
+                        trait_columns = trait_columns, ## vector of fuzzy trait columns
                         what = "biomass_col")
 ### See the output
 head(model_estimation_table_traits)

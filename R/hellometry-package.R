@@ -6,7 +6,7 @@
 ## DESCRIPTION Imports, not an importFrom here.)
 #' @importFrom dplyr first group_by n ntile row_number summarise
 #' @importFrom purrr imap
-#' @importFrom rlang expr sym syms
+#' @importFrom rlang .data .env expr sym syms
 #' @importFrom stats lm predict
 #' @importFrom tidyselect all_of
 #' @importFrom utils read.csv

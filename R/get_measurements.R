@@ -17,15 +17,11 @@
 get_measurements <- function(level_vec, use_BWG_db, no_BWG_data = FALSE){
   if(use_BWG_db == TRUE)
     # Do we want the database data?
-    {dats <- 
-      read.csv(system.file("extdata", 
-                           "measurement_table_withdb.csv", 
-                           package = "hellometry"))} else
-    # Or just extra measurements  
-         {dats <- 
-           read.csv(system.file("extdata", 
-                               "measurement_table_nodb.csv", 
-                               package = "hellometry"))}
+    {dats <-
+      read_extdata("measurement_table_withdb.csv")} else
+    # Or just extra measurements
+         {dats <-
+           read_extdata("measurement_table_nodb.csv")}
   
     
                            

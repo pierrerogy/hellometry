@@ -9,10 +9,12 @@
 dry_wet <- function(dats, biomass_type){
 
   # Simply filter based on chosen category
-  dats <- 
-    dats %>% 
+  dats <-
+    dats %>%
     ## Filter based on input
-    dplyr::filter(biomass_type == biomass_type)
+    ## .data$ is the column, .env$ is the function argument
+    ## (without these, both sides resolve to the column and nothing is filtered)
+    dplyr::filter(.data$biomass_type == .env$biomass_type)
   
   # Return data
   return(dats)
