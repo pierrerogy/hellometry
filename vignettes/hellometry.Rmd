@@ -269,13 +269,13 @@ dplyr::glimpse(model_estimation_table)
 
 ## Experimental feature: traits
 Let's say that you do not have valid models under a taxonomic level that feels satisfying (e.g. order). Here one alternative would be to use traits instead of taxonomy to infer similarities between species. For example, two small, white, undefended worm-like creatures have a high likelihood of having similar body masses if of the same size.<br>
-The package contains some functions (currently in development) to help you do so. So far, they are not incorporated into the `hellometry()` main function, but can get you as far as `full_estimation_table()`. To use them, you would need to supply in `measurement_table` a set of columns that contain <b>[fuzzy]( https://doi.org/10.1111/j.1365-2427.1994.tb01742.x)</b> traits. The functions will only work with crisp traits with discrete integer values, and will group species with those that have trait values +/-1 those of the focus species. You also tell the functions which column uniquely identifies a species through the `id_col` argument. Here is one example, adding a few random crisp traits to the reptile measurement table.
+The package contains some functions (currently in development) to help you do so. So far, they are not incorporated into the `hellometry()` main function, but can get you as far as `full_estimation_table()`. To use them, you would need to supply in `measurement_table` a set of columns that contain <b>[fuzzy]( https://doi.org/10.1111/j.1365-2427.1994.tb01742.x)</b> traits. The functions will only work with fuzzy traits with discrete integer values, and will group species with those that have trait values +/-1 those of the focus species. You also tell the functions which column uniquely identifies a species through the `id_col` argument. Here is one example, adding a few random fuzzy traits to the reptile measurement table.
 ```{r}
-# Crisp (discrete integer) trait columns
+# Fuzzy (discrete integer) trait columns
 trait_columns <-
   c("t1", "t2", "t3")
 
-# Add a few random crisp traits to the measurement table, one value per species
+# Add a few random fuzzy traits to the measurement table, one value per species
 set.seed(1)
 trait_lookup <-
   data.frame(species = unique(measurement_table$species))

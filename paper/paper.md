@@ -19,82 +19,43 @@ bibliography: paper.bib
 ---
 
 # Summary
-Body mass is a central trait to much of ecological theory. In fact, body mass scales reasonably well with many other traits, such as metabolic rate, growth rate, reproductive rate, abundance, trophic position [@Peters1983; @Brown2004;@Brose2006; @Woodward2005; @Smil2007; @White2007]. However, body mass is rarely measured directly: weighting specimens is slow, costly and destructive.
+Body mass is a trait central to much of ecological theory. In fact, body mass scales reasonably well with many other traits, such as metabolic rate, growth rate, reproductive rate, abundance, and trophic position [@Peters1983; @Brown2004;@Brose2006; @Woodward2005; @Smil2007; @White2007]. Despite its conceptual simplicity, body mass is rarely measured directly because weighting organisms is slow, costly and often destructive. One workaround solution is to develop allometric equations, which convert a body dimension, for example body length, to an estimation of body mass [@Benke1999; @Meiri2010; @Froese2014;@Sohlstrom2018]. However, in practice, many data sets are incomplete, where body size can be categorical (e.g. "small"), and both body size and body mass can be missing.
 
+# State of the field
+The software landscape to estimate body mass in ecological studies is fragmented and, for some groups, largely absent. Existing tools address adjacent but distinct problems. For example, the `allodb` package estimates biomass from stem diameter for trees in extratropical forest plots [@GonzalezAkre2022]; `rfishbase` exposes length–weight coefficients for fishes [@Boettiger2012], and `GroupStruct` performs allometric size correction of morphometric measurements rather than mass prediction [@Chan2022]. Nonetheless, these packages do not allow users to update allometric relationships with data they may have already collected. Moreover, curated trait compilations such as `AnimalTraits` [@Herberstein2022] and general trait-imputation frameworks [@Penone2014] provide measured or model-filled values, but they cannot be used to impute missing data in a custom dataset. Therefore, researchers have generally relied on transcribing published length–mass coefficients [@Benke1999; @Meiri2010; @Froese2014;@Sohlstrom2018], an approach that can hardly be compounded because the data used to fit these models is not always available, and can ignore variation to the study area or population of interest.
 
+# Software design
+An explanation of the trade-offs you weighed, the design/architecture you chose, and why it matters for your research application. This should demonstrate meaningful design thinking beyond a superficial code structure description.
 
+`hellometry` is an R [@RCoreTeam] package that fills both body size and body mass gaps from a researcher's own data. Given a table that follows a small set of column-naming conventions, it (i) imputes missing numeric sizes from the empirical size distribution of the relevant taxon, and (ii) fits log–log allometric models and uses them to estimate missing body masses, together with prediction intervals. Importantly, every estimate is made at the finest taxonomic level for which a defensible model exists: the package fits candidate models at each level supplied by the user (e.g., species, genus, family, order), discards those that fail customisable goodness-of-fit filters, and falls back up the taxonomic hierarchy only as far as necessary. The result is a reproducible, dependency-light pipeline wrapped in a single function, `hellometry()`, built on the `tidyverse` toolchain [@Wickham2019].
 
+Several design choices make it practical for real ecological datasets:
 
-
- so ecologists instead measure a linear body dimension
-(typically length, in mm) and convert it to mass (in mg) through allometric
-relationships of the form $M = aL^{b}$ [@Benke1999; @Sohlstrom2018]. In
-practice, field datasets are incomplete in two ways at once: some specimens have
-only categorical size information ("small", "medium", "large", or simply
-"unknown") rather than a numeric length, and many have no mass at all.
-
-`hellometry` is an R [@RCoreTeam] package that fills both gaps from a
-researcher's *own* data. Given a table that follows a small set of column-naming
-conventions, it (i) imputes missing numeric sizes from the empirical size
-distribution of the relevant taxon, and (ii) fits log–log allometric models and
-uses them to predict missing masses, together with prediction intervals. Crucially, every estimate is made at the *finest taxonomic level for which a defensible model exists*: the package fits candidate models at each level supplied by the user (e.g., species, genus, family, order), discards those that fail goodness-of-fit filters, and falls back up the taxonomic hierarchy only as far as necessary. The result is a reproducible, dependency-light pipeline wrapped in a single function, `hellometry()`, built on the `tidyverse` toolchain [@Wickham2019].
-
-# Statement of need
-
-Despite the central role of body mass in ecology, the software landscape for
-estimating it is fragmented and, for invertebrates, largely absent. Existing
-tools address adjacent but distinct problems. The `allodb` package estimates
-biomass from stem diameter for *trees* in extratropical forest plots
-[@GonzalezAkre2022]; `rfishbase` exposes length–weight coefficients for *fishes*
-[@Boettiger2012]; and `GroupStruct` performs allometric *size correction* of
-morphometric measurements rather than mass prediction [@Chan2022]. Curated trait
-compilations such as `AnimalTraits` [@Herberstein2022] and general trait-imputation
-frameworks [@Penone2014] provide measured or model-filled values, but they neither
-fit allometric equations to a user's specimens nor respect the taxonomic
-resolution of those specimens. For invertebrate biomass specifically, researchers
-have therefore relied on transcribing published length–mass coefficients
-[@Benke1999; @Sohlstrom2018; @Wardhaugh2013] into bespoke, error-prone scripts —
-an approach that ignores the variation captured in their own measurements and is
-difficult to reproduce.
-
-`hellometry` targets exactly this gap. Rather than shipping a fixed library of
-equations, it treats the user's measured rows as the training set, so estimates
-are tailored to the taxa, life stages, and conditions actually sampled — the
-better the supplied data, the better the estimates. Several design choices make
-it practical for real ecological datasets:
-
-- **Taxon- and stage-specific models with hierarchical fallback.** Models are
-  fit separately for each taxon and each life `stage` (e.g., larva, pupa, adult),
-  reflecting the strong stage-dependence of invertebrate length–mass scaling. When
+- **Taxon- and stage-specific models.** Models are
+  fit separately for each taxon and each life `stage` (e.g., larva, juvenile, adult),
+  reflecting the influence of metamorphosis of some organisms for length–mass scaling. When
   a taxon lacks enough data for a reliable model, `hellometry` automatically uses
   the next coarser taxonomic level, recording the level at which each estimate was
-  made.
-- **Automatic quality control.** Candidate models are dropped when their
-  $p$-value exceeds a threshold (default $0.05$) or their $R^2$ falls outside a
-  user-set window (default $0 < R^2 < 0.95$, the upper bound guarding against
-  overfit models from tiny samples).
+  made. 
 - **Categorical size imputation.** Where only a qualitative size is recorded, the
   package maps "small", "medium", and "large" onto terciles of the taxon's
-  observed size distribution and "unknown" onto its mean, so that downstream mass
-  prediction can still proceed.
-- **Honest uncertainty.** Masses are returned with prediction intervals
-  (uncertainty around a single new observation), scaled by specimen abundance,
-  rather than narrower confidence intervals around a mean.
-- **Data-format agnosticism.** Any taxonomy and any number of levels are
+  observed size distribution. "unknown" body masses lead to the computation of the weigthed mean, as smaller (younger) organisms tend to be more numerous than larger (older) ones.
+  - **Automatic thresholding.** Candidate models are dropped when their
+  $p$-value exceeds a threshold (default $0.05$) or their $R^2$ falls outside a
+  user-set window (default $0 < R^2 < 0.95$, the upper bound guarding against
+  overfit models from tiny samples). Both thresholds can be modified by the user.
+- **Handling of different taxa.** Any taxonomy and any number of levels are
   supported through a `level_vec` argument and a handful of conventional column
   names, so the package is not tied to a particular taxonomic group or sampling
   scheme.
 
-The package also includes an experimental, trait-based alternative to taxonomy:
+The package also includes a trait-based alternative to taxonomy:
 when no satisfactory model exists below a coarse level, species can instead be
-grouped by similarity in user-supplied discrete ("crisp") traits, matching taxa
+grouped by similarity in user-supplied discrete ("fuzzy") traits, matching taxa
 whose trait values differ by at most one unit, following the fuzzy-coding
-tradition in ecology [@Chevenet1994].
+tradition in ecology [@Chevenet1994; @Cereghino2018].
 
-`hellometry` was developed to process community invertebrate datasets for
-ecological research and is intended for ecologists, entomologists, and freshwater
-and soil biologists who need reproducible biomass estimates from heterogeneous,
-partially measured collections.
+It is important to underline that `hellometry` uses the data supplied by the user to generate body size and body mass estimations. This means that, even if the user can collate large customised datasets, the generated estimations are ultimately a product of the input data. 
 
 # Functionality and example
 
@@ -129,18 +90,18 @@ committing to the full pipeline. A worked example is provided in the package
 vignette (`vignette("hellometry")`).
 
 # Limitations and future directions
+REPRESENTATIVE OF INPUT DATA
 
-`hellometry` fits ordinary least-squares models on $\log_{10}$-transformed data
-and back-transforms predictions; it does not currently apply a correction factor
-for the bias this introduces [@Sprugel1983], so estimated masses should be read as
-median, not mean, predictions. Estimates are only as representative as the
-measured specimens that train them, and the trait-based grouping is experimental
-and not yet integrated into the main wrapper. Planned extensions include optional
-bias correction and support for alternative model backends (e.g., Bayesian
-regression) where small samples make uncertainty quantification especially
-valuable.
-
-# Acknowledgements
 
 
 # References
+Software design: An explanation of the trade-offs you weighed, the design/architecture you chose, and why it matters for your research application. This should demonstrate meaningful design thinking beyond a superficial code structure description.
+
+# Research impact statement
+Earlier versions of `hellometry` have been successfully used by the author's wide network of collaborators, both in terms of published articles [@Srivastava2003; @Rogy2025] and a Ph.D. dissertation [@Westwood2025]. The package is also being used in articles currently being written [Ravoth, pers. comm.]
+
+
+# AI usage disclosure
+The original package was written entirely without generative AI assistance. Claude Opus 4.8 was used in the last stages of the project to make the package more efficient (e.g. correcting redundancies in the code). Here, changes were checked by PR before implementation, and outputs were carefuly checked to those before generative AI was used to ensure the quality and correctness of the content. Claude Opus 4.8 was also used to generate the first draft of the present manuscript, draft that was then considerably edited by all co-authors.
+
+# Acknowledgements
