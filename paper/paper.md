@@ -28,7 +28,10 @@ authors:
     affiliation: 6
   - name: Sarah Abdelazim
     orcid: 0000-0002-6379-2733
-    affiliation: 7                        
+    affiliation: 7                  
+  - name: Fabiola Ospina-Bautista
+    orcid:
+    affiliation: 8      
 affiliations:
   - name: Department of Biology, McGill University, Montréal, QC, Canada
     index: 1
@@ -43,8 +46,10 @@ affiliations:
   - name: 
     index: 6  
   - name: 
-    index: 7         
-date: 10 June 2026
+    index: 7
+  - name: 
+    index: 8                   
+date: 25 June 2026
 bibliography: paper.bib
 ---
 
@@ -78,34 +83,76 @@ Several design choices make it practical for real ecological datasets:
 - **Ease of customisation**
   The package was built in the R language, a langage commonly used in ecological research. Although this may make the computation of estimations slow for massive datasets, it allows users to easily examine the functions, and modify them if need be. The package was built using the simple `tidyverse` [@Wickham2019] library, and includes thorough commenting.
 
-It is important to underline that `hellometry` uses the data supplied by the user to generate body size and body mass estimations. This means that, even if the user can collate large customised datasets, the generated estimations are ultimately a product of the input data. 
-
-The user-facing workflow is a single call. The input table must contain columns
+The user can compute estimations with a single call. The input table must contain columns
 named `size_col` (numeric length, or one of `"small"`, `"medium"`, `"large"`,
 `"unknown"`), `biomass_col` (mass, with `NA` where an estimate is wanted),
 `abundance`, `stage`, `biomass_type` (`"dry"` or `"wet"`), and one column per
 taxonomic level.
 
+The package comes with a toy dataset from Trinidadian bromeliad communities [@Rogy2024] and a large dataset with body size (head to tail, mm) and body mass (mg) that were measured by authors of this manuscript.
+
 ```r
+# Load library
 library(hellometry)
 
-# Taxonomic levels, from finest to coarsest resolution
+# Define taxonomic levels, from finest to coarsest resolution
 level_vec <- 
   c("species", "genus", "family", "order")
 
-result <- 
+# Read in the package datasets
+## Real body-size and body-mass measurements, used to build the models
+measurements <- 
+  bromeliad_inverts_measurements() %>% 
+  ## Rename columns to those expected by hellometry()
+  dplyr::rename(size_col = body_size_mm,
+                biomass_col = body_mass_mg,
+                biomass_type = mass_type) %>% 
+  ## size_col holds both numbers and categories, so it must be character;
+  ## biomass_col must be numeric for the allometric models
+  dplyr::mutate(size_col = as.character(size_col),
+                biomass_col = as.numeric(biomass_col))
+
+## Trinidadian communities, the taxa we want size and biomass estimates for
+communities <- 
+  trini_communities() %>% 
+  ## Rename the abundance column and add the columns hellometry() needs
+  dplyr::rename(abundance = n) %>% 
+  ## Here we do not have any information on the invertebrates, so size is "unknown" and
+  ## biomass NA
+  dplyr::mutate(size_col = "unknown",   
+                biomass_col = NA_real_, 
+                biomass_type = "dry")
+
+# Stack the reference measurements and the target communities into one table
+my_invertebrates <- 
+  measurements %>% 
+  dplyr::bind_rows(communities)
+
+# Generate estimates for the communities using the measurements as reference
+estimates <- 
   hellometry(dats = my_invertebrates,
              level_vec = level_vec,
              biomass_type = "dry")
+
+# Check outputs
+## The ouptuts consist of a list of three elements
+str(estimates)
+# `data` is your data with estimated body sizes and biomasses, and column with information on the level at which were performed the estimations
+dplyr::glimpse(estimates$data)
+# `size_estimations` is a tibble with all unique size estimations that were joined to your data
+dplyr::glimpse(estimates$size_estimations)
+# `model_estimations` is a tibble with all unique allometric models that were joined to your data
+dplyr::glimpse(estimates$model_estimations)
 ```
 
 Internally, `hellometry()` builds a measurement table from the rows that carry a numeric size (`make_measurement_table()`), computes every admissible size estimate and allometric model across taxonomic level (`full_estimation_table()`), joins the finest available estimate back to each
 target row, and predicts mass. It returns a list of three data frames: `data`
 (the original table augmented with estimated sizes, masses, prediction-interval bounds, and the taxonomic level and name used for each estimate), `size_estimations` (the unique size estimates applied), and `model_estimations` (the unique allometric models applied). The helper functions are also exported, so users can inspect all possible estimates and models for their data without committing to the full pipeline. A worked example is provided in the package vignette (`vignette("hellometry")`).
 
+It is important to underline that `hellometry` uses the data supplied by the user to generate body size and body mass estimations. This means that, even if the user can collate large customised datasets, the generated estimations are ultimately a product of the input data.  
 
 # Research impact statement
-Earlier versions of `hellometry` have been successfully used by the authors' network of collaborators, both in terms of published articles [@Srivastava2003; @Rogy2025] and a Ph.D. dissertation [@Westwood2025]. The package is also being used in articles currently being written [S. Ravoth, pers. comm.]
+Earlier versions of `hellometry` have been successfully used by the authors' network of collaborators, both in terms of published articles [@Srivastava2003; @Rogy2025] and a Ph.D. dissertation [@Westwood2025]. The package is also being used in articles currently being written [S.M. Ravoth, pers. comm.]
 
 # AI usage disclosure
 The original package was written entirely without generative AI assistance. Claude Opus 4.8 was used in the last stages of the project to make the package more efficient (e.g. correcting redundancies in the code). Here, changes were checked by PR before implementation, and outputs were carefuly checked to those before generative AI was used to ensure the quality and correctness of the content. Claude Opus 4.8 was also used to generate the first draft of the present manuscript, draft that was then considerably edited by all co-authors.

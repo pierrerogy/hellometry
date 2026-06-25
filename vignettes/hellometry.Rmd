@@ -20,8 +20,9 @@ impute missing body size and body mass measurements in the supplied data frame (
 - column with development stage of specimens (larva/pupa/adult for instance) needs to be called "stage" <br>
 - column with abundance of specimens needs to be called "abundance" <br>
 - column with biomass of specimens needs to be called 'biomass_col'
+- column with biomass type needs to be called 'biomass_type", and only accepts "dry" or "wet"
 
-The idea of the package, wrapped in `hellometry()` is rather simple. First, a `measurement_table` is compiled from your own measurements. This table is then used to compute every possible size estimations, and allometric linear models with  `full_estimation_table()`. Models are  deleted if p > 0.05 or R2 > 0.95, unless you specify other values. Note that size and models are not necessarily computed at the same scale, it all depends on model fit filtered by these p and R2 values! Finally, the size estimation and model at the lowest possible taxonomic level are joined back to the data, and used to estimate biomass at that particular row. The estimations are given with a prediction interval, which differs from a confidence interval in that it represents uncertainty around a single value as opposed to mean predicted values. `hellometry()` returns a list of three elements: your data with estimated body sizes and biomasses, and column with information on the level at which were performed the estimations, a tibble with all unique size estimations that were joined to your data, and a tibble with all unique allometric models that were joined to your data. <br>
+The idea of the package, wrapped in `hellometry()` is rather simple. First, a `measurement_table` is compiled from your own measurements. This table is then used to compute every possible size estimations, and allometric linear models with  `full_estimation_table()`. Models are kept only if $0 < R^2 < 0.95$ and $p$-value $< 0.05$, and discarded otherwise, unless you specify other values. Note that size and models are not necessarily computed at the same scale, it all depends on model fit filtered by these $p$ and R^2 values! Finally, the size estimation and model at the lowest possible taxonomic level are joined back to the data, and used to estimate biomass at that particular row. The estimations are given with a prediction interval, which differs from a confidence interval in that it represents uncertainty around a single value as opposed to mean predicted values. `hellometry()` returns a list of three elements: your data with estimated body sizes and biomasses, and column with information on the level at which were performed the estimations, a tibble with all unique size estimations that were joined to your data, and a tibble with all unique allometric models that were joined to your data. <br>
 
 The diagram below traces one example species (`Sp.A`) through every stage of the pipeline, from your raw input to the final estimated table.
 
@@ -236,9 +237,9 @@ myreptiles_estimated <-
 # The result is a list of three elements
 # - `dats` - your data with estimated body sizes and biomasses, and column with information on the level at which were performed the estimations
 dplyr::glimpse(myreptiles_estimated$data)
-# - `estimation_table` - a tibble with all unique size estimations that were joined to your data
+# - `size_estimations` - a tibble with all unique size estimations that were joined to your data
 dplyr::glimpse(myreptiles_estimated$size_estimations)
-# - `model_table` - a tibble with all unique allometric models that were joined to your data
+# - `model_estimations` - a tibble with all unique allometric models that were joined to your data
 dplyr::glimpse(myreptiles_estimated$model_estimations)
 
 
@@ -256,7 +257,7 @@ size_estimation_table <-
 dplyr::glimpse(size_estimation_table)
 
 ## Get all possible models
-### Note that the package filters out models with p >0.05 and R2 < 0.95 to not include overfitted models
+### Note that the package keeps only models with 0 < R2 < 0.95 and p < 0.05, filtering out poorly-fit and overfitted models
 model_estimation_table <-
   full_estimation_table(level_vec  = level_vec ,
                         measurement_table = dry_wet(measurement_table,
@@ -267,22 +268,31 @@ dplyr::glimpse(model_estimation_table)
 
 ```
 
-## Experimental feature: traits
-Let's say that you do not have valid models under a taxonomic level that feels satisfying (e.g. order). Here one alternative would be to use traits instead of taxonomy to infer similarities between species. For example, two small, white, undefended worm-like creatures have a high likelihood of having similar body masses if of the same size.<br>
-The package contains some functions (currently in development) to help you do so. So far, they are not incorporated into the `hellometry()` main function, but can get you as far as `full_estimation_table()`. To use them, you would need to supply in `measurement_table` a set of columns that contain <b>[fuzzy]( https://doi.org/10.1111/j.1365-2427.1994.tb01742.x)</b> traits. The functions will only work with fuzzy traits with discrete integer values, and will group species with those that have trait values +/-1 those of the focus species. You also tell the functions which column uniquely identifies a species through the `id_col` argument. Here is one example, adding a few random fuzzy traits to the reptile measurement table.
+## Alternative to taxonomical grouping: fuzzy traits
+Let's say that you do not have valid models that feels satisfying under a rather high taxonomic level (e.g. order). Here, one alternative would be to use traits instead of taxonomy to infer similarities between species. For example, two small, white, oblong, worm-like creatures have a high likelihood of having similar body masses if of the same body size.<br>
+The package contains a function to help you do so. So far, they are not incorporated into the `hellometry()` main function, but can get you as far as `full_estimation_table()`. To use them, you would need to supply in `measurement_table` a set of columns that contain <b>[fuzzy]( https://doi.org/10.1111/j.1365-2427.1994.tb01742.x)</b> traits. The functions will only work with fuzzy traits with discrete integer values, and will group species with those that have trait values +/-1 those of the focus species. You also tell the functions which column uniquely identifies a species through the `id_col` argument. Here is one example, adding a few random fuzzy traits to the reptile measurement table.
 ```{r}
 # Fuzzy (discrete integer) trait columns
 trait_columns <-
   c("t1", "t2", "t3")
 
 # Add a few random fuzzy traits to the measurement table, one value per species
+## For reproducibility
 set.seed(1)
+## Get species
 trait_lookup <-
-  data.frame(species = unique(measurement_table$species))
+  tibble::tibble(species = unique(measurement_table$species))
+## Generate random set of traits
 for (tc in trait_columns)
-  trait_lookup[[tc]] <- sample(1:3, nrow(trait_lookup), replace = TRUE)
+  trait_lookup[[tc]] <- 
+    sample(1:3, 
+           nrow(trait_lookup), 
+           replace = TRUE)
+## Join to data
 dats <-
-  dplyr::left_join(measurement_table, trait_lookup, by = "species")
+  measurement_table %>% 
+  dplyr::left_join(trait_lookup, 
+                   by = "species")
 
 ## Get long format data of which species have similar traits
 matched_traits <-
@@ -293,6 +303,7 @@ matched_traits <-
 head(matched_traits)
 
 ## Get clean list for full_estimation_table, includes matcher_of_traits()
+## Here you can see which species were grouped together
 clean_trait_list <-
   make_trait_table(measurement_table = dats,
                    trait_columns = trait_columns,

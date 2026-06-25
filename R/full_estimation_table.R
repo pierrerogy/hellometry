@@ -43,8 +43,9 @@ full_estimation_table <- function(level_vec, measurement_table,
           ## Select only the level and size_col
           dplyr::select(name = dplyr::all_of(.x), 
                         stage, size_col, biomass_col) %>%
-          ## Remove NAs, name being the taxonomic level
-          dplyr::filter(!is.na(name) & !is.na(size_col)) %>% 
+          ## Drop rows with a missing taxon name (NA or "") so the estimation
+          ## falls back to the level above, and rows without a numeric size
+          dplyr::filter(!is.na(name) & name != "" & !is.na(size_col)) %>%
           ## Add column with level name
           dplyr::mutate(level = .x)) %>% 
       ## Remove empty levels 
