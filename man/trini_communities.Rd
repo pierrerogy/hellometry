@@ -4,14 +4,23 @@
 \alias{trini_communities}
 \title{Read the \code{trini_communities} dataset}
 \usage{
-trini_communities()
+trini_communities(traits = FALSE)
+}
+\arguments{
+\item{traits}{Logical; if \code{TRUE}, the returned tibble includes the fuzzy
+trait columns. If \code{FALSE} (the default), only the taxonomy, abundance,
+bromeliad ID and stage columns are returned.}
 }
 \value{
 A tibble with one row per taxon per bromeliad, with columns for
-taxonomy, abundance, and bromeliad ID.
+taxonomy, abundance, and bromeliad ID, and, when \code{traits = TRUE}, a set of
+discrete (fuzzy) trait columns.
 }
 \description{
 Reads the \code{trini_communities} dataset, a set of invertebrate
 community samples from 20 Trinidadian bromeliads (from @Rogy2024). It is provided
 as a toy dataset to try out the package, alongside \code{\link[=bromeliad_inverts_measurements]{bromeliad_inverts_measurements()}}.
+Each taxon also carries a set of discrete (fuzzy) trait columns, matched from
+the Bromeliad Working Group trait database, that can be returned with
+\code{traits = TRUE} to illustrate the trait-based grouping functions.
 }

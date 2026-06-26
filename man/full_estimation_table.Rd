@@ -26,7 +26,7 @@ used to compute allometric lms}
 \item{what}{Should size (what = "size_col") or biomass (what = "biomass_col") be
 estimated?}
 
-\item{model}{What kind of model should be computed, so far only lm}
+\item{model}{What kind of model should be computed, so far only lm, will be updated in the future}
 
 \item{traits}{Should the table be computed by traits or not? Default FALSE}
 

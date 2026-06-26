@@ -6,7 +6,7 @@
 #' used to compute allometric lms 
 #' @param what Should size (what = "size_col") or biomass (what = "biomass_col") be 
 #' estimated? 
-#' @param model What kind of model should be computed, so far only lm
+#' @param model What kind of model should be computed, so far only lm, will be updated in the future
 #' @param traits Should the table be computed by traits or not? Default FALSE
 #' @param trait_columns List of traits to match, should be column names in measurement_table
 #' @param id_col Name of the column holding a unique identifier per species/taxon,

@@ -1,8 +1,8 @@
 #' Read the `bromeliad_inverts_measurements` dataset
 #'
-#' Reads the  `bromeliad_inverts_measurements` dataset, a compilation of invertebrate
-#' body size (mm) and body mass (mg) measurements from bromeliad communities. It is meant
-#' to be used as
+#' Reads the  `bromeliad_inverts_measurements` dataset, a compilation of real invertebrate
+#' body size (mm) and body mass (mg) measurements from bromeliad communities. If you use the
+#' data outside the package, please cite the package.
 #'
 #' @return A tibble with real body length and body size measurements from bromeliad invertebrates.
 #' It contains columns for taxonomy ("phylum" to "species"), "stage", "abundance", "body_size_mm",

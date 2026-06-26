@@ -2,7 +2,7 @@
 #'
 #' Wrapper function, input your data and get size and measurement. 
 #' Please name column with number of specimen "abundance", column with measurement 
-#' in mm "size_col", column with life stage (larva/pupa/adult) "stage", column 
+#' in mm "size_col", column with life stage (e.g. larva/adult) "stage", column 
 #' with biomass type (dry/wet) "biomass_type", and the column with biomass in mg 
 #' "biomass_col".
 #' If you do not have a numerical measurement for a given specimen, the function
@@ -26,14 +26,14 @@
 #' @param r_square_cutoff_upper Upper cutoff for R2 in allometric models, models with values above it will not be used un estimations. Default is 0.95 to avoid overfit models
 #' @param r_square_cutoff_lower Lower cutoff for R2 in allometric models, models with values below it will not be used un estimations. Default is 0.
 #' @param p_val_cutoff Upper cutoff for p-value of allometric models, models with p_value above it will not be used in estimations. Default is 0.05.
-#' @return A list with three dataframes:
+#' @return A list with three tibbles:
 #' - data: the input data with added size and biomass estimations, and new columns 
 #'         with the taxonomic level and name of the taxon at which the estimation 
 #'         was made.
-#' - size_estimations: dataframe with size estimations that were used, 
+#' - size_estimations: tibble with size estimations that were used, 
 #'                     with columns for taxonomic level, name and size category
 #'                     of the estimation.
-#' - model_estimations: dataframe with biomass models that were used, with columns
+#' - model_estimations: tibble with biomass models that were used, with columns
 #'                      for taxonomic level and name.
 #' See `full_estimation_table()` to get all possible size estimations and models
 #' for your data
