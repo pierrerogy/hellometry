@@ -12,7 +12,7 @@ It contains columns for taxonomy ("phylum" to "species"), "stage", "abundance", 
 "body_mass_mg", "mass_type" (dry/wet), "data_providers" and "note".
 }
 \description{
-Reads the  \code{bromeliad_inverts_measurements} dataset, a compilation of invertebrate
-body size (mm) and body mass (mg) measurements from bromeliad communities. It is meant
-to be used as
+Reads the  \code{bromeliad_inverts_measurements} dataset, a compilation of real invertebrate
+body size (mm) and body mass (mg) measurements from bromeliad communities. If you use the
+data outside the package, please cite the package.
 }

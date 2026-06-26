@@ -1,11 +1,11 @@
 #' Read the `trini_communities` dataset
 #'
 #' Reads the `trini_communities` dataset, a set of invertebrate
-#' community samples from 20 Trinidadian bromeliads (from @Rogy2024). It is provided
+#' community samples from 17 Trinidadian bromeliads (from @Rogy2024). It is provided
 #' as a toy dataset to try out the package, alongside [bromeliad_inverts_measurements()].
-#' Each taxon also carries a set of discrete (fuzzy) trait columns, matched from
-#' @Cereghino2018, that can be returned with
-#' `traits = TRUE` to illustrate the trait-based grouping functions.
+#' Each taxon also carries a set of discrete (fuzzy) trait columns, matched from a
+#' trait database (@Cereghino2018), that can be returned with `traits = TRUE` to
+#' illustrate the trait-based grouping functions.
 #'
 #' @param traits Logical; if `TRUE`, the returned tibble includes the fuzzy
 #' trait columns. If `FALSE` (the default), only the taxonomy, abundance,

@@ -17,7 +17,3 @@ A logical vector of the same length as \code{x}.
 \description{
 Returns logical vector indicating if elements are \strong{not} in a given set.
 }
-\examples{
-1 \%notin\% c(2, 3, 4) # TRUE
-"a" \%notin\% letters # FALSE
-}

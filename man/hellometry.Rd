@@ -31,15 +31,15 @@ for more information on how this works.}
 \item{p_val_cutoff}{Upper cutoff for p-value of allometric models, models with p_value above it will not be used in estimations. Default is 0.05.}
 }
 \value{
-A list with three dataframes:
+A list with three tibbles:
 \itemize{
 \item data: the input data with added size and biomass estimations, and new columns
 with the taxonomic level and name of the taxon at which the estimation
 was made.
-\item size_estimations: dataframe with size estimations that were used,
+\item size_estimations: tibble with size estimations that were used,
 with columns for taxonomic level, name and size category
 of the estimation.
-\item model_estimations: dataframe with biomass models that were used, with columns
+\item model_estimations: tibble with biomass models that were used, with columns
 for taxonomic level and name.
 See \code{full_estimation_table()} to get all possible size estimations and models
 for your data
@@ -48,7 +48,7 @@ for your data
 \description{
 Wrapper function, input your data and get size and measurement.
 Please name column with number of specimen "abundance", column with measurement
-in mm "size_col", column with life stage (larva/pupa/adult) "stage", column
+in mm "size_col", column with life stage (e.g. larva/adult) "stage", column
 with biomass type (dry/wet) "biomass_type", and the column with biomass in mg
 "biomass_col".
 If you do not have a numerical measurement for a given specimen, the function
