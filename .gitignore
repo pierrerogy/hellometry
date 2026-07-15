@@ -8,6 +8,7 @@ vignettes/*.hmtl
 vignettes/*.R
 doc
 Meta
+paper/coauthors
 /doc/
 /Meta/
 .positai

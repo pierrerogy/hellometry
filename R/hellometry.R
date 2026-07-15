@@ -10,7 +10,7 @@
 #' In this case, the algorithm will use existing size measurements for the species,
 #' and use the size distribution to estimate "small", "medium" and "large" inputs,
 #' or a weighted average of all measurements if the input is "unknown". For biomass
-#' measurements, just leave NA for those cells you want estimations in.
+#' measurements, just leave NA for those cells you want estimates in.
 #'
 #' Please make sure that the level_vec argument has levels in increasing order
 #' of resolution, e.g. from species to order.
@@ -23,19 +23,19 @@
 #' @param biomass_type "dry"/"wet". Should data used in inference be "dry" for
 #' just dry biomass (default), or "wet" for just wet biomass. See `dry_wet()`
 #' for more information on how this works.
-#' @param r_square_cutoff_upper Upper cutoff for R2 in allometric models, models with values above it will not be used un estimations. Default is 0.95 to avoid overfit models
-#' @param r_square_cutoff_lower Lower cutoff for R2 in allometric models, models with values below it will not be used un estimations. Default is 0.
-#' @param p_val_cutoff Upper cutoff for p-value of allometric models, models with p_value above it will not be used in estimations. Default is 0.05.
+#' @param r_square_cutoff_upper Upper cutoff for R2 in allometric models, models with values above it will not be used in estimation. Default is 0.95 to avoid overfit models
+#' @param r_square_cutoff_lower Lower cutoff for R2 in allometric models, models with values below it will not be used in estimation. Default is 0.
+#' @param p_val_cutoff Upper cutoff for p-value of allometric models, models with p_value above it will not be used in estimation. Default is 0.05.
 #' @return A list with three tibbles:
-#' - data: the input data with added size and biomass estimations, and new columns 
-#'         with the taxonomic level and name of the taxon at which the estimation 
+#' - data: the input data with added size and biomass estimates, and new columns 
+#'         with the taxonomic level and name of the taxon at which the estimate 
 #'         was made.
-#' - size_estimations: tibble with size estimations that were used, 
+#' - size_estimates: tibble with size estimates that were used, 
 #'                     with columns for taxonomic level, name and size category
 #'                     of the estimation.
-#' - model_estimations: tibble with biomass models that were used, with columns
+#' - model_estimates: tibble with biomass models that were used, with columns
 #'                      for taxonomic level and name.
-#' See `full_estimation_table()` to get all possible size estimations and models
+#' See `full_estimation_table()` to get all possible size estimates and models
 #' for your data
 #' @export
 hellometry <- function(dats,
@@ -63,10 +63,10 @@ hellometry <- function(dats,
     make_measurement_table(dats = dats,
                            level_vec = level_vec)
 
-  # Getting size estimations
+  # Getting size estimates
   ## Print message
-  print("Getting size estimations...")
-  ## Make table with all estimations
+  print("Getting size estimates...")
+  ## Make table with all estimates
   full_estimation_table_size <- 
     full_estimation_table(level_vec = level_vec, 
                           measurement_table = measurement_table,
@@ -75,8 +75,8 @@ hellometry <- function(dats,
                           r_square_cutoff_lower = r_square_cutoff_lower,
                           p_val_cutoff = p_val_cutoff) 
   
-  # Join size estimations to the original data
-  size_estimations <- 
+  # Join size estimates to the original data
+  size_estimates <- 
     ret %>% 
     ## Filter numerical measurements
     dplyr::filter(size_col %in% c("small", "medium", "large", "unknown")) %>% 
@@ -104,7 +104,7 @@ hellometry <- function(dats,
                                          stage, size_category),
                          ### Join by column name, stage and size category to get a new column for that trophic level
                          by = c(.y, "stage", "size_category"))) %>%
-    ## Now that all estimations at all levels have been joined, pick the one at the smallest taxonomic level
+    ## Now that all estimates at all levels have been joined, pick the one at the smallest taxonomic level
     dplyr::mutate(
       ### Coalesce all size_col columns to get the first non-NA value
       ### Follows the order of the given vector!
@@ -143,7 +143,7 @@ hellometry <- function(dats,
                             p_val_cutoff = p_val_cutoff))
   
   # Join models to the original data
-  model_estimations <- 
+  model_estimates <- 
     ret %>% 
     ## Get NA biomasses
     dplyr::filter(is.na(biomass_col)) %>% 
@@ -211,14 +211,14 @@ hellometry <- function(dats,
   
   # Stick back to original data
   ## Print message
-  print("Combining estimations and models with data...")
+  print("Combining estimates and models with data...")
   ## Stick back to the data
   ### Suppress warnings when mutated to numeric
   suppressWarnings(
     ret <- 
       ret %>% 
-      ## Join size estimations by row number 
-      dplyr::left_join(size_estimations %>% 
+      ## Join size estimates by row number 
+      dplyr::left_join(size_estimates %>% 
                          dplyr::select(-stage),
                        by = "row") %>% 
       ## Combine by new and old sizes
@@ -226,10 +226,10 @@ hellometry <- function(dats,
                     size_col = dplyr::coalesce(size_col.x, size_col.y)) %>%
       ## Join models by row number
       dplyr::select(-size_col.x, -size_col.y) %>% 
-      dplyr::left_join(model_estimations %>% 
+      dplyr::left_join(model_estimates %>% 
                          dplyr::select(-stage),
                        by = "row") %>%
-      ## Now get estimations of biomass for a single individual
+      ## Now get estimates of biomass for a single individual
       dplyr::mutate(
         ### Iterate over the list column
         biomass = purrr::map2(
@@ -241,7 +241,7 @@ hellometry <- function(dats,
             else if (length(.x) == 0 || any(is.na(.x))) {
               NA_real_}
             else {
-              ### if we have all the data we need, use predict to get estimation
+              ### if we have all the data we need, use predict to get estimate
               predict(.x, 
                       newdata = data.frame(size_col = .y),
                       interval = "prediction")}})) %>% 
@@ -266,11 +266,11 @@ hellometry <- function(dats,
       dplyr::mutate(biomass_col = dplyr::coalesce(biomass, biomass_col)) %>%
       ## Remove biomass column
       dplyr::select(-biomass) %>%
-      ## If we have a value in size_col but no size estimation, make it "raw_data"
+      ## If we have a value in size_col but no size estimate, make it "raw_data"
       dplyr::mutate(dplyr::across(c(size_category, size_level, size_taxon_name),
                                   ~ ifelse(is.na(.),
                                            "raw_data", .))) %>% 
-      ## If we have no biomass estimation say that estimation failed
+      ## If we have no biomass estimate say that estimation failed
       dplyr::mutate(dplyr::across(c(model_level, model_taxon_name),
                                   ~ ifelse(is.na(biomass_col),
                                            "estimation_failed", .))) %>% 
@@ -287,16 +287,16 @@ hellometry <- function(dats,
   
   
   # Return a list of three dataframes
-  ## The original data with estimations, the used size estimations, and the used models
+  ## The original data with estimates, the used size estimates, and the used models
   return(list(
-    ## Original data with estimations
+    ## Original data with estimates
     data = 
       ret %>% 
       ### Remove row number
       dplyr::select(-row),
-    ## Size estimations
-    size_estimations = 
-      size_estimations %>% 
+    ## Size estimation
+    size_estimates = 
+      size_estimates %>% 
       ### Remove NAs
       dplyr::filter(!is.na(size_col)) %>%
       ### Make longer format 
@@ -305,9 +305,9 @@ hellometry <- function(dats,
                     stage, size_category, size_col) %>% 
       ### Keep unique rows
       unique(),
-    ## Model estimations
-    model_estimations = 
-      model_estimations %>% 
+    ## Model estimation
+    model_estimates = 
+      model_estimates %>% 
       ### Remove NAs
       dplyr::filter(!is.na(model)) %>%
       ### Make longer format 

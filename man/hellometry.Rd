@@ -24,24 +24,24 @@ in your data, in increasing order of taxonomic resolution.}
 just dry biomass (default), or "wet" for just wet biomass. See \code{dry_wet()}
 for more information on how this works.}
 
-\item{r_square_cutoff_upper}{Upper cutoff for R2 in allometric models, models with values above it will not be used un estimations. Default is 0.95 to avoid overfit models}
+\item{r_square_cutoff_upper}{Upper cutoff for R2 in allometric models, models with values above it will not be used in estimations. Default is 0.95 to avoid overfit models}
 
-\item{r_square_cutoff_lower}{Lower cutoff for R2 in allometric models, models with values below it will not be used un estimations. Default is 0.}
+\item{r_square_cutoff_lower}{Lower cutoff for R2 in allometric models, models with values below it will not be used in estimations. Default is 0.}
 
 \item{p_val_cutoff}{Upper cutoff for p-value of allometric models, models with p_value above it will not be used in estimations. Default is 0.05.}
 }
 \value{
 A list with three tibbles:
 \itemize{
-\item data: the input data with added size and biomass estimations, and new columns
+\item data: the input data with added size and biomass estimates, and new columns
 with the taxonomic level and name of the taxon at which the estimation
 was made.
-\item size_estimations: tibble with size estimations that were used,
+\item size_estimates: tibble with size estimates that were used,
 with columns for taxonomic level, name and size category
 of the estimation.
-\item model_estimations: tibble with biomass models that were used, with columns
+\item model_estimates: tibble with biomass models that were used, with columns
 for taxonomic level and name.
-See \code{full_estimation_table()} to get all possible size estimations and models
+See \code{full_estimation_table()} to get all possible size estimates and models
 for your data
 }
 }
@@ -52,11 +52,11 @@ in mm "size_col", column with life stage (e.g. larva/adult) "stage", column
 with biomass type (dry/wet) "biomass_type", and the column with biomass in mg
 "biomass_col".
 If you do not have a numerical measurement for a given specimen, the function
-can do size estimations if you input "small", "medium", "large" or "unknown".
+can do size estimation if you input "small", "medium", "large" or "unknown".
 In this case, the algorithm will use existing size measurements for the species,
 and use the size distribution to estimate "small", "medium" and "large" inputs,
 or a weighted average of all measurements if the input is "unknown". For biomass
-measurements, just leave NA for those cells you want estimations in.
+measurements, just leave NA for those cells you want estimates in.
 }
 \details{
 Please make sure that the level_vec argument has levels in increasing order
