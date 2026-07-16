@@ -2,7 +2,7 @@
 % Please edit documentation in R/full_estimation_table.R
 \name{full_estimation_table}
 \alias{full_estimation_table}
-\title{Returns size and biomass estimations for every taxon in measurement table}
+\title{Returns size and biomass estimates for every taxon in measurement table}
 \usage{
 full_estimation_table(
   level_vec,
@@ -18,7 +18,7 @@ full_estimation_table(
 )
 }
 \arguments{
-\item{level_vec}{Vector of taxonomic levels over which to iterate estimations}
+\item{level_vec}{Vector of taxonomic levels over which to iterate estimation}
 
 \item{measurement_table}{A table with the numerical measurements and biomass
 used to compute allometric lms}
@@ -26,7 +26,7 @@ used to compute allometric lms}
 \item{what}{Should size (what = "size_col") or biomass (what = "biomass_col") be
 estimated?}
 
-\item{model}{What kind of model should be computed, so far only lm, will be updated in the future}
+\item{model}{What kind of model should be computed, "lm" (default) for a linear model on the log10-log10 scale, or "poisson" for a Poisson glm with a log link}
 
 \item{traits}{Should the table be computed by traits or not? Default FALSE}
 
@@ -35,15 +35,15 @@ estimated?}
 \item{id_col}{Name of the column holding a unique identifier per species/taxon,
 used only when \code{traits = TRUE}. Default "species".}
 
-\item{r_square_cutoff_upper}{Upper cutoff for R2 in allometric models, models with values above it will not be used un estimations. Default is 0.95 to avoid overfit models}
+\item{r_square_cutoff_upper}{Upper cutoff for R2 in allometric models, models with values above it will not be used in estimation. Default is 0.95 to avoid overfit models}
 
-\item{r_square_cutoff_lower}{Lower cutoff for R2 in allometric models, models with values below it will not be used un estimations. Default is 0.}
+\item{r_square_cutoff_lower}{Lower cutoff for R2 in allometric models, models with values below it will not be used in estimation. Default is 0.}
 
-\item{p_val_cutoff}{Upper cutoff for p-value of allometric models, models with p_value above it will not be used in estimations. Default is 0.05.}
+\item{p_val_cutoff}{Upper cutoff for p-value of allometric models, models with p_value above it will not be used in estimation. Default is 0.05.}
 }
 \value{
-Tibble with size estimations or allometric models used in estimations.
+Tibble with size estimates or allometric models used in estimation.
 }
 \description{
-Returns size and biomass estimations for every taxon in measurement table
+Returns size and biomass estimates for every taxon in measurement table
 }

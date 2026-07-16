@@ -3,7 +3,7 @@
 \docType{package}
 \name{hellometry-package}
 \alias{hellometry-package}
-\title{hellometry: Biomass estimations from allometric relationships}
+\title{hellometry: Biomass estimation from allometric relationships}
 \description{
 Estimates body size (mm) and biomass (mg) of invertebrates from allometric relationships. It works with any data that follow a few column-naming conventions, using the measurements you supply to impute the ones that are missing.
 }

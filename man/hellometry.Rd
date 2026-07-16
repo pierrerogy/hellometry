@@ -8,6 +8,7 @@ hellometry(
   dats,
   level_vec,
   biomass_type = "dry",
+  model = "lm",
   r_square_cutoff_upper = 0.95,
   r_square_cutoff_lower = 0,
   p_val_cutoff = 0.05
@@ -18,23 +19,27 @@ hellometry(
 "size_col", "biomass_col", "stage" (larva/pupa/adult).}
 
 \item{level_vec}{A character vector indicating the taxonomic levels present
-in your data, in increasing order of taxonomic resolution.}
+in your data, in increasing order of coarseness.}
 
 \item{biomass_type}{"dry"/"wet". Should data used in inference be "dry" for
 just dry biomass (default), or "wet" for just wet biomass. See \code{dry_wet()}
 for more information on how this works.}
 
-\item{r_square_cutoff_upper}{Upper cutoff for R2 in allometric models, models with values above it will not be used in estimations. Default is 0.95 to avoid overfit models}
+\item{model}{What kind of allometric model should be computed, "lm" (default)
+for a linear model on the log10-log10 scale, or "poisson" for a Poisson glm
+with a log link.}
 
-\item{r_square_cutoff_lower}{Lower cutoff for R2 in allometric models, models with values below it will not be used in estimations. Default is 0.}
+\item{r_square_cutoff_upper}{Upper cutoff for R2 in allometric models, models with values above it will not be used in estimation. Default is 0.95 to avoid overfit models}
 
-\item{p_val_cutoff}{Upper cutoff for p-value of allometric models, models with p_value above it will not be used in estimations. Default is 0.05.}
+\item{r_square_cutoff_lower}{Lower cutoff for R2 in allometric models, models with values below it will not be used in estimation. Default is 0.}
+
+\item{p_val_cutoff}{Upper cutoff for p-value of allometric models, models with p_value above it will not be used in estimation. Default is 0.05.}
 }
 \value{
 A list with three tibbles:
 \itemize{
 \item data: the input data with added size and biomass estimates, and new columns
-with the taxonomic level and name of the taxon at which the estimation
+with the taxonomic level and name of the taxon at which the estimate
 was made.
 \item size_estimates: tibble with size estimates that were used,
 with columns for taxonomic level, name and size category
@@ -52,7 +57,7 @@ in mm "size_col", column with life stage (e.g. larva/adult) "stage", column
 with biomass type (dry/wet) "biomass_type", and the column with biomass in mg
 "biomass_col".
 If you do not have a numerical measurement for a given specimen, the function
-can do size estimation if you input "small", "medium", "large" or "unknown".
+can do size estimations if you input "small", "medium", "large" or "unknown".
 In this case, the algorithm will use existing size measurements for the species,
 and use the size distribution to estimate "small", "medium" and "large" inputs,
 or a weighted average of all measurements if the input is "unknown". For biomass
@@ -60,5 +65,5 @@ measurements, just leave NA for those cells you want estimates in.
 }
 \details{
 Please make sure that the level_vec argument has levels in increasing order
-of resolution, e.g. from species to order.
+of coarseness, e.g. from species to order.
 }

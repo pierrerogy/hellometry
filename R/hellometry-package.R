@@ -7,7 +7,7 @@
 #' @importFrom dplyr group_by n ntile row_number summarise
 #' @importFrom purrr imap
 #' @importFrom rlang .data .env expr sym syms
-#' @importFrom stats lm predict
+#' @importFrom stats df.residual glm lm poisson predict qnorm qt
 #' @importFrom tidyselect all_of
 NULL
 
@@ -16,6 +16,6 @@ NULL
 utils::globalVariables(c(
   ".", "abundance", "biomass", "biomass_col", "biomass_lower",
   "biomass_upper", "level", "model", "model_level", "model_taxon_name",
-  "name", "prediction_interval", "size_category", "size_col",
+  "name", "size_category", "size_col",
   "size_col.x", "size_col.y", "size_level", "size_taxon_name", "stage"
 ))

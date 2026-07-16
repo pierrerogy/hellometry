@@ -4,13 +4,16 @@
 \alias{data_checker}
 \title{Set of checks to perform on the data to make sure it can be handled by \code{hellometry()}}
 \usage{
-data_checker(dats, biomass_type)
+data_checker(dats, biomass_type, model)
 }
 \arguments{
-\item{dats}{Dataframe to be used for estimations}
+\item{dats}{Dataframe to be used for estimation}
 
 \item{biomass_type}{"dry"/"wet". Whether the biomass used in inference should
 be dry (default) or wet. See \code{dry_wet()} for details.}
+
+\item{model}{"lm"/"poisson". What kind of allometric model should be computed.
+See \code{full_estimation_table()} for details.}
 }
 \description{
 Will fail if any condition not met

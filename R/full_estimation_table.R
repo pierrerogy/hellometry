@@ -1,20 +1,20 @@
-#' Returns size and biomass estimations for every taxon in measurement table
+#' Returns size and biomass estimates for every taxon in measurement table
 #'
 #'
-#' @param level_vec Vector of taxonomic levels over which to iterate estimations
+#' @param level_vec Vector of taxonomic levels over which to iterate estimation
 #' @param measurement_table A table with the numerical measurements and biomass 
 #' used to compute allometric lms 
 #' @param what Should size (what = "size_col") or biomass (what = "biomass_col") be 
 #' estimated? 
-#' @param model What kind of model should be computed, so far only lm, will be updated in the future
+#' @param model What kind of model should be computed, "lm" (default) for a linear model on the log10-log10 scale, or "poisson" for a Poisson glm with a log link
 #' @param traits Should the table be computed by traits or not? Default FALSE
 #' @param trait_columns List of traits to match, should be column names in measurement_table
 #' @param id_col Name of the column holding a unique identifier per species/taxon,
 #' used only when `traits = TRUE`. Default "species".
-#' @param r_square_cutoff_upper Upper cutoff for R2 in allometric models, models with values above it will not be used un estimations. Default is 0.95 to avoid overfit models
-#' @param r_square_cutoff_lower Lower cutoff for R2 in allometric models, models with values below it will not be used un estimations. Default is 0.
-#' @param p_val_cutoff Upper cutoff for p-value of allometric models, models with p_value above it will not be used in estimations. Default is 0.05.
-#' @return Tibble with size estimations or allometric models used in estimations. 
+#' @param r_square_cutoff_upper Upper cutoff for R2 in allometric models, models with values above it will not be used in estimation. Default is 0.95 to avoid overfit models
+#' @param r_square_cutoff_lower Lower cutoff for R2 in allometric models, models with values below it will not be used in estimation. Default is 0.
+#' @param p_val_cutoff Upper cutoff for p-value of allometric models, models with p_value above it will not be used in estimation. Default is 0.05.
+#' @return Tibble with size estimates or allometric models used in estimation. 
 #' @export
 #' 
 full_estimation_table <- function(level_vec, measurement_table,
@@ -24,7 +24,7 @@ full_estimation_table <- function(level_vec, measurement_table,
                                   r_square_cutoff_lower = 0,
                                   p_val_cutoff = 0.05){
 
-  # If we want to get estimations with traits
+  # If we want to get estimates with traits
   if (traits) {
     ## Use trait functions to make groupings of similar trait species
     ret <-
@@ -118,8 +118,9 @@ full_estimation_table <- function(level_vec, measurement_table,
         purrr::keep(function(x) nrow(x) > 0)
       
       ## If we want basic lms
+      ## The log10-log10 scale is what makes the relationship allometric
       if(model == "lm"){
-        ret <- 
+        ret <-
           ret %>%
           purrr::map(.,
                      ### Make a model column
@@ -127,26 +128,40 @@ full_estimation_table <- function(level_vec, measurement_table,
                        dplyr::summarise(
                          model = list(lm(log10(biomass_col) ~ log10(size_col),
                                     data = dplyr::pick(size_col, biomass_col))),
-                         .groups = "drop") %>%
-                       ### Summarise each model once, then derive R2 and p-value
-                       dplyr::mutate(
-                         .smry = purrr::map(model, summary),
-                         .r2   = purrr::map_dbl(.smry, "r.squared"),
-                         .pval = purrr::map_dbl(.smry, ~ .x$coefficients[2, 4])) %>%
-                       ### Filter out models based on R2 cutoffs and p value
-                       dplyr::filter(.r2 < r_square_cutoff_upper,
-                                     .r2 > r_square_cutoff_lower,
-                                     .pval < p_val_cutoff) %>%
-                       ### Drop helper columns
-                       dplyr::select(-.smry, -.r2, -.pval))}
-      ## If we want other models
-      if(model == "brms"){
-        ret <- 
-          ret
-      }
-      
-      
-      
+                         .groups = "drop"))}
+      ## If we want Poisson glms
+      ## Biomass is not log10-transformed here, the log link already models it
+      ## on the log scale, so only size needs transforming
+      if(model == "poisson"){
+        ret <-
+          ret %>%
+          purrr::map(.,
+                     ### Make a model column
+                     ~ .x %>%
+                       dplyr::summarise(
+                         model = list(glm(biomass_col ~ log10(size_col),
+                                    data = dplyr::pick(size_col, biomass_col),
+                                    family = poisson)),
+                         .groups = "drop"))}
+
+      ## Filter out the bad models, the same way whatever their kind
+      ret <-
+        ret %>%
+        purrr::map(.,
+                   ~ .x %>%
+                     ### Get the R2 of each model, and the p-value of its slope
+                     dplyr::mutate(
+                       .r2   = purrr::map_dbl(model, r_squared),
+                       .pval = purrr::map_dbl(model,
+                                              ~ summary(.x)$coefficients[2, 4])) %>%
+                     ### Filter out models based on R2 cutoffs and p value
+                     dplyr::filter(.r2 < r_square_cutoff_upper,
+                                   .r2 > r_square_cutoff_lower,
+                                   .pval < p_val_cutoff) %>%
+                     ### Drop helper columns
+                     dplyr::select(-.r2, -.pval))
+
+
       ## Convert data to format we want
       ret <- 
         ret %>% 

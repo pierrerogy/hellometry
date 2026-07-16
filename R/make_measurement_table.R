@@ -5,10 +5,10 @@
 #' every row with a numerical `size_col` is kept (expanded by `abundance` so
 #' each row represents one individual), carrying its taxonomy along.
 #'
-#' @param dats Dataframe to be used for estimations.
+#' @param dats Dataframe to be used for estimation.
 #' @param level_vec Vector of taxonomic levels to be used in the measurement table.
 #' @return A table with measurements and taxonomy, ready to be used for
-#'  size and biomass estimations.
+#'  size and biomass estimation.
 #' @export
 make_measurement_table <- function(dats, level_vec){
 

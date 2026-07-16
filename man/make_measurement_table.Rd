@@ -7,13 +7,13 @@
 make_measurement_table(dats, level_vec)
 }
 \arguments{
-\item{dats}{Dataframe to be used for estimations.}
+\item{dats}{Dataframe to be used for estimation.}
 
 \item{level_vec}{Vector of taxonomic levels to be used in the measurement table.}
 }
 \value{
 A table with measurements and taxonomy, ready to be used for
-size and biomass estimations.
+size and biomass estimation.
 }
 \description{
 Compiles the table of numerical measurements used to estimate sizes and fit

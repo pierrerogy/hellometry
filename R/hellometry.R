@@ -13,16 +13,19 @@
 #' measurements, just leave NA for those cells you want estimates in.
 #'
 #' Please make sure that the level_vec argument has levels in increasing order
-#' of resolution, e.g. from species to order.
+#' of coarseness, e.g. from species to order.
 #'
 #'
 #' @param dats The input data table, please include columns "abundance",
 #' "size_col", "biomass_col", "stage" (larva/pupa/adult).
 #' @param level_vec A character vector indicating the taxonomic levels present
-#' in your data, in increasing order of taxonomic resolution.
+#' in your data, in increasing order of coarseness.
 #' @param biomass_type "dry"/"wet". Should data used in inference be "dry" for
 #' just dry biomass (default), or "wet" for just wet biomass. See `dry_wet()`
 #' for more information on how this works.
+#' @param model What kind of allometric model should be computed, "lm" (default)
+#' for a linear model on the log10-log10 scale, or "poisson" for a Poisson glm
+#' with a log link.
 #' @param r_square_cutoff_upper Upper cutoff for R2 in allometric models, models with values above it will not be used in estimation. Default is 0.95 to avoid overfit models
 #' @param r_square_cutoff_lower Lower cutoff for R2 in allometric models, models with values below it will not be used in estimation. Default is 0.
 #' @param p_val_cutoff Upper cutoff for p-value of allometric models, models with p_value above it will not be used in estimation. Default is 0.05.
@@ -41,13 +44,15 @@
 hellometry <- function(dats,
                        level_vec,
                        biomass_type = "dry",
+                       model = "lm",
                        r_square_cutoff_upper = 0.95,
                        r_square_cutoff_lower = 0,
                        p_val_cutoff = 0.05) {
 
-  # Columns must be properly named, biomass_type must have a valid value
+  # Columns must be properly named, biomass_type and model must have valid values
   data_checker(dats = dats,
-               biomass_type = biomass_type)
+               biomass_type = biomass_type,
+               model = model)
 
   # Make copy of dataset to then reuse
   ret <-
@@ -134,10 +139,11 @@ hellometry <- function(dats,
   ### Wrap in suppressWarnings to avoid cluttering
   suppressWarnings(
     full_estimation_table_biomass <- 
-      full_estimation_table(level_vec = level_vec, 
+      full_estimation_table(level_vec = level_vec,
                             measurement_table = dry_wet(measurement_table,
-                                                        biomass_type = "dry"),
+                                                        biomass_type = biomass_type),
                             what = "biomass_col",
+                            model = model,
                             r_square_cutoff_upper = r_square_cutoff_upper,
                             r_square_cutoff_lower = r_square_cutoff_lower,
                             p_val_cutoff = p_val_cutoff))
@@ -229,39 +235,32 @@ hellometry <- function(dats,
       dplyr::left_join(model_estimates %>% 
                          dplyr::select(-stage),
                        by = "row") %>%
-      ## Now get estimates of biomass for a single individual
+      ## Now get estimates of biomass for the whole row
       dplyr::mutate(
         ### Iterate over the list column
-        biomass = purrr::map2(
-          model, size_col, ~ {
+        biomass = purrr::pmap(
+          list(model, size_col, abundance),
+          function(model, size_col, abundance) {
             ### If the cell is NULL (biomass was inputted),make NA
-            if (is.null(.x)) {
-              NA_real_}
+            if (is.null(model)) {
+              NA}
             ### If the cell is NA (no model could be computed), make NA
-            else if (length(.x) == 0 || any(is.na(.x))) {
-              NA_real_}
+            else if (length(model) == 0 || any(is.na(model))) {
+              NA}
             else {
               ### if we have all the data we need, use predict to get estimate
-              predict(.x, 
-                      newdata = data.frame(size_col = .y),
-                      interval = "prediction")}})) %>% 
+              ### predict_biomass() scales to abundance and back-transforms
+              predict_biomass(model = model,
+                              size = size_col,
+                              abundance = abundance)}})) %>%
       ## Do rowwise operations
-      dplyr::rowwise() %>% 
-      ## Convert to normal units
-      dplyr::mutate(biomass_lower = 10^biomass[2],
-                    biomass_upper = 10^biomass[3],
-                    biomass = 10^biomass[1]*abundance) %>% 
-      ## Get new prediction error interval related to abundace
-      ## First get individual SE, EM = 1.96 * SEindividual
-      ## Multiply by squareroot of abundance to get SEtotal
-      ## Multiply by 1.96 to get back to total EM  dplyr::mutate(prediction_interval = (((biomass_upper - biomass_lower)/2)/1.96)*sqrt(abundance)*1.96) %>% 
-      dplyr::mutate(prediction_interval = (((biomass_upper - biomass_lower)/2)/1.96)*sqrt(abundance)*1.96) %>% 
-      dplyr::mutate(biomass_lower = biomass - prediction_interval,
-                    biomass_upper = biomass + prediction_interval) %>% 
-      ## Remove predicioon interval
-      dplyr::select(-prediction_interval) %>% 
+      dplyr::rowwise() %>%
+      ## Split the estimate and its bounds into their own columns
+      dplyr::mutate(biomass_lower = biomass[2],
+                    biomass_upper = biomass[3],
+                    biomass = biomass[1]) %>%
       ## Ungroup
-      dplyr::ungroup() %>% 
+      dplyr::ungroup() %>%
       ## Coalesce the two biomass columns
       dplyr::mutate(biomass_col = dplyr::coalesce(biomass, biomass_col)) %>%
       ## Remove biomass column

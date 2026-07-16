@@ -2,7 +2,7 @@
 % Please edit documentation in R/make_trait_table.R
 \name{make_trait_table}
 \alias{make_trait_table}
-\title{Prepare data to do estimations with traits in \code{full_estimation_table}}
+\title{Prepare data to do estimation with traits in \code{full_estimation_table}}
 \usage{
 make_trait_table(measurement_table, trait_columns, id_col = "species")
 }

@@ -1,4 +1,4 @@
-#' Prepare data to do estimations with traits in `full_estimation_table`
+#' Prepare data to do estimation with traits in `full_estimation_table`
 #'
 #' Remove columns with taxonomy, and replace them with trait-based groupings
 #'
