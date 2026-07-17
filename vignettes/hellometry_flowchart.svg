@@ -1,0 +1,147 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1460" width="900" height="1460" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" role="img" aria-label="Flowchart of a hellometry() call. Your data enters data_checker(); invalid input stops. make_measurement_table() builds the measurement table. full_estimation_table() runs with what equals size_col to estimate sizes, which are joined per level so the size at the lowest taxonomic level is selected. dry_wet() filters biomass type, then full_estimation_table() runs with what equals biomass_col, choosing lm or a Poisson glm, filtered by r_squared() and the slope p-value; rejected models fall back to the level above. Surviving models are joined per level, predict_biomass() applies them, and a list of three tables is returned. make_trait_table() and matcher_of_traits() sit on a dashed side path used only when traits equals TRUE.">
+  <defs>
+    <marker id="hm-arw" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="#8FA098" />
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="900" height="1460" fill="#FFFFFF" />
+
+  <!-- edges -->
+  <g fill="none" stroke="#8FA098" stroke-width="1.4">
+    <path marker-end="url(#hm-arw)" d="M420,58 V82" />
+    <path marker-end="url(#hm-arw)" d="M420,132 V158" />
+    <path marker-end="url(#hm-arw)" d="M530,202 H636" />
+    <path marker-end="url(#hm-arw)" d="M420,246 V268" />
+    <path marker-end="url(#hm-arw)" d="M420,318 V348" />
+    <path marker-end="url(#hm-arw)" d="M420,394 V424" />
+    <path marker-end="url(#hm-arw)" d="M420,486 V516" />
+    <path marker-end="url(#hm-arw)" d="M420,572 V602" />
+    <path marker-end="url(#hm-arw)" d="M420,648 V682" />
+    <path marker-end="url(#hm-arw)" d="M420,738 V768" />
+
+    <path marker-end="url(#hm-arw)" d="M310,812 H250 V882" />
+    <path marker-end="url(#hm-arw)" d="M530,812 H590 V882" />
+    <path d="M250,932 V962 H420" />
+    <path d="M590,932 V962 H420" />
+    <path marker-end="url(#hm-arw)" d="M420,962 V986" />
+
+    <path marker-end="url(#hm-arw)" d="M420,1038 V1064" />
+    <path marker-end="url(#hm-arw)" d="M550,1116 H636" />
+    <path marker-end="url(#hm-arw)" d="M420,1168 V1196" />
+
+    <path marker-end="url(#hm-arw)" d="M420,1248 V1282" />
+    <path marker-end="url(#hm-arw)" d="M420,1340 V1374" />
+
+    <path marker-end="url(#hm-arw)" stroke-dasharray="5 4" d="M280,708 H244" />
+    <path marker-end="url(#hm-arw)" stroke-dasharray="5 4" d="M130,734 V768" />
+  </g>
+
+  <!-- your data -->
+  <polygon points="282,16 490,16 478,58 270,58" fill="#E8EDE7" stroke="#A9B7AF" stroke-width="1" />
+  <text x="380" y="42" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="600" fill="#16211D">your data</text>
+
+  <!-- data_checker -->
+  <rect x="290" y="82" width="260" height="50" rx="3" fill="#FFFFFF" stroke="#A9B7AF" stroke-width="1" />
+  <text x="420" y="103" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" font-weight="600" fill="#16211D">data_checker()</text>
+  <text x="420" y="120" text-anchor="middle" font-size="10.5" fill="#5A6862">check correct formatting</text>
+
+  <!-- input valid? -->
+  <polygon points="420,158 530,202 420,246 310,202" fill="#DFEDEB" stroke="#2C6B66" stroke-width="1.25" />
+  <text x="420" y="206" text-anchor="middle" font-size="11" font-weight="600" fill="#2C6B66">input valid?</text>
+  <text x="536" y="196" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10" fill="#8A968F">no</text>
+  <text x="428" y="264" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10" fill="#2C6B66">yes</text>
+
+  <!-- stop -->
+  <rect x="636" y="180" width="248" height="44" rx="3" fill="#F6E6E3" stroke="#A83A2C" stroke-width="1.5" />
+  <text x="760" y="199" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" font-weight="600" fill="#A83A2C">stop()</text>
+  <text x="760" y="215" text-anchor="middle" font-size="10.5" fill="#5A6862">nothing is guessed</text>
+
+  <!-- make_measurement_table -->
+  <rect x="290" y="268" width="260" height="50" rx="3" fill="#FFFFFF" stroke="#A9B7AF" stroke-width="1" />
+  <text x="420" y="289" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" font-weight="600" fill="#16211D">make_measurement_table()</text>
+  <text x="420" y="306" text-anchor="middle" font-size="10.5" fill="#5A6862">numeric sizes only, one row per individual</text>
+
+  <!-- measurement table -->
+  <polygon points="282,348 490,348 478,394 270,394" fill="#E8EDE7" stroke="#A9B7AF" stroke-width="1" />
+  <text x="380" y="376" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="600" fill="#16211D">measurement table</text>
+
+  <!-- full_estimation_table (size) -->
+  <rect x="280" y="424" width="280" height="62" rx="3" fill="#FFFFFF" stroke="#A9B7AF" stroke-width="1" />
+  <text x="420" y="445" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" font-weight="600" fill="#16211D">full_estimation_table()</text>
+  <text x="420" y="462" text-anchor="middle" font-size="10.5" fill="#5A6862">what = "size_col"</text>
+  <text x="420" y="478" text-anchor="middle" font-size="10.5" fill="#5A6862">terciles → small / medium / large, mean → unknown</text>
+
+  <!-- join sizes -->
+  <rect x="280" y="516" width="280" height="56" rx="3" fill="#FFFFFF" stroke="#A9B7AF" stroke-width="1" />
+  <text x="420" y="540" text-anchor="middle" font-size="12" font-weight="600" fill="#16211D">join per level</text>
+  <text x="420" y="557" text-anchor="middle" font-size="10.5" fill="#5A6862">size at lowest taxonomic level selected</text>
+
+  <!-- dry_wet -->
+  <rect x="290" y="602" width="260" height="46" rx="3" fill="#FFFFFF" stroke="#A9B7AF" stroke-width="1" />
+  <text x="420" y="621" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" font-weight="600" fill="#16211D">dry_wet()</text>
+  <text x="420" y="637" text-anchor="middle" font-size="10.5" fill="#5A6862">keeps dry or wet rows</text>
+
+  <!-- full_estimation_table (biomass) -->
+  <rect x="280" y="682" width="280" height="56" rx="3" fill="#FFFFFF" stroke="#A9B7AF" stroke-width="1" />
+  <text x="420" y="705" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" font-weight="600" fill="#16211D">full_estimation_table()</text>
+  <text x="420" y="722" text-anchor="middle" font-size="10.5" fill="#5A6862">what = "biomass_col"</text>
+
+  <!-- trait side path -->
+  <rect x="20" y="682" width="220" height="52" rx="3" fill="#E8EDE7" stroke="#A9B7AF" stroke-width="1" stroke-dasharray="4 3" />
+  <text x="130" y="704" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" font-weight="600" fill="#16211D">make_trait_table()</text>
+  <text x="130" y="721" text-anchor="middle" font-size="10.5" fill="#5A6862">only when traits = TRUE</text>
+
+  <rect x="20" y="768" width="220" height="52" rx="3" fill="#E8EDE7" stroke="#A9B7AF" stroke-width="1" stroke-dasharray="4 3" />
+  <text x="130" y="790" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" font-weight="600" fill="#16211D">matcher_of_traits()</text>
+  <text x="130" y="807" text-anchor="middle" font-size="10.5" fill="#5A6862">traits within ±1 of each other</text>
+
+  <!-- model kind -->
+  <polygon points="420,768 530,812 420,856 310,812" fill="#DFEDEB" stroke="#2C6B66" stroke-width="1.25" />
+  <text x="420" y="816" text-anchor="middle" font-size="11" font-weight="600" fill="#2C6B66">model =</text>
+  <text x="304" y="804" text-anchor="end" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10" fill="#8A968F">"lm"</text>
+  <text x="536" y="804" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10" fill="#8A968F">"poisson"</text>
+
+  <!-- lm -->
+  <rect x="130" y="882" width="240" height="50" rx="3" fill="#FFFFFF" stroke="#A9B7AF" stroke-width="1" />
+  <text x="250" y="903" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" font-weight="600" fill="#16211D">lm()</text>
+  <text x="250" y="920" text-anchor="middle" font-size="10.5" fill="#5A6862">log10(biomass) ~ log10(size)</text>
+
+  <!-- poisson -->
+  <rect x="470" y="882" width="240" height="50" rx="3" fill="#FFFFFF" stroke="#A9B7AF" stroke-width="1" />
+  <text x="590" y="903" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" font-weight="600" fill="#16211D">glm(family = poisson)</text>
+  <text x="590" y="920" text-anchor="middle" font-size="10.5" fill="#5A6862">log link, biomass ~ log10(size)</text>
+
+  <!-- r_squared -->
+  <rect x="290" y="986" width="260" height="52" rx="3" fill="#FFFFFF" stroke="#A9B7AF" stroke-width="1" />
+  <text x="420" y="1008" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" font-weight="600" fill="#16211D">r_squared()</text>
+  <text x="420" y="1025" text-anchor="middle" font-size="10.5" fill="#5A6862">performance::r2(), plus the slope p-value</text>
+
+  <!-- fit filter -->
+  <polygon points="420,1064 550,1116 420,1168 290,1116" fill="#DFEDEB" stroke="#2C6B66" stroke-width="1.25" />
+  <text x="420" y="1104" text-anchor="middle" font-size="11" font-weight="600" fill="#2C6B66">0 &lt; R² &lt; 0.95</text>
+  <text x="420" y="1119" text-anchor="middle" font-size="11" font-weight="600" fill="#2C6B66">and p &lt; 0.05?</text>
+  <text x="420" y="1134" text-anchor="middle" font-size="9.5" fill="#5A6862">(or custom thresholds)</text>
+  <text x="556" y="1110" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10" fill="#8A968F">no</text>
+  <text x="428" y="1186" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10" fill="#2C6B66">yes</text>
+
+  <!-- model dropped -->
+  <rect x="636" y="1094" width="248" height="46" rx="3" fill="#FFFFFF" stroke="#A9B7AF" stroke-width="1" />
+  <text x="760" y="1114" text-anchor="middle" font-size="12" font-weight="600" fill="#16211D">model dropped</text>
+  <text x="760" y="1130" text-anchor="middle" font-size="10.5" fill="#5A6862">the level above is tried instead</text>
+
+  <!-- join models -->
+  <rect x="280" y="1196" width="280" height="52" rx="3" fill="#FFFFFF" stroke="#A9B7AF" stroke-width="1" />
+  <text x="420" y="1218" text-anchor="middle" font-size="12" font-weight="600" fill="#16211D">join per level</text>
+  <text x="420" y="1235" text-anchor="middle" font-size="10.5" fill="#5A6862">model at lowest taxonomic level selected</text>
+
+  <!-- predict_biomass -->
+  <rect x="290" y="1282" width="260" height="58" rx="3" fill="#FFFFFF" stroke="#A9B7AF" stroke-width="1" />
+  <text x="420" y="1303" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" font-weight="600" fill="#16211D">predict_biomass()</text>
+  <text x="420" y="1320" text-anchor="middle" font-size="10.5" fill="#5A6862">scale to abundance on the fitted scale,</text>
+  <text x="420" y="1334" text-anchor="middle" font-size="10.5" fill="#5A6862">then back-transform once</text>
+
+  <!-- output -->
+  <polygon points="262,1374 598,1374 586,1420 250,1420" fill="#E8EDE7" stroke="#A9B7AF" stroke-width="1" />
+  <text x="424" y="1402" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" font-weight="600" fill="#16211D">list(data, size_estimates, model_estimates)</text>
+</svg>
