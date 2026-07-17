@@ -1,6 +1,6 @@
 Package: hellometry
 Title: Biomass estimation from allometric relationships
-Version: 0.9.1
+Version: 1.0.1
 Authors@R:
     person(given = "Pierre",
            family = "Rogy",

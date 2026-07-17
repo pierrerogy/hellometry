@@ -28,82 +28,172 @@ The idea of the package, wrapped in `hellometry()` is rather simple. First, a `m
 - a tibble with all unique size estimates that were joined to your data, 
 - a tibble with all unique allometric models that were joined to your data. <br>
 
-The diagram below traces one example species (`Sp.A`) through every stage of the pipeline, from your raw input to the final estimated table.
+The flowchart below traces one `hellometry()` call, from your data to the returned list.
 
-```
-                       hellometry() PIPELINE
-                       =====================
+<style>
+.hm-flow {
+  --surface:     #FFFFFF;
+  --surface-sunk:#E8EDE7;
+  --ink:         #16211D;
+  --ink-soft:    #5A6862;
+  --ink-faint:   #8A968F;
+  --rule-strong: #A9B7AF;
+  --edge:        #8FA098;
+  --accent:      #A83A2C;
+  --accent-wash: #F6E6E3;
+  --teal:        #2C6B66;
+  --teal-wash:   #DFEDEB;
+  --flow-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --flow-mono: ui-monospace, SFMono-Regular, "Cascadia Code", Menlo, Consolas, monospace;
+  margin: 1.5em 0;
+  overflow-x: auto;
+}
+.hm-flow svg { display: block; width: 100%; max-width: 900px; height: auto; margin: 0 auto; }
+.hm-flow .f-box   { fill: var(--surface); stroke: var(--rule-strong); stroke-width: 1; }
+.hm-flow .f-data  { fill: var(--surface-sunk); stroke: var(--rule-strong); stroke-width: 1; }
+.hm-flow .f-dec   { fill: var(--teal-wash); stroke: var(--teal); stroke-width: 1.25; }
+.hm-flow .f-stop  { fill: var(--accent-wash); stroke: var(--accent); stroke-width: 1.5; }
+.hm-flow .f-side .f-box { stroke-dasharray: 4 3; fill: var(--surface-sunk); }
+.hm-flow .f-name  { font-family: var(--flow-mono); font-size: 12.5px; font-weight: 600; fill: var(--ink); }
+.hm-flow .f-stop-name { font-family: var(--flow-mono); font-size: 12.5px; font-weight: 600; fill: var(--accent); }
+.hm-flow .f-sub   { font-family: var(--flow-body); font-size: 10.5px; fill: var(--ink-soft); }
+.hm-flow .f-inline{ font-family: var(--flow-body); font-size: 12px; font-weight: 600; fill: var(--ink); }
+.hm-flow .f-dec-t { font-family: var(--flow-body); font-size: 11px; font-weight: 600; fill: var(--teal); }
+.hm-flow .f-dec-s { font-family: var(--flow-body); font-size: 9.5px; fill: var(--ink-soft); }
+.hm-flow .f-datat { font-family: var(--flow-mono); font-size: 11.5px; font-weight: 600; fill: var(--ink); }
+.hm-flow .edge    { stroke: var(--edge); stroke-width: 1.4; fill: none; }
+.hm-flow .edge-opt{ stroke-dasharray: 5 4; }
+.hm-flow .f-lab   { font-family: var(--flow-mono); font-size: 10px; fill: var(--ink-faint); }
+.hm-flow .f-lab-y { fill: var(--teal); }
+.hm-flow #hm-arw path { fill: var(--edge); }
+</style>
 
-  [1] YOUR DATA                          size_col may be numeric OR a
-  ┌─────────┬───────┬──────────┬─────────────┐   category: small / medium /
-  │ species │ stage │ size_col │ biomass_col │   large / unknown.
-  ├─────────┼───────┼──────────┼─────────────┤   NA biomass_col = to estimate.
-  │ Sp.A    │ larva │   3.8    │    12.1     │
-  │ Sp.A    │ larva │   5.9    │    15.2     │
-  │ Sp.A    │ larva │   12     │    24.3     │
-  │ Sp.A    │ larva │ unknown  │    NA       │  <- to estimate
-  │ Sp.A    │ larva │   8.1    │    17.2     │
-  │ Sp.A    │ larva │   8.2    │    NA       │
-  │  ...    │  ...  │   ...    │    ...      │
-  └─────────┴───────┴──────────┴─────────────┘
-        │
-        │  make_measurement_table()  ->  keep rows with a numeric size,
-        v                                 one row per individual (abundance)
-  [2] MEASUREMENT TABLE
-  ┌─────────┬───────┬──────────┬─────────────┐
-  │ species │ stage │ size_col │ biomass_col │
-  ├─────────┼───────┼──────────┼─────────────┤
-  │ Sp.A    │ larva │   3.8    │    12.1     │
-  │ Sp.A    │ larva │   5.9    │    15.2     │
-  │ Sp.A    │ larva │   12     │    24.3     │
-  │ Sp.A    │ larva │   8.1    │    17.2     │
-  │ Sp.A    │ larva │   8.2    │    NA       │
-  │  ...    │  ...  │   ...    │    ...      │
-  └─────────┴───────┴──────────┴─────────────┘
-        │
-        │   full_estimation_table()  --  computed at every taxonomic level
-        ├───────────────────────────────┬───────────────────────────────┐
-        v what = "size_col"             v what = "biomass_col"
-  [3a] SIZE ESTIMATION                 [3b] BIOMASS MODELS
-  ┌─────────┬──────┬───────┬───────────────┬──────┐  ┌─────────┬──────┬───────┬───────┐
-  │ level   │ name │ stage │ size_category │ size │  │ level   │ name │ stage │ model │
-  ├─────────┼──────┼───────┼───────────────┼──────┤  ├─────────┼──────┼───────┼───────┤
-  │ species │ Sp.A │ larva │ unknown       │ 7.6  │  │ species │ Sp.A │ larva │  lm   │
-  │ species │ Sp.A │ larva │ small         │ 4.85 │  │ genus   │ Gn.1 │ larva │  lm   │
-  │ species │ Sp.A │ larva │ medium        │ 8.15 │  │ family  │ Fm.1 │ larva │  lm   │
-  │ species │ Sp.A │ larva │ large         │ 12   │  │  ...    │ ...  │  ...  │  ...  │
-  │ genus   │ Gn.1 │ larva │ unknown       │ 6.9  │  └─────────┴──────┴───────┴───────┘
-  │  ...    │ ...  │  ...  │   ...         │ ...  │        │
-  └─────────┴──────┴───────┴───────────────┴──────┘        │
-        │                                                  │
-        │  join finest-level size back to data             │
-        v                                                  │
-  [4] SIZES FILLED                                         │
-  ┌─────────┬───────┬──────────┬─────────────┬────────────┐│
-  │ species │ stage │ size_col │ biomass_col │ size_level ││
-  ├─────────┼───────┼──────────┼─────────────┼────────────┤│
-  │ Sp.A    │ larva │   3.8    │    12.1     │ raw_data   ││
-  │ Sp.A    │ larva │   7.6    │    NA       │ species    ││  <- "unknown" -> 7.6
-  │  ...    │  ...  │   ...    │    ...      │   ...      ││
-  └─────────┴───────┴──────────┴─────────────┴────────────┘│
-        │                                                  │
-        │  apply finest-level model: biomass = predict(lm, size) <--┘
-        v
-  [5] FINAL OUTPUT  ($data)
-  ┌─────────┬───────┬──────────┬─────────────┬────────────┬─────────────┐
-  │ species │ stage │ size_col │ biomass_col │ size_level │ model_level │
-  ├─────────┼───────┼──────────┼─────────────┼────────────┼─────────────┤
-  │ Sp.A    │ larva │   3.8    │    12.1     │ raw_data   │ raw_data    │
-  │ Sp.A    │ larva │   7.6    │    16.4     │ species    │ genus       │  <- both estimated
-  │ Sp.A    │ larva │   8.2    │    17.5     │ raw_data   │ genus       │  <- mass estimated
-  │  ...    │  ...  │   ...    │    ...      │   ...      │    ...      │
-  └─────────┴───────┴──────────┴─────────────┴────────────┴─────────────┘
+<div class="hm-flow">
+<svg viewBox="0 0 900 1460" role="img" aria-label="Flowchart of a hellometry() call. Your data enters data_checker(); invalid input stops. make_measurement_table() builds the measurement table. full_estimation_table() runs with what equals size_col to estimate sizes, which are joined per level so the size at the lowest taxonomic level is selected. dry_wet() filters biomass type, then full_estimation_table() runs with what equals biomass_col, choosing lm or a Poisson glm, filtered by r_squared() and the slope p-value; rejected models fall back to the level above. Surviving models are joined per level, predict_biomass() applies them, and a list of three tables is returned. make_trait_table() and matcher_of_traits() sit on a dashed side path used only when traits equals TRUE.">
+  <defs>
+    <marker id="hm-arw" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" />
+    </marker>
+  </defs>
 
-  Legend: raw_data = measured value kept as-is | species/genus/family =
-          taxonomic level at which the estimate was made (finest wins).
-          $data also carries biomass_lower / biomass_upper (prediction
-          interval) and *_taxon_name columns, omitted here for clarity.
-```
+  <path class="edge" marker-end="url(#hm-arw)" d="M420,58 V82" />
+  <path class="edge" marker-end="url(#hm-arw)" d="M420,132 V158" />
+  <path class="edge" marker-end="url(#hm-arw)" d="M530,202 H636" />
+  <path class="edge" marker-end="url(#hm-arw)" d="M420,246 V268" />
+  <path class="edge" marker-end="url(#hm-arw)" d="M420,318 V348" />
+  <path class="edge" marker-end="url(#hm-arw)" d="M420,394 V424" />
+  <path class="edge" marker-end="url(#hm-arw)" d="M420,486 V516" />
+  <path class="edge" marker-end="url(#hm-arw)" d="M420,572 V602" />
+  <path class="edge" marker-end="url(#hm-arw)" d="M420,648 V682" />
+  <path class="edge" marker-end="url(#hm-arw)" d="M420,738 V768" />
+
+  <path class="edge" marker-end="url(#hm-arw)" d="M310,812 H250 V882" />
+  <path class="edge" marker-end="url(#hm-arw)" d="M530,812 H590 V882" />
+  <path class="edge" d="M250,932 V962 H420" />
+  <path class="edge" d="M590,932 V962 H420" />
+  <path class="edge" marker-end="url(#hm-arw)" d="M420,962 V986" />
+
+  <path class="edge" marker-end="url(#hm-arw)" d="M420,1038 V1064" />
+  <path class="edge" marker-end="url(#hm-arw)" d="M550,1116 H636" />
+  <path class="edge" marker-end="url(#hm-arw)" d="M420,1168 V1196" />
+
+  <path class="edge" marker-end="url(#hm-arw)" d="M420,1248 V1282" />
+  <path class="edge" marker-end="url(#hm-arw)" d="M420,1340 V1374" />
+
+  <path class="edge edge-opt" marker-end="url(#hm-arw)" d="M280,708 H244" />
+  <path class="edge edge-opt" marker-end="url(#hm-arw)" d="M130,734 V768" />
+
+  <polygon class="f-data" points="282,16 490,16 478,58 270,58" />
+  <text class="f-datat" x="380" y="42" text-anchor="middle">your data</text>
+
+  <rect class="f-box" x="290" y="82" width="260" height="50" rx="3" />
+  <text class="f-name" x="420" y="103" text-anchor="middle">data_checker()</text>
+  <text class="f-sub" x="420" y="120" text-anchor="middle">check correct formatting</text>
+
+  <polygon class="f-dec" points="420,158 530,202 420,246 310,202" />
+  <text class="f-dec-t" x="420" y="206" text-anchor="middle">input valid?</text>
+  <text class="f-lab" x="536" y="196">no</text>
+  <text class="f-lab f-lab-y" x="428" y="264">yes</text>
+
+  <rect class="f-stop" x="636" y="180" width="248" height="44" rx="3" />
+  <text class="f-stop-name" x="760" y="199" text-anchor="middle">stop()</text>
+  <text class="f-sub" x="760" y="215" text-anchor="middle">nothing is guessed</text>
+
+  <rect class="f-box" x="290" y="268" width="260" height="50" rx="3" />
+  <text class="f-name" x="420" y="289" text-anchor="middle">make_measurement_table()</text>
+  <text class="f-sub" x="420" y="306" text-anchor="middle">numeric sizes only, one row per individual</text>
+
+  <polygon class="f-data" points="282,348 490,348 478,394 270,394" />
+  <text class="f-datat" x="380" y="376" text-anchor="middle">measurement table</text>
+
+  <rect class="f-box" x="280" y="424" width="280" height="62" rx="3" />
+  <text class="f-name" x="420" y="445" text-anchor="middle">full_estimation_table()</text>
+  <text class="f-sub" x="420" y="462" text-anchor="middle">what = "size_col"</text>
+  <text class="f-sub" x="420" y="478" text-anchor="middle">terciles → small / medium / large, mean → unknown</text>
+
+  <rect class="f-box" x="280" y="516" width="280" height="56" rx="3" />
+  <text class="f-inline" x="420" y="540" text-anchor="middle">join per level</text>
+  <text class="f-sub" x="420" y="557" text-anchor="middle">size at lowest taxonomic level selected</text>
+
+  <rect class="f-box" x="290" y="602" width="260" height="46" rx="3" />
+  <text class="f-name" x="420" y="621" text-anchor="middle">dry_wet()</text>
+  <text class="f-sub" x="420" y="637" text-anchor="middle">keeps dry or wet rows</text>
+
+  <rect class="f-box" x="280" y="682" width="280" height="56" rx="3" />
+  <text class="f-name" x="420" y="705" text-anchor="middle">full_estimation_table()</text>
+  <text class="f-sub" x="420" y="722" text-anchor="middle">what = "biomass_col"</text>
+
+  <g class="f-side">
+    <rect class="f-box" x="20" y="682" width="220" height="52" rx="3" />
+    <text class="f-name" x="130" y="704" text-anchor="middle">make_trait_table()</text>
+    <text class="f-sub" x="130" y="721" text-anchor="middle">only when traits = TRUE</text>
+
+    <rect class="f-box" x="20" y="768" width="220" height="52" rx="3" />
+    <text class="f-name" x="130" y="790" text-anchor="middle">matcher_of_traits()</text>
+    <text class="f-sub" x="130" y="807" text-anchor="middle">traits within ±1 of each other</text>
+  </g>
+
+  <polygon class="f-dec" points="420,768 530,812 420,856 310,812" />
+  <text class="f-dec-t" x="420" y="816" text-anchor="middle">model =</text>
+  <text class="f-lab" x="304" y="804" text-anchor="end">"lm"</text>
+  <text class="f-lab" x="536" y="804">"poisson"</text>
+
+  <rect class="f-box" x="130" y="882" width="240" height="50" rx="3" />
+  <text class="f-name" x="250" y="903" text-anchor="middle">lm()</text>
+  <text class="f-sub" x="250" y="920" text-anchor="middle">log10(biomass) ~ log10(size)</text>
+
+  <rect class="f-box" x="470" y="882" width="240" height="50" rx="3" />
+  <text class="f-name" x="590" y="903" text-anchor="middle">glm(family = poisson)</text>
+  <text class="f-sub" x="590" y="920" text-anchor="middle">log link, biomass ~ log10(size)</text>
+
+  <rect class="f-box" x="290" y="986" width="260" height="52" rx="3" />
+  <text class="f-name" x="420" y="1008" text-anchor="middle">r_squared()</text>
+  <text class="f-sub" x="420" y="1025" text-anchor="middle">performance::r2(), plus the slope p-value</text>
+
+  <polygon class="f-dec" points="420,1064 550,1116 420,1168 290,1116" />
+  <text class="f-dec-t" x="420" y="1104" text-anchor="middle">0 &lt; R² &lt; 0.95</text>
+  <text class="f-dec-t" x="420" y="1119" text-anchor="middle">and p &lt; 0.05?</text>
+  <text class="f-dec-s" x="420" y="1134" text-anchor="middle">(or custom thresholds)</text>
+  <text class="f-lab" x="556" y="1110">no</text>
+  <text class="f-lab f-lab-y" x="428" y="1186">yes</text>
+
+  <rect class="f-box" x="636" y="1094" width="248" height="46" rx="3" />
+  <text class="f-inline" x="760" y="1114" text-anchor="middle">model dropped</text>
+  <text class="f-sub" x="760" y="1130" text-anchor="middle">the level above is tried instead</text>
+
+  <rect class="f-box" x="280" y="1196" width="280" height="52" rx="3" />
+  <text class="f-inline" x="420" y="1218" text-anchor="middle">join per level</text>
+  <text class="f-sub" x="420" y="1235" text-anchor="middle">model at lowest taxonomic level selected</text>
+
+  <rect class="f-box" x="290" y="1282" width="260" height="58" rx="3" />
+  <text class="f-name" x="420" y="1303" text-anchor="middle">predict_biomass()</text>
+  <text class="f-sub" x="420" y="1320" text-anchor="middle">scale to abundance on the fitted scale,</text>
+  <text class="f-sub" x="420" y="1334" text-anchor="middle">then back-transform once</text>
+
+  <polygon class="f-data" points="262,1374 598,1374 586,1420 250,1420" />
+  <text class="f-datat" x="424" y="1402" text-anchor="middle">list(data, size_estimates, model_estimates)</text>
+</svg>
+</div>
 
 
 
@@ -243,7 +333,7 @@ trait_lookup <-
 # Now hand each measured taxon the trait profile of its most similar relative, i.e.
 # the profile found at the finest taxonomic level at which the taxon matches
 trait_assignment <-
-  meas %>%
+  measurement_table %>%
   ## Tag each measurement row so we can return its assigned traits later
   dplyr::mutate(.row = dplyr::row_number()) %>%
   ## Keep only that tag and the taxonomy columns we match on
