@@ -5,7 +5,7 @@
 \alias{hellometry-package}
 \title{hellometry: Biomass estimation from allometric relationships}
 \description{
-Estimates body size (mm) and biomass (mg) of invertebrates from allometric relationships. It works with any data that follow a few column-naming conventions, using the measurements you supply to impute the ones that are missing.
+Estimates body size and biomass of organisms from allometric relationships. It works with any data that follow a few column-naming conventions, using the measurements you supply to impute the ones that are missing.
 }
 \author{
 \strong{Maintainer}: Pierre Rogy \email{pierre.rogy@gmail.com} (\href{https://orcid.org/0000-0002-3002-0059}{ORCID})

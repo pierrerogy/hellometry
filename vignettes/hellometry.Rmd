@@ -43,7 +43,8 @@ To illustrate, the package ships with two real datasets from Trinidadian bromeli
 # Load library
 library(hellometry)
 
-# We need to define a suite of levels to be used for estimation, i.e. columns in the data, from finest to coarsest resolution
+# We need to define a suite of levels to be used for estimation, i.e. columns in the data, 
+# from lowest to coarsest resolution
 level_vec  <-
   c("species", "genus", "family", "order")
 
@@ -91,7 +92,9 @@ my_invertebrates_estimated <-
               biomass_type = "dry") ## Type of biomass to be estimated, "dry" or "wet"
 
 # The result is a list of three elements
-# - `data` - your data with estimated body sizes and biomasses, and column with information on the level at which were performed the estimation. Note that it also includes the measurements supplied so will need to filter out these rows
+# - `data` - your data with estimated body sizes and biomasses, and column with 
+# information on the level at which were performed the estimation. Note that 
+# it also includes the measurements supplied so will need to filter out these rows
 dplyr::glimpse(my_invertebrates_estimated$data)
 # - `size_estimates` - a tibble with all unique size estimates that were joined to your data
 dplyr::glimpse(my_invertebrates_estimated$size_estimates)
@@ -99,7 +102,9 @@ dplyr::glimpse(my_invertebrates_estimated$size_estimates)
 dplyr::glimpse(my_invertebrates_estimated$model_estimates)
 
 
-# But now let's say you do not really want to do estimation on the data, but just see the results of all possible estimations. Fear not, it is easy!
+# But now let's say you do not really want to do estimation on the data, 
+# but just see the results of all possible estimations. Fear not, 
+# it is easy!
 ## First compile the measurement table
 measurement_table <-
   make_measurement_table(dats = my_invertebrates, ## The data to be used

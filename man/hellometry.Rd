@@ -53,8 +53,8 @@ for your data
 \description{
 Wrapper function, input your data and get size and measurement.
 Please name column with number of specimen "abundance", column with measurement
-in mm "size_col", column with life stage (e.g. larva/adult) "stage", column
-with biomass type (dry/wet) "biomass_type", and the column with biomass in mg
+"size_col", column with life stage (e.g. larva/adult) "stage", column
+with biomass type (dry/wet) "biomass_type", and the column with biomass
 "biomass_col".
 If you do not have a numerical measurement for a given specimen, the function
 can do size estimations if you input "small", "medium", "large" or "unknown".
