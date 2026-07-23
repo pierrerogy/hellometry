@@ -84,7 +84,7 @@ named `size_col` (numeric length, or one of `"small"`, `"medium"`, `"large"`,
 `abundance`, `stage` ("larva", "adult"...), `biomass_type` (`"dry"` or `"wet"`), and one column per taxonomic level. To illustrate its usage, the package comes with a toy dataset from communities of aquatic invertebrates sampled from Trinidadian bromeliads [@Rogy2024]. The package also includes a large dataset of body size (head to tail, mm) and body mass (mg) of bromeliad invertebrates collected across the Neotropics with by the authors of this manuscript.
 
 ```r
-# Here we provide sample code for estimating missing body masses in the Trinidadian dataset
+# Here we provide sample code for estimating missing body masses # in the Trinidadian dataset
 
 # Load library
 library(hellometry)
@@ -112,8 +112,8 @@ communities <-
   trini_communities() %>% 
   ## Rename the abundance column and add the columns hellometry() needs
   dplyr::rename(abundance = n) %>% 
-  ## Here we do not have any information on the invertebrates, so size is "unknown" and
-  ## biomass NA
+  ## Here we do not have any information on the invertebrates, 
+  ## so size is "unknown" and biomass NA
   dplyr::mutate(size_col = "unknown",   
                 biomass_col = NA, 
                 biomass_type = "dry")
@@ -137,9 +137,11 @@ str(estimates)
 # `data` is your data with estimated body sizes and biomasses, and column with 
 # information on the level at which were performed the estimations
 dplyr::glimpse(estimates$data)
-# `size_estimates` is a tibble with all unique size estimations that were joined to your data
+# `size_estimates` is a tibble with all unique size estimations that were 
+# joined to your data
 dplyr::glimpse(estimates$size_estimates)
-# `model_estimates` is a tibble with all unique allometric models that were joined to your data
+# `model_estimates` is a tibble with all unique allometric models that 
+# were joined to your data
 dplyr::glimpse(estimates$model_estimates)
 ```
 
