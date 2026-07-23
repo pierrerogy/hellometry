@@ -84,7 +84,8 @@ named `size_col` (numeric length, or one of `"small"`, `"medium"`, `"large"`,
 `abundance`, `stage` ("larva", "adult"...), `biomass_type` (`"dry"` or `"wet"`), and one column per taxonomic level. To illustrate its usage, the package comes with a toy dataset from communities of aquatic invertebrates sampled from Trinidadian bromeliads [@Rogy2024]. The package also includes a large dataset of body size (head to tail, mm) and body mass (mg) of bromeliad invertebrates collected across the Neotropics with by the authors of this manuscript.
 
 ```r
-# Here we provide sample code for estimating missing body masses # in the Trinidadian dataset
+# Here we provide sample code for estimating missing body masses
+# in the Trinidadian dataset
 
 # Load library
 library(hellometry)
