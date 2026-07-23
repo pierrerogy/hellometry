@@ -11,27 +11,24 @@ authors:
   - name: Pierre Rogy
     orcid: 0000-0002-3002-0059
     affiliation: 1, 2
-  - name: Diane Srivastava
-    orcid: 0000-0003-4541-5595
-    affiliation: 2
   - name: Olivier Dézerald
     orcid: 0000-0002-9987-9865
     affiliation: 3
   - name: Gustavo Q. Romero
     orcid: 0000-0002-3002-0059
     affiliation: 4
-  - name: Paula M. de Omena
-    orcid: 0000-0002-5221-7901
-    affiliation: 5
-  - name: Sarah Abdelazim
-    orcid: 0000-0002-6379-2733
-    affiliation: 7                  
   - name: Fabiola Ospina-Bautista
     orcid: 0000-0003-2498-1459
-    affiliation: 8      
-  - name: Nicholas Marino
-    orcid:
-    affiliation: 9 
+    affiliation: 5         
+  - name: Sarah Abdelazim
+    orcid: 0000-0002-6379-2733
+    affiliation: 6                  
+  - name: Nicholas A. C. Marino
+    orcid: 0000-0002-5702-5466
+    affiliation: 7 
+  - name: Diane Srivastava
+    orcid: 0000-0003-4541-5595
+    affiliation: 2
 affiliations:
   - name: Department of Biology, McGill University, Montréal, QC, Canada
     index: 1
@@ -41,17 +38,13 @@ affiliations:
     index: 3    
   - name: Laboratório de Interações Multitróficas e Biodiversidade, Departamento de Biologia Animal, Instituto de Biologia, Universidade Estadual de Campinas (UNICAMP), Campinas, SP, Brasil
     index: 4  
-  - name: Laboratório Ecologia de Insetos Aquáticos, Universidade Vila Velha, Vila Velha, ES, Brasil
+  - name: Universidad Pedagogica y Tecnologica de Colombia, Tunja, Colombia
     index: 5  
-  - name: 
-    index: 6  
-  - name: 
-    index: 7
-  - name: 
-    index: 8
-  - name: 
-    index: 9                        
-date: 15 July 2026
+  - name: UBC Data Science Institute, University of British Columbia, Vancouver, BC, Canada
+    index: 6
+  - name: Departamento de Biologia, Instituto de Biologia, Universidade Federal do Rio de Janeiro, Rio de Janeiro, RJ, Brasil
+    index: 7                       
+date: 23 July 2026
 bibliography: paper.bib
 ---
 
@@ -141,7 +134,8 @@ estimates <-
 # Check outputs
 ## The outputs consist of a list of three elements
 str(estimates)
-# `data` is your data with estimated body sizes and biomasses, and column with information on the level at which were performed the estimations
+# `data` is your data with estimated body sizes and biomasses, and column with 
+# information on the level at which were performed the estimations
 dplyr::glimpse(estimates$data)
 # `size_estimates` is a tibble with all unique size estimations that were joined to your data
 dplyr::glimpse(estimates$size_estimates)
@@ -156,10 +150,13 @@ target row, and predicts mass. `hellometry` returns a list of three data frames:
 It is important to underline that `hellometry` uses the data supplied by the user to generate body size and body mass estimates. This means that, even if the user can collate large customised datasets, the generated estimates are ultimately a product of the input data.  
 
 # Research impact statement
-Earlier versions of `hellometry` have been successfully used by the authors' network of collaborators, both in terms of published articles [@Srivastava2023; @Rogy2025] and a Ph.D. dissertation [@Westwood2025]. The package is also being used in various articles currently being written [S.M. Ravoth, G. Q. Romero, L. Guimarães, P. Sabino, pers. comm.]
+Earlier versions of `hellometry` have been successfully used by the authors' network of collaborators, both in terms of published articles [@Srivastava2023; @Rogy2025] and a Ph.D. dissertation [@Westwood2025]. The package is also being used in various scientific articles currently being written [S.M. Ravoth, G. Q. Romero, L. Guimarães, P. Sabino, pers. comm.]
+
+# Contributions
+Conceptualisation: PR, DSS.	Data collection: PR, OD, GQR, FOB, NACM, DSS.	Data curation: PR, OD, GQR, FOB, NACM, DSS.	Code contribution: PR, SA.	Writing - Original Draft: PR.	Writing - Review & Editing: PR, OD, GQR, FOB, NACM, SA, DSS.	Supervision: DSS.
 
 # AI usage disclosure
 The original package was written entirely without generative AI assistance. Claude Opus 4.8 was used in the last stages of the project to make the package more efficient (e.g. correcting redundancies in the code), and to add some functions (e.g. different kinds of models). Here, changes were checked by PR before implementation, and outputs were carefully checked to those before generative AI was used to ensure the quality and correctness of the content. Claude Opus 4.8 was also used to generate the first draft of the present manuscript, draft that was then considerably edited by all co-authors.
 
 # Acknowledgements
-This is a publication of the Bromeliad Working Group. We thank Barbara A. Richardson and the late Michael J. Richardson for their numerous contributions to bromeliad science, and for contributing to this project bromeliad invertebrate data collected over 24 years in Puerto Rico and other Caribbean islands.
+This is a publication of the Bromeliad Working Group. We thank Barbara A. Richardson and the late Michael J. Richardson for their numerous contributions to bromeliad science, and for contributing to this project bromeliad invertebrate data collected over 24 years in Puerto Rico and other Caribbean islands. We also thank Paula M. de Omena for contributing data to this project.
