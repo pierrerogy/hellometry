@@ -38,7 +38,7 @@ knitr::include_graphics("hellometry_flowchart.svg")
 
 ## Quick working example
 The package estimates sizes and biomasses from the measurements you provide.
-To illustrate, the package ships with two real datasets from Trinidadian bromeliad communities [(Rogy et al. 2024)](https://doi.org/10.1111/ele.14391): `bromeliad_inverts_measurements()`, a large set of invertebrate body size (head to tail, mm) and body mass (mg) measurements compiled by the authors, and `trini_communities()`, the taxa observed in a set of bromeliads for which we want size and biomass estimates. <br>
+To illustrate, the package ships with two real datasets from Trinidadian bromeliad communities [(Rogy et al., 2024)](https://doi.org/10.1111/ele.14391): `bromeliad_inverts_measurements()`, a large set of invertebrate body size (head to tail, mm) and body mass (mg) measurements compiled by the authors, and `trini_communities()`, the taxa observed in a set of bromeliads for which we want size and biomass estimates. <br>
 ```{r}
 # Load library
 library(hellometry)
@@ -77,7 +77,7 @@ communities <-
 # Have a look at the communities to estimate
 dplyr::glimpse(communities)
 
-# Stack the reference measurements and the target communities into one table
+# Combine the reference measurements and the target communities into one table
 my_invertebrates <-
   communities %>%
   dplyr::bind_rows(measurements)
@@ -89,7 +89,7 @@ my_invertebrates <-
 my_invertebrates_estimated <-
   hellometry(dats = my_invertebrates, ## The data to be used
               level_vec  = level_vec , ## The taxonomic levels to be used
-              biomass_type = "dry") ## Type of biomass to be estimated, "dry" or "wet"
+              biomass_type = "dry") ## Type of biomass to be estimated
 
 # The result is a list of three elements
 # - `data` - your data with estimated body sizes and biomasses, and column with 
@@ -107,8 +107,8 @@ dplyr::glimpse(my_invertebrates_estimated$model_estimates)
 # it is easy!
 ## First compile the measurement table
 measurement_table <-
-  make_measurement_table(dats = my_invertebrates, ## The data to be used
-                         level_vec  = level_vec) ## The taxonomic levels to be used
+  make_measurement_table(dats = my_invertebrates, ## Data to be used
+                         level_vec  = level_vec) ## Taxonomic levels to be used
 ## Get all possible size estimates
 size_estimation_table <-
   full_estimation_table(level_vec  = level_vec ,
@@ -146,8 +146,8 @@ trait_columns <-
   ## Keep just their names
   names()
 
-# Rebuild a measurement table, this time asking it to keep every taxonomic level we
-# want to match on (make_measurement_table() only keeps the levels we give it)
+# Rebuild a measurement table, this time asking it to keep every taxonomic level
+# we want to match on (make_measurement_table() only keeps the levels we give it)
 measurement_table <-
   make_measurement_table(dats = my_invertebrates,
                          level_vec = c("species", "genus", "subfamily",
@@ -158,8 +158,9 @@ measurement_table <-
 match_levels <-
   c("genus", "subfamily", "family", "order", "class")
 
-# Build a lookup holding one representative trait profile per taxon, at every level,
-# stacked into a single long table that remembers the level each profile came from
+# Build a lookup holding one representative trait profile per taxon, at 
+# every level combined into a single long table that remembers the level 
+# each profile came from
 trait_lookup <-
   match_levels %>%
   purrr::map_dfr(.,
@@ -238,9 +239,9 @@ clean_trait_list[[1]]
 size_estimation_table_traits <-
   full_estimation_table(level_vec  = c(),
                         measurement_table = dats,
-                        traits = TRUE, ## traits = TRUE
+                        traits = TRUE, ## switch for traits
                         trait_columns = trait_columns, ## vector of fuzzy trait columns
-                        id_col = "family", ## column identifying taxa
+                        id_col = "family", ## where to group
                         what = "size_col")
 ### See the output
 head(size_estimation_table_traits)

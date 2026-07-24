@@ -26,7 +26,7 @@ authors:
   - name: Nicholas A. C. Marino
     orcid: 0000-0002-5702-5466
     affiliation: 7 
-  - name: Diane Srivastava
+  - name: Diane S. Srivastava
     orcid: 0000-0003-4541-5595
     affiliation: 2
 affiliations:
@@ -42,7 +42,7 @@ affiliations:
     index: 5  
   - name: UBC Data Science Institute, University of British Columbia, Vancouver, BC, Canada
     index: 6
-  - name: Departamento de Biologia, Instituto de Biologia, Universidade Federal do Rio de Janeiro, Rio de Janeiro, RJ, Brasil
+  - name: Departamento de Ecologia, Instituto de Biologia, Universidade Federal do Rio de Janeiro, Rio de Janeiro, RJ, Brasil
     index: 7                       
 date: 23 July 2026
 bibliography: paper.bib
@@ -56,7 +56,7 @@ The methodological landscape to estimate body mass in ecological studies offers 
 
 
 # Software design
-`hellometry` is an R  package that fills both body size and body mass gaps from the researcher's own data. Given a table that follows a small set of column-naming conventions, the package (i) imputes missing numeric sizes from the provided size distribution of the relevant taxon, and (ii) fits log–log allometric models and uses these models to estimate missing body masses, together with confidence intervals. Importantly, every estimate is made at the finest taxonomic level for which an acceptable model exists: the package fits candidate models at each level supplied by the user (e.g., species, genus, family, order), discards those that fail customisable goodness-of-fit filters, and falls back up the taxonomic hierarchy only as far as necessary. The result is a reproducible, dependency-light pipeline wrapped in a single function, `hellometry()`. 
+`hellometry` is an R  package that fills both body size and body mass gaps from the researcher's own data. Given a table that follows a small set of column-naming conventions, the package (i) imputes missing numeric sizes from the provided size distribution of the relevant taxon, and (ii) fits and uses allometric models to estimate missing body masses, together with confidence intervals. Importantly, every estimate is made at the finest taxonomic level for which an acceptable model exists: the package fits candidate models at each level supplied by the user (e.g., species, genus, family, order), discards those that fail customisable goodness-of-fit filters, and falls back up the taxonomic hierarchy only as far as necessary. The result is a reproducible, dependency-light pipeline wrapped in a single function, `hellometry()`. 
 
 Several design choices make `hellometry` practical for real ecological datasets:
 
@@ -64,7 +64,7 @@ Several design choices make `hellometry` practical for real ecological datasets:
   Size estimates and allometric relationships are computed separately for each taxon and each life stage (e.g., larva, juvenile, adult), reflecting the influence of ontogeny (e.g. metamorphosis) of some organisms on their body size and body mass. When a reliable estimate cannot be generated at a given taxonomic level, `hellometry` automatically returns the estimate at the next level above. Nonetheless, to allow researchers to examine body size estimates and allometric relationships in detail, the package can return all computed estimates and models at every taxonomic level. This is especially important if researchers want to closely examine the suite of models that can be generated from their data.
   
 - **Categorical body size estimates.** 
-  The package can flexibly handle different levels of coarseness in body size estimate. So far, four categorical values are accepted. When "small", "medium" or "large" is supplied, the package splits available data of body size for a given taxon into terciles and computes a log-log relationship within that tercile. To estimate the expected body mass of a randomly selected individual from the population, the package requires "unknown" body masses. Here, we use a weighted rather than unweighted mean, for smaller (younger) organisms tend to be more numerous than larger (older) ones.
+  The package can flexibly handle different levels of coarseness in body size estimate. So far, four categorical values are accepted. When "small", "medium" or "large" is supplied, the package splits available data of body size for a given taxon into terciles and computes a relationship within that tercile. To estimate the expected body mass of a randomly selected individual from the population, the package requires "unknown" body masses. Here, we use a weighted rather than unweighted mean, for smaller (younger) organisms tend to be more numerous than larger (older) ones.
 
 - **Incorporation of fuzzy traits.** 
   The package also includes a trait-based alternative to taxonomy: when no satisfactory model exists below a coarse level, species can instead be grouped by similarity using discrete categorical ("fuzzy") traits [@Chevenet1994; @Cereghino2018] supplied by the user. Here, taxa are matched when their trait values differ by at most one unit of affinity across all given modalities.
@@ -81,7 +81,7 @@ Several design choices make `hellometry` practical for real ecological datasets:
 The user can compute estimates with a single call. The input table must contain columns
 named `size_col` (numeric length, or one of `"small"`, `"medium"`, `"large"`,
 `"unknown"`), `biomass_col` (mass, with `NA` where an estimate is wanted),
-`abundance`, `stage` ("larva", "adult"...), `biomass_type` (`"dry"` or `"wet"`), and one column per taxonomic level. To illustrate its usage, the package comes with a toy dataset from communities of aquatic invertebrates sampled from Trinidadian bromeliads [@Rogy2024]. The package also includes a large dataset of body size (head to tail, mm) and body mass (mg) of bromeliad invertebrates collected across the Neotropics with by the authors of this manuscript.
+`abundance`, `stage` ("larva", "adult"...), `biomass_type` (`"dry"` or `"wet"`), and one column per taxonomic level. To illustrate its usage, the package comes with a toy dataset from communities of aquatic invertebrates sampled from Trinidadian bromeliads [@Rogy2024]. The package also includes a large dataset of body size (head to tail, mm) and body mass (mg) of bromeliad invertebrates collected across the Neotropics by the authors of this manuscript.
 
 ```r
 # Here we provide sample code for estimating missing body masses
@@ -109,7 +109,7 @@ measurements <-
 
 ## Trinidadian communities, the taxa we want size and biomass estimates for
 communities <- 
-## Calls the toy dataset extracted from [@Rogy2024]
+## Calls the toy dataset extracted from Rogy et al. (2024)
   trini_communities() %>% 
   ## Rename the abundance column and add the columns hellometry() needs
   dplyr::rename(abundance = n) %>% 
@@ -123,8 +123,8 @@ communities <-
 # the Trinidadian dataset (both need to be in the same tibble/dataframe)
 # for the package to work
 my_invertebrates <- 
-  measurements %>% 
-  dplyr::bind_rows(communities)
+  communities %>% 
+  dplyr::bind_rows(measurements)
 
 # Generate estimates for the communities using the measurements as reference
 estimates <- 
@@ -153,7 +153,7 @@ target row, and predicts mass. `hellometry` returns a list of three data frames:
 It is important to underline that `hellometry` uses the data supplied by the user to generate body size and body mass estimates. This means that, even if the user can collate large customised datasets, the generated estimates are ultimately a product of the input data.  
 
 # Research impact statement
-Earlier versions of `hellometry` have been successfully used by the authors' network of collaborators, both in terms of published articles [@Srivastava2023; @Rogy2025] and a Ph.D. dissertation [@Westwood2025]. The package is also being used in various scientific articles currently being written [S.M. Ravoth, G. Q. Romero, L. Guimarães, P. Sabino, pers. comm.]
+Earlier versions of `hellometry` have been successfully used by the authors' network of collaborators, both in terms of published articles [@Srivastava2023; @Rogy2025] and a Ph.D. dissertation [@Westwood2025]. The package is also being used in various scientific articles currently being written (S.M. Ravoth, G. Q. Romero, L. Guimarães, P. Sabino, pers. comm.)
 
 # Contributions
 Conceptualisation: PR, DSS.	Data collection: PR, OD, GQR, FOB, NACM, DSS.	Data curation: PR, OD, GQR, FOB, NACM, DSS.	Code contribution: PR, SA.	Writing - Original Draft: PR.	Writing - Review & Editing: PR, OD, GQR, FOB, NACM, SA, DSS.	Supervision: DSS.
@@ -163,3 +163,5 @@ The original package was written entirely without generative AI assistance. Clau
 
 # Acknowledgements
 This is a publication of the Bromeliad Working Group. We thank Barbara A. Richardson and the late Michael J. Richardson for their numerous contributions to bromeliad science, and for contributing to this project bromeliad invertebrate data collected over 24 years in Puerto Rico and other Caribbean islands. We also thank Paula M. de Omena for contributing data to this project.
+
+# References
