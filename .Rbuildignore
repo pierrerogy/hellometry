@@ -9,3 +9,5 @@
 ^\.vscode$
 ^raw_data$
 \.ipynb_checkpoints$
+^cran-comments\.md$
+^\.github$

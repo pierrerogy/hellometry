@@ -47,3 +47,43 @@ Tibble with size estimates or allometric models used in estimation.
 \description{
 Returns size and biomass estimates for every taxon in measurement table
 }
+\examples{
+# Reference measurements for one family, renamed to the columns the package expects
+measurements <-
+  bromeliad_inverts_measurements() \%>\%
+  dplyr::filter(family == "Culicidae") \%>\%
+  dplyr::rename(size_col = body_size_mm,
+                biomass_col = body_mass_mg,
+                biomass_type = mass_type) \%>\%
+  dplyr::mutate(size_col = as.character(size_col),
+                biomass_col = as.numeric(biomass_col))
+
+# Taxa to estimate, with no measurement of their own
+communities <-
+  trini_communities() \%>\%
+  dplyr::filter(family == "Culicidae") \%>\%
+  dplyr::rename(abundance = n) \%>\%
+  dplyr::mutate(size_col = "unknown",
+                biomass_col = NA,
+                biomass_type = "dry")
+
+# The two together are what the package works on
+dats <-
+  dplyr::bind_rows(communities, measurements)
+level_vec <-
+  c("species", "genus", "family")
+
+measurement_table <-
+  make_measurement_table(dats = dats, level_vec = level_vec)
+
+# Every size estimate the data allows
+full_estimation_table(level_vec = level_vec,
+                      measurement_table = measurement_table,
+                      what = "size_col")
+
+# Every allometric model the data allows, on dry biomass
+full_estimation_table(level_vec = level_vec,
+                      measurement_table = dry_wet(measurement_table,
+                                                  biomass_type = "dry"),
+                      what = "biomass_col")
+}

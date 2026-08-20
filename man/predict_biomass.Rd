@@ -26,3 +26,13 @@ mean predicted biomass. The estimate is scaled to the abundance of the row
 while still on the scale the model was fitted on (log10 for an lm, the log
 link for a Poisson glm), and then back-transformed.
 }
+\examples{
+# Any allometric model will do
+mod <-
+  lm(log10(biomass_col) ~ log10(size_col),
+     data = data.frame(size_col = c(1, 2, 3, 4, 5),
+                       biomass_col = c(0.1, 0.5, 1.2, 2.4, 4.1)))
+
+# Biomass of a row holding ten individuals of size 3, with its bounds
+predict_biomass(mod, size = 3, abundance = 10)
+}

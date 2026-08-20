@@ -16,3 +16,7 @@ Reads the  \code{bromeliad_inverts_measurements} dataset, a compilation of real 
 body size (mm) and body mass (mg) measurements from bromeliad communities. If you use the
 data outside the package, please cite the package.
 }
+\examples{
+# The measurements the package ships with
+bromeliad_inverts_measurements()
+}

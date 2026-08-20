@@ -67,3 +67,39 @@ measurements, just leave NA for those cells you want estimates in.
 Please make sure that the level_vec argument has levels in increasing order
 of coarseness, e.g. from species to order.
 }
+\examples{
+# Reference measurements for one family, renamed to the columns the package expects
+measurements <-
+  bromeliad_inverts_measurements() \%>\%
+  dplyr::filter(family == "Culicidae") \%>\%
+  dplyr::rename(size_col = body_size_mm,
+                biomass_col = body_mass_mg,
+                biomass_type = mass_type) \%>\%
+  dplyr::mutate(size_col = as.character(size_col),
+                biomass_col = as.numeric(biomass_col))
+
+# Taxa to estimate, with no measurement of their own
+communities <-
+  trini_communities() \%>\%
+  dplyr::filter(family == "Culicidae") \%>\%
+  dplyr::rename(abundance = n) \%>\%
+  dplyr::mutate(size_col = "unknown",
+                biomass_col = NA,
+                biomass_type = "dry")
+
+# The two together are what the package works on
+dats <-
+  dplyr::bind_rows(communities, measurements)
+level_vec <-
+  c("species", "genus", "family")
+
+res <-
+  hellometry(dats = dats, level_vec = level_vec, biomass_type = "dry")
+
+# The estimates, joined back to the data
+res$data[, c("genus", "size_col", "biomass_col", "size_level", "model_level")]
+
+# The size estimates and the models they came from
+res$size_estimates
+res$model_estimates
+}

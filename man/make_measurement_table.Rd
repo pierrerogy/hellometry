@@ -21,3 +21,32 @@ allometric models. The table is built entirely from the data you supply:
 every row with a numerical \code{size_col} is kept (expanded by \code{abundance} so
 each row represents one individual), carrying its taxonomy along.
 }
+\examples{
+# Reference measurements for one family, renamed to the columns the package expects
+measurements <-
+  bromeliad_inverts_measurements() \%>\%
+  dplyr::filter(family == "Culicidae") \%>\%
+  dplyr::rename(size_col = body_size_mm,
+                biomass_col = body_mass_mg,
+                biomass_type = mass_type) \%>\%
+  dplyr::mutate(size_col = as.character(size_col),
+                biomass_col = as.numeric(biomass_col))
+
+# Taxa to estimate, with no measurement of their own
+communities <-
+  trini_communities() \%>\%
+  dplyr::filter(family == "Culicidae") \%>\%
+  dplyr::rename(abundance = n) \%>\%
+  dplyr::mutate(size_col = "unknown",
+                biomass_col = NA,
+                biomass_type = "dry")
+
+# The two together are what the package works on
+dats <-
+  dplyr::bind_rows(communities, measurements)
+level_vec <-
+  c("species", "genus", "family")
+
+# One row per measured individual, taxonomy carried along
+make_measurement_table(dats = dats, level_vec = level_vec)
+}

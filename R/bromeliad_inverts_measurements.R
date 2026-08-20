@@ -7,6 +7,9 @@
 #' @return A tibble with real body length and body size measurements from bromeliad invertebrates.
 #' It contains columns for taxonomy ("phylum" to "species"), "stage", "abundance", "body_size_mm",
 #' "body_mass_mg", "mass_type" (dry/wet), "data_providers" and "note".
+#' @examples
+#' # The measurements the package ships with
+#' bromeliad_inverts_measurements()
 #' @export
 bromeliad_inverts_measurements <- function() {
 

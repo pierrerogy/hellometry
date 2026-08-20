@@ -17,3 +17,12 @@ Wraps \code{performance::r2()}, which returns the R2 suited to the model it is
 given, so that any kind of model can be filtered the same way in
 \code{full_estimation_table()}
 }
+\examples{
+# Any allometric model will do
+mod <-
+  lm(log10(biomass_col) ~ log10(size_col),
+     data = data.frame(size_col = c(1, 2, 3, 4, 5),
+                       biomass_col = c(0.1, 0.5, 1.2, 2.4, 4.1)))
+
+r_squared(mod)
+}

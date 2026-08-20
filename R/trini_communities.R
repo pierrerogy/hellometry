@@ -13,6 +13,12 @@
 #' @return A tibble with one row per taxon per bromeliad, with columns for
 #' taxonomy, abundance, and bromeliad ID, and, when `traits = TRUE`, a set of
 #' discrete (fuzzy) trait columns.
+#' @examples
+#' # The communities the package ships with
+#' trini_communities()
+#'
+#' # The same, with the fuzzy trait columns
+#' trini_communities(traits = TRUE)
 #' @export
 trini_communities <- function(traits = FALSE) {
 

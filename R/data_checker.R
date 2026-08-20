@@ -7,6 +7,22 @@
 #' be dry (default) or wet. See `dry_wet()` for details.
 #' @param model "lm"/"poisson". What kind of allometric model should be computed.
 #' See `full_estimation_table()` for details.
+#' @return An error if any check fails.
+#' @examples
+#' # Data named the way the package expects
+#' dats <-
+#'   data.frame(species = c("sp_a", "sp_b"),
+#'              stage = "larva",
+#'              abundance = c(2, 5),
+#'              size_col = c("3.1", "unknown"),
+#'              biomass_col = c(0.4, NA),
+#'              biomass_type = "dry")
+#'
+#' # Passes quietly
+#' data_checker(dats, biomass_type = "dry", model = "lm")
+#'
+#' # Fails on a column that is not named properly
+#' try(data_checker(dats["species"], biomass_type = "dry", model = "lm"))
 #' @export
 data_checker <- function(dats, biomass_type, model){
 

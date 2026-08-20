@@ -3,12 +3,30 @@
 \docType{package}
 \name{hellometry-package}
 \alias{hellometry-package}
-\title{hellometry: Biomass estimation from allometric relationships}
+\title{hellometry: Biomass Estimation from Allometric Relationships}
 \description{
 Estimates body size and biomass of organisms from allometric relationships. It works with any data that follow a few column-naming conventions, using the measurements you supply to impute the ones that are missing.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/pierrerogy/hellometry}
+  \item Report bugs at \url{https://github.com/pierrerogy/hellometry/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Pierre Rogy \email{pierre.rogy@gmail.com} (\href{https://orcid.org/0000-0002-3002-0059}{ORCID})
+
+Other contributors:
+\itemize{
+  \item Olivier Dézerald (\href{https://orcid.org/0000-0002-9987-9865}{ORCID}) [contributor]
+  \item Gustavo Q. Romero (\href{https://orcid.org/0000-0003-3736-4759}{ORCID}) [contributor]
+  \item Fabiola Ospina-Bautista (\href{https://orcid.org/0000-0003-2498-1459}{ORCID}) [contributor]
+  \item Sarah Abdelazim (\href{https://orcid.org/0000-0002-6379-2733}{ORCID}) [contributor]
+  \item Nicholas A. C. Marino (\href{https://orcid.org/0000-0002-5702-5466}{ORCID}) [contributor]
+  \item Diane S. Srivastava (\href{https://orcid.org/0000-0003-4541-5595}{ORCID}) [contributor]
+}
 
 }
 \keyword{internal}

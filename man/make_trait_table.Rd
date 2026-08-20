@@ -22,3 +22,16 @@ measurements of the species sharing that grouping's traits
 \description{
 Remove columns with taxonomy, and replace them with trait-based groupings
 }
+\examples{
+# Fuzzy traits of three species, sp_a and sp_b within +/- 1 of each other
+measurement_table <-
+  data.frame(species = rep(c("sp_a", "sp_b", "sp_c"), each = 4),
+             stage = "larva",
+             size_col = c(1, 2, 3, 4, 1.2, 2.1, 3.3, 4.2, 8, 9, 10, 11),
+             biomass_col = c(0.1, 0.4, 1, 2, 0.2, 0.5, 1.1, 2.2, 12, 15, 20, 26),
+             AS1 = rep(c(1, 2, 5), each = 4),
+             AS2 = rep(c(3, 3, 9), each = 4))
+
+# The measurements of the species sharing each trait grouping
+make_trait_table(measurement_table, trait_columns = c("AS1", "AS2"))
+}

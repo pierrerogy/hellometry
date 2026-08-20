@@ -24,3 +24,10 @@ Each taxon also carries a set of discrete (fuzzy) trait columns, matched from a
 trait database (@Cereghino2018), that can be returned with \code{traits = TRUE} to
 illustrate the trait-based grouping functions.
 }
+\examples{
+# The communities the package ships with
+trini_communities()
+
+# The same, with the fuzzy trait columns
+trini_communities(traits = TRUE)
+}

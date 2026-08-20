@@ -40,6 +40,41 @@
 #'                      for taxonomic level and name.
 #' See `full_estimation_table()` to get all possible size estimates and models
 #' for your data
+#' @examples
+#' # Reference measurements for one family, renamed to the columns the package expects
+#' measurements <-
+#'   bromeliad_inverts_measurements() %>%
+#'   dplyr::filter(family == "Culicidae") %>%
+#'   dplyr::rename(size_col = body_size_mm,
+#'                 biomass_col = body_mass_mg,
+#'                 biomass_type = mass_type) %>%
+#'   dplyr::mutate(size_col = as.character(size_col),
+#'                 biomass_col = as.numeric(biomass_col))
+#'
+#' # Taxa to estimate, with no measurement of their own
+#' communities <-
+#'   trini_communities() %>%
+#'   dplyr::filter(family == "Culicidae") %>%
+#'   dplyr::rename(abundance = n) %>%
+#'   dplyr::mutate(size_col = "unknown",
+#'                 biomass_col = NA,
+#'                 biomass_type = "dry")
+#'
+#' # The two together are what the package works on
+#' dats <-
+#'   dplyr::bind_rows(communities, measurements)
+#' level_vec <-
+#'   c("species", "genus", "family")
+#'
+#' res <-
+#'   hellometry(dats = dats, level_vec = level_vec, biomass_type = "dry")
+#'
+#' # The estimates, joined back to the data
+#' res$data[, c("genus", "size_col", "biomass_col", "size_level", "model_level")]
+#'
+#' # The size estimates and the models they came from
+#' res$size_estimates
+#' res$model_estimates
 #' @export
 hellometry <- function(dats,
                        level_vec,
@@ -62,7 +97,7 @@ hellometry <- function(dats,
 
   # Make measurement table
   ## Print message
-  print("Making measurement table...")
+  message("Making measurement table...")
   ## Make table
   measurement_table <-
     make_measurement_table(dats = dats,
@@ -70,7 +105,7 @@ hellometry <- function(dats,
 
   # Getting size estimates
   ## Print message
-  print("Getting size estimates...")
+  message("Getting size estimates...")
   ## Make table with all estimates
   full_estimation_table_size <- 
     full_estimation_table(level_vec = level_vec, 
@@ -133,7 +168,7 @@ hellometry <- function(dats,
   
   # Getting biomass models
   ## Print message
-  print("Getting biomass models...")
+  message("Getting biomass models...")
   ## Make table
   ### Some models will be bad but filtered out,
   ### Wrap in suppressWarnings to avoid cluttering
@@ -217,7 +252,7 @@ hellometry <- function(dats,
   
   # Stick back to original data
   ## Print message
-  print("Combining estimates and models with data...")
+  message("Combining estimates and models with data...")
   ## Stick back to the data
   ### Suppress warnings when mutated to numeric
   suppressWarnings(

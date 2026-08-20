@@ -15,6 +15,25 @@ be dry (default) or wet. See \code{dry_wet()} for details.}
 \item{model}{"lm"/"poisson". What kind of allometric model should be computed.
 See \code{full_estimation_table()} for details.}
 }
+\value{
+An error if any check fails.
+}
 \description{
 Will fail if any condition not met
+}
+\examples{
+# Data named the way the package expects
+dats <-
+  data.frame(species = c("sp_a", "sp_b"),
+             stage = "larva",
+             abundance = c(2, 5),
+             size_col = c("3.1", "unknown"),
+             biomass_col = c(0.4, NA),
+             biomass_type = "dry")
+
+# Passes quietly
+data_checker(dats, biomass_type = "dry", model = "lm")
+
+# Fails on a column that is not named properly
+try(data_checker(dats["species"], biomass_type = "dry", model = "lm"))
 }
