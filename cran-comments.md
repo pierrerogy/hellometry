@@ -1,10 +1,10 @@
 ## Test environments
 * local Windows 11, R 4.5.2
-* TODO before submitting: win-builder (devel and release)
-* TODO before submitting: macbuilder or R-hub (Linux, macOS)
+* R-hub: Windows Server 2022, R-devel (2026-08-19 r90430 ucrt)
+* R-hub: macOS Sequoia 15.7.7, R-devel (2026-06-24 r90190)
 
 ## R CMD check results
-Local check: 0 errors | 0 warnings | 1 note
+0 errors | 0 warnings | 1 note
 
 * This is a new release.
 
