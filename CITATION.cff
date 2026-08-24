@@ -1,0 +1,41 @@
+cff-version: 1.2.0
+type: software
+title: 'hellometry: Biomass Estimation from Allometric Relationships'
+version: 1.0.1
+date-released: '2026-08-24'
+authors:
+  - family-names: Rogy
+    given-names: Pierre
+    email: pierre.rogy@gmail.com
+    orcid: 'https://orcid.org/0000-0002-3002-0059'
+  - family-names: Dézerald
+    given-names: Olivier
+    orcid: 'https://orcid.org/0000-0002-9987-9865'
+  - family-names: Romero
+    given-names: Gustavo Q.
+    orcid: 'https://orcid.org/0000-0003-3736-4759'
+  - family-names: Ospina-Bautista
+    given-names: Fabiola
+    orcid: 'https://orcid.org/0000-0003-2498-1459'
+  - family-names: Abdelazim
+    given-names: Sarah
+    orcid: 'https://orcid.org/0000-0002-6379-2733'
+  - family-names: Marino
+    given-names: Nicholas A. C.
+    orcid: 'https://orcid.org/0000-0002-5702-5466'
+  - family-names: Srivastava
+    given-names: Diane S.
+    orcid: 'https://orcid.org/0000-0003-4541-5595'
+repository-code: 'https://github.com/pierrerogy/hellometry'
+url: 'https://github.com/pierrerogy/hellometry'
+abstract: Estimates body size and biomass of organisms from allometric relationships. Works with any data that follow a few column-naming conventions, using the measurements you supply to impute the ones that are missing.
+keywords:
+  - allometry
+  - biomass
+  - body size
+  - invertebrates
+  - bromeleliads
+license: GPL-3.0-or-later
+identifiers:
+  - type: doi
+    value: 10.32614/CRAN.package.hellometry
