@@ -31,13 +31,17 @@ Authors@R: c(
            family = "Srivastava",
            role = "ctb",
            comment = c(ORCID = "0000-0003-4541-5595")))
-Description: Estimates body size and biomass of organisms from
-    allometric relationships. It works with any data that follow a few
-    column-naming conventions, using the measurements you supply to impute the
-    ones that are missing.
+Description: Estimates body size and biomass of organisms from values 
+    supplied by the user with any data that follow a few column-naming 
+    conventions. Comes with a dataset of measurements from bromeliad 
+    invertebrates to improve the quality of estimation.
 License: GPL (>= 3)
 URL: https://github.com/pierrerogy/hellometry
 BugReports: https://github.com/pierrerogy/hellometry/issues
+References:
+    Rogy P, Páez-Rosales N, Stewart S, Deacon AE, Lewis J, Auguste R, Leong R, Sandoval-Acuña P, Srivastava DS, Ramharrack L (2024) "Aquatic invertebrates of epiphytic tank bromeliads on the island of Trinidad, W.I.: An illustrated checklist" <https://ttfnc.org/livingworld/index.php/lwj/article/view/rogy_et_al_2024>
+    Chevene F, Doléadec S, Chessel D (1994) <doi:10.1111/j.1365-2427.1994.tb01742.x>
+    Céréghino R, Pillar VD, Srivastava DS, Omena PM, MacDonald AAM, Barberis IM, et al. (2018) <doi:10.1111/1365-2435.13141>
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
