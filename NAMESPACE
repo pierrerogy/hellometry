@@ -3,6 +3,7 @@
 export("%>%")
 export("%notin%")
 export(bromeliad_inverts_measurements)
+export(combine_measurements)
 export(data_checker)
 export(dry_wet)
 export(full_estimation_table)

@@ -29,6 +29,9 @@
 #' @param r_square_cutoff_upper Upper cutoff for R2 in allometric models, models with values above it will not be used in estimation. Default is 0.95 to avoid overfit models
 #' @param r_square_cutoff_lower Lower cutoff for R2 in allometric models, models with values below it will not be used in estimation. Default is 0.
 #' @param p_val_cutoff Upper cutoff for p-value of allometric models, models with p_value above it will not be used in estimation. Default is 0.05.
+#' @param measurements Optional dataframe of reference measurements, only used
+#' to build the measurement table. Needs columns "size_col", "biomass_col",
+#' "biomass_type", "stage". Default is NULL, i.e. measurements are in `dats`.
 #' @return A list with three tibbles:
 #' - data: the input data with added size and biomass estimates, and new columns 
 #'         with the taxonomic level and name of the taxon at which the estimate 
@@ -60,14 +63,12 @@
 #'                 biomass_col = NA,
 #'                 biomass_type = "dry")
 #'
-#' # The two together are what the package works on
-#' dats <-
-#'   dplyr::bind_rows(communities, measurements)
 #' level_vec <-
 #'   c("species", "genus", "family")
 #'
 #' res <-
-#'   hellometry(dats = dats, level_vec = level_vec, biomass_type = "dry")
+#'   hellometry(dats = communities, level_vec = level_vec,
+#'              biomass_type = "dry", measurements = measurements)
 #'
 #' # The estimates, joined back to the data
 #' res$data[, c("genus", "size_col", "biomass_col", "size_level", "model_level")]
@@ -82,12 +83,18 @@ hellometry <- function(dats,
                        model = "lm",
                        r_square_cutoff_upper = 0.95,
                        r_square_cutoff_lower = 0,
-                       p_val_cutoff = 0.05) {
+                       p_val_cutoff = 0.05,
+                       measurements = NULL) {
 
   # Columns must be properly named, biomass_type and model must have valid values
   data_checker(dats = dats,
                biomass_type = biomass_type,
                model = model)
+
+  # Combine reference measurements, if any, to build the measurement table
+  combined_measurements <-
+    combine_measurements(dats = dats,
+                         measurements = measurements)
 
   # Make copy of dataset to then reuse
   ret <-
@@ -100,7 +107,7 @@ hellometry <- function(dats,
   message("Making measurement table...")
   ## Make table
   measurement_table <-
-    make_measurement_table(dats = dats,
+    make_measurement_table(dats = combined_measurements,
                            level_vec = level_vec)
 
   # Getting size estimates
