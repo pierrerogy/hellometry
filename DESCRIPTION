@@ -31,10 +31,10 @@ Authors@R: c(
            family = "Srivastava",
            role = "ctb",
            comment = c(ORCID = "0000-0003-4541-5595")))
-Description: Estimates body size and biomass of organisms from values 
-    supplied by the user with any data that follow a few column-naming 
-    conventions. Comes with a dataset of measurements from bromeliad 
-    invertebrates to improve the quality of estimation.
+Description: Estimates body size and biomass of organisms from
+    allometric relationships. It works with any data that follow a few
+    column-naming conventions, using the measurements you supply to impute the
+    ones that are missing.
 License: GPL (>= 3)
 URL: https://github.com/pierrerogy/hellometry
 BugReports: https://github.com/pierrerogy/hellometry/issues

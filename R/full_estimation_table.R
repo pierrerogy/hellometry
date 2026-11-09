@@ -37,7 +37,7 @@
 #'
 #' # The two together are what the package works on
 #' dats <-
-#'   dplyr::bind_rows(communities, measurements)
+#'   combine_measurements(dats = communities, measurements = measurements)
 #' level_vec <-
 #'   c("species", "genus", "family")
 #'

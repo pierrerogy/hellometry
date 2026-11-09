@@ -31,6 +31,8 @@ data_checker <- function(dats, biomass_type, model){
     stop("Please call column with abundance values 'abundance'")
   if("size_col" %notin% colnames(dats))
     stop("Please call column with specimen measurement values 'size_col'")
+  if("biomass_col" %notin% colnames(dats))
+    stop("Please call column with biomass values 'biomass_col'")
   if("stage" %notin% colnames(dats))
     stop("Please call column with life stage (larva/pupa/adult) 'stage'")
   if("biomass_type" %notin% colnames(dats))
