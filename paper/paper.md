@@ -15,7 +15,7 @@ authors:
     orcid: 0000-0002-9987-9865
     affiliation: 3
   - name: Gustavo Q. Romero
-    orcid: 0000-0002-3002-0059
+    orcid: 0000-0003-3736-4759
     affiliation: 4
   - name: Fabiola Ospina-Bautista
     orcid: 0000-0003-2498-1459
@@ -44,7 +44,7 @@ affiliations:
     index: 6
   - name: Departamento de Ecologia, Instituto de Biologia, Universidade Federal do Rio de Janeiro, Rio de Janeiro, RJ, Brasil
     index: 7                       
-date: 23 July 2026
+date: 10 November 2026
 bibliography: paper.bib
 ---
 
@@ -60,12 +60,12 @@ Body mass is a trait central to much of ecological theory. In fact, body mass sc
 The methodological landscape to estimate body mass in ecological studies offers a variety of data sources. Beyond published allometric relationships [@Benke1999; @Meiri2010; @Froese2014;@Sohlstrom2018], there exists R packages, such as `allodb` for extratropical trees [@GonzalezAkre2022] and `rfishbase` for fishes [@Boettiger2012], or published databases, such as `AnimalTraits` [@Herberstein2022]. These allow users to either directly apply the relationships to their data, or, if available, the source data can be accessed to generate custom relationships by hand. Other tools focus on methodological considerations post-estimation such as `GroupStruct` [@Chan2022]. Nonetheless, none of these tools address the constraint of missing body size data in a custom dataset, and they do not allow the piecemeal compilation of data to generate allometric relationships directly inside the tool.
 
 # Software design
-`hellometry` is an R  package that fills both body size and body mass gaps from the researcher's own data. Given two tables that follow a small set of column-naming conventions, the package (i) imputes missing numeric sizes from the provided size distribution of the relevant taxon, and (ii) fits and uses allometric models to estimate missing body masses, together with confidence intervals. Importantly, every estimate is made at the finest taxonomic level for which an acceptable model exists: the package fits candidate models at each level supplied by the user (e.g., species, genus, family, order), discards those that fail customisable goodness-of-fit filters, and falls back up the taxonomic hierarchy only as far as necessary.
+`hellometry` is an R  package that fills both body size and body mass gaps from the researcher's own data. Given two tables that follow a small set of column-naming conventions, the package (i) imputes missing numeric sizes from the provided size distribution of the relevant taxon, and (ii) fits and uses allometric models to estimate missing body masses, together with confidence intervals. Importantly, every estimate is made at the finest taxonomic level for which an acceptable model exists: the package fits candidate models at each level supplied by the user (e.g., species, genus, family, order), discards those that fail customisable goodness-of-fit filters, and returns the model at the lowest supplied taxonomic level.
 
 Several design choices make `hellometry` practical for real ecological datasets:
 
 - **Taxon- and stage-specific estimates.** 
-  Size estimates and allometric relationships are computed separately for each taxon and each life stage (e.g., larva, juvenile, adult), reflecting the influence of ontogeny (e.g. metamorphosis) of some organisms on their body size and body mass. When a reliable estimate cannot be generated at a given taxonomic level, `hellometry` automatically returns the estimate at the next level above. Nonetheless, to allow researchers to examine body size estimates and allometric relationships in detail, the package can return all computed estimates and models at every taxonomic level. This is especially important if researchers want to closely examine the suite of models that can be generated from their data.
+  Size estimates and allometric relationships are computed separately for each taxon and each life stage (e.g., larva, juvenile, adult), reflecting the influence of ontogeny (e.g. metamorphosis) of some organisms on their body size and body mass. When a reliable estimate cannot be generated at a given taxonomic level, `hellometry` automatically tests a model at the next level above until a suitable one is found. Nonetheless, to allow researchers to examine body size estimates and allometric relationships in detail, the package can return all computed estimates and models at every taxonomic level. This is especially important if researchers want to closely examine the suite of models that can be generated from their data.
   
 - **Categorical body size estimates.** 
   The package can flexibly handle different levels of coarseness in body size estimate. So far, four categorical values are accepted. When "small", "medium" or "large" is supplied, the package splits available data of body size for a given taxon into terciles and computes a relationship within that tercile. To estimate the expected body mass of a randomly selected individual from the population, the package requires "unknown" body masses. Here, we use a weighted rather than unweighted mean, for smaller (younger) organisms tend to be more numerous than larger (older) ones.
@@ -142,10 +142,10 @@ dplyr::glimpse(estimates$model_estimates)
 ```
 
 Internally, `hellometry()` builds a measurement table from the rows of both tables that carry a numeric size (`make_measurement_table()`), computes every admissible size estimate and allometric model across taxonomic levels (`full_estimation_table()`), joins the finest available estimate back to each
-target row, and predicts mass. `hellometry` returns a list of three data frames: `data`
+target row, and predicts body mass and biomass. `hellometry` returns a list of three dataframes: `data`
 (the input table augmented with estimated sizes, masses, prediction-interval bounds, and the taxonomic level and name used for each estimate), `size_estimates` (the unique size estimates applied), and `model_estimates` (the unique allometric models applied). The helper functions are also exported, so users can inspect all possible estimates and models for their data without committing to the full pipeline. A worked example is provided in the package vignette (`vignette("hellometry")`).
 
-It is important to underline that `hellometry` uses the data supplied by the user to generate body size and body mass estimates. This means that, even if the user can collate large customised datasets, the generated estimates are ultimately a product of the input data.  
+It is important to underline that `hellometry` uses the data supplied by the user to generate body size, body mass and biomass estimates. This means that, even if the user can collate large customised datasets, the generated estimates are ultimately a product of the input data.  
 
 # Research impact statement
 Earlier versions of `hellometry` have been successfully used by the authors' network of collaborators, both in terms of published articles [@Srivastava2023; @Rogy2025] and a Ph.D. dissertation [@Westwood2025]. The package is also being used in various scientific articles currently being written (S.M. Ravoth, G. Q. Romero, L. Guimarães, P. Sabino, pers. comm.)
