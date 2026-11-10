@@ -11,3 +11,6 @@
 \.ipynb_checkpoints$
 ^cran-comments\.md$
 ^\.github$
+^paper$
+^CITATION\.cff$
+^CRAN-SUBMISSION$
