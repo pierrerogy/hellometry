@@ -5,7 +5,7 @@
 \alias{hellometry-package}
 \title{hellometry: Biomass Estimation from Allometric Relationships}
 \description{
-Estimates body size and biomass of organisms from allometric relationships. It works with any data that follow a few column-naming conventions, using the measurements you supply to impute the ones that are missing.
+Estimates body size and biomass of organisms from allometric relationships. It works with any data that follow a few column-naming conventions, using the measurements you supply to impute the ones that are missing. Taxa can also be grouped by fuzzy traits (Chevenet et al. 1994) \doi{10.1111/j.1365-2427.1994.tb01742.x}, as in Céréghino et al. (2018) \doi{10.1111/1365-2435.13141}. Example data come from Rogy et al. (2024) \url{https://ttfnc.org/livingworld/index.php/lwj/article/view/rogy_et_al_2024}.
 }
 \seealso{
 Useful links:
