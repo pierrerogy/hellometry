@@ -44,12 +44,12 @@ affiliations:
     index: 6
   - name: Departamento de Ecologia, Instituto de Biologia, Universidade Federal do Rio de Janeiro, Rio de Janeiro, RJ, Brasil
     index: 7                       
-date: 10 November 2026
+date: 16 November 2026
 bibliography: paper.bib
 ---
 
 # Summary
- Here, we present `hellometry`, an R package [@RCoreTeam] that addresses the challenge of estimating missing body sizes and body masses directly from a researcher's own dataset. Using data from similar taxa, `hellometry` imputes categorical or absent sizes, and fits log–log allometric models at the finest available taxonomic level, returning both predictions and computed models.
+ Here, we present `hellometry` [@Rogy2026], an R package [@RCoreTeam] that addresses the challenge of estimating missing body sizes and body masses directly from a researcher's own dataset. Using data from similar taxa, `hellometry` imputes categorical or absent sizes, and fits log–log allometric models at the finest available taxonomic level, returning both predictions and computed models.
 
 # Statement of need 
 Body mass is a trait central to much of ecological theory. In fact, body mass scales surprisingly well with many other traits, such as metabolic rate, growth rate, reproductive rate, abundance, and trophic position [@Peters1983; @Brown2004; @Brose2006; @Woodward2005; @Smil2007]. Despite its conceptual simplicity, body mass is rarely measured directly because measuring the mass of organisms is slow, costly and often destructive. One workaround solution is to develop allometric equations, which convert a body dimension, for example body length, into an estimate of body mass [@Benke1999; @Meiri2010; @Froese2014;@Sohlstrom2018]. However, in practice, many data sets are incomplete, where body size can be categorical (e.g. "small"), and both body size and body mass can be missing.
@@ -97,7 +97,7 @@ level_vec <-
 
 # Read in the package datasets
 measurements <- 
-  ## Calls the large dataset of invertebrate measurements collected by the authors
+  ## Calls the dataset of invertebrate measurements collected by the authors
   bromeliad_inverts_measurements() %>% 
   ## Rename columns to those expected by hellometry()
   dplyr::rename(size_col = body_size_mm,
@@ -148,10 +148,10 @@ target row, and predicts body mass and biomass. `hellometry` returns a list of t
 It is important to underline that `hellometry` uses the data supplied by the user to generate body size, body mass and biomass estimates. This means that, even if the user can collate large customised datasets, the generated estimates are ultimately a product of the input data.  
 
 # Research impact statement
-Earlier versions of `hellometry` have been successfully used by the authors' network of collaborators, both in terms of published articles [@Srivastava2023; @Rogy2025] and a Ph.D. dissertation [@Westwood2025]. The package is also being used in various scientific articles currently being written (S.M. Ravoth, G. Q. Romero, L. Guimarães, P. Sabino, pers. comm.)
+Earlier versions of `hellometry` have been successfully used by the authors' network of collaborators, both in terms of published articles [@Srivastava2023; @Rogy2025] and a Ph.D. dissertation [@Westwood2025]. The package is also being used in various scientific articles currently being written (S.M. Ravoth, G. Q. Romero, L. Guimarães, P. Sabino, pers. comm.). To allow usage by the broader research community, the package has been published on CRAN [@Rogy2026].
 
 # Contributions
-Conceptualisation: PR, DSS.	Data collection: PR, OD, GQR, FOB, NACM, DSS.	Data curation: PR, OD, GQR, FOB, NACM, DSS.	Code contribution: PR, SA.	Writing - Original Draft: PR.	Writing - Review & Editing: PR, OD, GQR, FOB, NACM, SA, DSS.	Supervision: DSS.
+Conceptualisation: PR, DSS.	Data collection: PR, OD, GQR, FOB, NACM, DSS.	Data curation: PR, OD, GQR, FOB, NACM, DSS.	Code contribution: PR, SA.	Writing - Original Draft: PR.	Writing - Review & Editing: PR, OD, GQR, FOB, NACM, SA, DSS. Supervision: DSS.
 
 # AI usage disclosure
 The original package was written entirely without generative AI assistance. Claude Opus 4.8 was used in the last stages of the project to make the package more efficient (e.g. correcting redundancies in the code), and to add some functions (e.g. different kinds of models). Here, changes were checked by PR before implementation, and outputs were carefully checked to those before generative AI was used to ensure the quality and correctness of the content. Claude Opus 4.8 was also used to generate the first draft of the present manuscript, draft that was then considerably edited by all co-authors.
